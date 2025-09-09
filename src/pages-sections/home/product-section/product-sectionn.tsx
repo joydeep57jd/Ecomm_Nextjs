@@ -63,7 +63,7 @@ export default function ProductSection() {
                       )
                       : 0,
                     categories: [section.sectionName || "Products"],
-                    rating: 0,
+                    
                   }}
                 />
               </Box>

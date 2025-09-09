@@ -6,7 +6,7 @@ import FlexBox from "components/flex-box/flex-box"
 
 // ==============================================================
 interface Props extends BoxProps {
-  rating: number;
+  rating?: number;
   showRating?: boolean;
 }
 // ==============================================================

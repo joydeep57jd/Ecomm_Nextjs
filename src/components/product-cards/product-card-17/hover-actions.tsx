@@ -24,6 +24,7 @@ export default function HoverActions({ product }: Props) {
   const [isQuickViewLoading, setQuickViewLoading] = useState(false)
 
   const handleAddToCart = useCallback(() => {
+    
     setCartLoading(true)
 
     setTimeout(() => {
@@ -70,7 +71,7 @@ export default function HoverActions({ product }: Props) {
           loading={isQuickViewLoading}
           aria-label="Quick view"
         >
-          Quick View
+          View
         </Button>
       </Link>
     </HoverWrapper>

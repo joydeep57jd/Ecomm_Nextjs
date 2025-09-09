@@ -8,14 +8,35 @@ export const mainCarouselData = [
   },
   {
     title: "50% Off For Your First Shopping",
-    imgUrl: "/assets/images/market-1/speaker-5.png",
+    imgUrl: "/assets/images/market-1/casual-set.png",
     description: "Get Free Shipping on all orders over $99.00",
     buttonText: "Shop Now",
     buttonLink: "#"
   },
   {
     title: "50% Off For Your First Shopping",
-    imgUrl: "/assets/images/market-1/bag-1.png",
+    imgUrl: "/assets/images/market-1/shoes.png",
+    description: "Get Free Shipping on all orders over $99.00",
+    buttonText: "Shop Now",
+    buttonLink: "#"
+  },
+  {
+    title: "50% Off For Your First Shopping",
+    imgUrl: "/assets/images/market-1/spice.png",
+    description: "Get Free Shipping on all orders over $99.00",
+    buttonText: "Shop Now",
+    buttonLink: "#"
+  },
+  {
+    title: "50% Off For Your First Shopping",
+    imgUrl: "/assets/images/market-1/mixer.png",
+    description: "Get Free Shipping on all orders over $99.00",
+    buttonText: "Shop Now",
+    buttonLink: "#"
+  },
+  {
+    title: "50% Off For Your First Shopping",
+    imgUrl: "/assets/images/market-1/vegitable.png",
     description: "Get Free Shipping on all orders over $99.00",
     buttonText: "Shop Now",
     buttonLink: "#"

@@ -22,8 +22,8 @@ const StyledChip = styled(Chip, {
 
 // ==============================================================
 interface Props extends ChipProps {
-  discount: number;
-  shape?: "rounded" | "square";
+  discount: number
+  shape?: "rounded" | "square"
 }
 // ==============================================================
 

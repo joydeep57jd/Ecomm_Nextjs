@@ -3,6 +3,6 @@ import axiosInstance from "../axiosInstance"
 import { API_URL } from "../constants"
 
 export const homePage = async () => {
-  const response = await axiosInstance.post(API_URL.ITEMS.P_ALLPRODUCT, {})
+  const response = await axiosInstance.post(API_URL.ITEMS.P_ALLPRODUCT, {type:"1"})
   return response.data
 }
