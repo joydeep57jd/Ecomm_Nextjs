@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface CategoryResponse {
+export interface Category {
   id: string
   name: string
   icon: string

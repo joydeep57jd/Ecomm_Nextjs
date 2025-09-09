@@ -35,10 +35,14 @@ export default function ShopLayout1({ children, data }: Props) {
   const MOBILE_VERSION_HEADER = (
     <MobileHeader>
       <MobileHeader.Left>
-        <MobileMenu navigation={header.navigation} />
+        {
+          header && <MobileMenu navigation={header.navigation} />
+        }
       </MobileHeader.Left>
 
-      <MobileHeader.Logo logoUrl={mobileNavigation.logo} />
+      {
+        mobileNavigation && <MobileHeader.Logo logoUrl={mobileNavigation.logo} />
+      }
 
       <MobileHeader.Right>
         <HeaderSearch>
@@ -54,29 +58,36 @@ export default function ShopLayout1({ children, data }: Props) {
   return (
     <Fragment>
       <Topbar>
-        <Topbar.Left label={topbar.label} title={topbar.title} />
+        {
+          topbar && <>
+            <Topbar.Left label={topbar.label} title={topbar.title} />
 
-        <Topbar.Right>
-          <TopbarLanguageSelector languages={topbar.languageOptions} />
-          <TopbarSocialLinks links={topbar.socials} />
-        </Topbar.Right>
+            <Topbar.Right>
+              <TopbarLanguageSelector languages={topbar.languageOptions} />
+              <TopbarSocialLinks links={topbar.socials} />
+            </Topbar.Right>
+          </>
+        }
+
       </Topbar>
 
       <Sticky fixedOn={0} scrollDistance={300}>
-        <Header mobileHeader={MOBILE_VERSION_HEADER}>
-          <Header.Left>
-            <Header.Logo url={header.logo} />
-          </Header.Left>
+        {
+          header && <Header mobileHeader={MOBILE_VERSION_HEADER}>
+            <Header.Left>
+              <Header.Logo url={header.logo} />
+            </Header.Left>
 
-          <Header.Mid>
-            <NavigationList navigation={header.navigation} />
-          </Header.Mid>
+            <Header.Mid>
+              <NavigationList navigation={header.navigation} />
+            </Header.Mid>
 
-          <Header.Right>
-            <HeaderLogin />
-            <HeaderCart />
-          </Header.Right>
-        </Header>
+            <Header.Right>
+              <HeaderLogin />
+              <HeaderCart />
+            </Header.Right>
+          </Header>
+        }
       </Sticky>
 
       <SecondaryHeader elevation={0}>
@@ -85,59 +96,69 @@ export default function ShopLayout1({ children, data }: Props) {
         </SecondaryHeader.Left> */}
 
         <SecondaryHeader.Right>
-          <SearchInput1 categories={header.categories} />
+          {
+            header &&
+            <SearchInput1 categories={header.categories} />
+          }
         </SecondaryHeader.Right>
       </SecondaryHeader>
 
       {children}
 
-      <MobileNavigationBar navigation={mobileNavigation.version1} />
+      {
+        mobileNavigation &&
+        <MobileNavigationBar navigation={mobileNavigation.version1} />
+      }
 
-      <Footer1>
-        <Footer1.Brand>
-          <Link href="/">
-            <Image src={footer.logo} alt="logo" width={105} height={50} />
-          </Link>
 
-          <Typography
-            variant="body1"
-            sx={{ mt: 1, mb: 3, maxWidth: 370, color: "white", lineHeight: 1.7 }}
-          >
-            {footer.description}
-          </Typography>
+      {
+        footer &&
+        <Footer1>
+          <Footer1.Brand>
+            <Link href="/">
+              <Image src={footer.logo} alt="logo" width={105} height={50} />
+            </Link>
 
-          <FooterApps playStoreUrl={footer.playStoreUrl} appleStoreUrl={footer.appStoreUrl} />
-        </Footer1.Brand>
+            <Typography
+              variant="body1"
+              sx={{ mt: 1, mb: 3, maxWidth: 370, color: "white", lineHeight: 1.7 }}
+            >
+              {footer.description}
+            </Typography>
 
-        <Footer1.Widget1>
-          <FooterLinksWidget title="About Us" links={footer.about} />
-        </Footer1.Widget1>
+            <FooterApps playStoreUrl={footer.playStoreUrl} appleStoreUrl={footer.appStoreUrl} />
+          </Footer1.Brand>
 
-        <Footer1.Widget2>
-          <FooterLinksWidget title="Customer Care" links={footer.customers} />
-        </Footer1.Widget2>
+          <Footer1.Widget1>
+            <FooterLinksWidget title="About Us" links={footer.about} />
+          </Footer1.Widget1>
 
-        <Footer1.Contact>
-          <FooterContact
-            phone={footer.contact.phone}
-            email={footer.contact.email}
-            address={footer.contact.address}
-          />
+          <Footer1.Widget2>
+            <FooterLinksWidget title="Customer Care" links={footer.customers} />
+          </Footer1.Widget2>
 
-          <FooterSocialLinks links={footer.socials} />
-        </Footer1.Contact>
+          <Footer1.Contact>
+            <FooterContact
+              phone={footer.contact.phone}
+              email={footer.contact.email}
+              address={footer.contact.address}
+            />
 
-        <Footer1.Copyright>
-          <Divider sx={{ borderColor: "grey.800" }} />
+            <FooterSocialLinks links={footer.socials} />
+          </Footer1.Contact>
 
-          <Typography
-            variant="body2"
-            sx={{ py: 3, textAlign: "center", span: { fontWeight: 500 } }}
-          >
-            &copy; Copyright {new Date().getFullYear()} <span>UI Lib</span>, All rights reserved.
-          </Typography>
-        </Footer1.Copyright>
-      </Footer1>
+          <Footer1.Copyright>
+            <Divider sx={{ borderColor: "grey.800" }} />
+
+            <Typography
+              variant="body2"
+              sx={{ py: 3, textAlign: "center", span: { fontWeight: 500 } }}
+            >
+              &copy; Copyright {new Date().getFullYear()} <span>UI Lib</span>, All rights reserved.
+            </Typography>
+          </Footer1.Copyright>
+        </Footer1>
+      }
     </Fragment>
   )
 }

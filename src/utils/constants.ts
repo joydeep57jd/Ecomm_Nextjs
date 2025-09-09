@@ -57,11 +57,11 @@ export const API_URL = {
   },
 
   ITEMS: {
-    GET_ALL: "/frontend/GetAllItems?companyid=",
+    GET_ALL: "/frontend/GetAllItems",
     GET_ALL_LAZY: "/frontend/GetAllItemsForLazyLoad?",
     GET_BY_VARIANT: "/frontend/GetItemsByVariantIds",
-    GET_FEATURED: "/frontend/GetFeatureItems?companyid=",
-    GET_CATEGORY: "/frontend/GetAllCategories?CompanyId=",
+    GET_FEATURED: "/frontend/GetFeatureItems",
+    GET_CATEGORY: "/frontend/GetAllCategories",
     GET_ITEM_DETAIL_BY_SECTION: "/frontend/GetItemDetailBySectionFor",
     GET_SECTIONS: "/frontend/GetItemsFromSectionId",
     GET_RELATED: "/frontend/GetRelatedItem",

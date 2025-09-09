@@ -13,11 +13,11 @@ import OverlayScrollbar from "components/overlay-scrollbar"
 import { renderLevels } from "./render-levels"
 // NAVIGATION DATA LIST
 import { updateNavigation } from "./modified-navigation"
+import { Category } from "@/models/Category.modal"
 // CUSTOM DATA MODEL
-import { Menu } from "models/Navigation.model"
 
 // ==============================================================
-type Props = { navigation: Menu[] };
+type Props = { navigation: Category[] };
 // ==============================================================
 
 export function MobileMenu({ navigation }: Props) {

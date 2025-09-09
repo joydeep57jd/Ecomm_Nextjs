@@ -34,10 +34,10 @@ export default function SalesLayout({ children, data }: Props) {
   const MOBILE_VERSION_HEADER = (
     <MobileHeader>
       <MobileHeader.Left>
-        <MobileMenu navigation={header.navigation} />
+        <MobileMenu navigation={header!.navigation} />
       </MobileHeader.Left>
 
-      <MobileHeader.Logo logoUrl={mobileNavigation.logo} />
+      <MobileHeader.Logo logoUrl={mobileNavigation!.logo} />
 
       <MobileHeader.Right>
         <HeaderSearch>
@@ -53,21 +53,21 @@ export default function SalesLayout({ children, data }: Props) {
   return (
     <Fragment>
       <Topbar>
-        <Topbar.Left label={topbar.label} title={topbar.title} />
+        <Topbar.Left label={topbar!.label} title={topbar!.title} />
 
         <Topbar.Right>
-          <TopbarLanguageSelector languages={topbar.languageOptions} />
-          <TopbarSocialLinks links={topbar.socials} />
+          <TopbarLanguageSelector languages={topbar!.languageOptions} />
+          <TopbarSocialLinks links={topbar!.socials} />
         </Topbar.Right>
       </Topbar>
 
       <Header mobileHeader={MOBILE_VERSION_HEADER}>
         <Header.Left>
-          <Header.Logo url={header.logo} />
+          <Header.Logo url={header!.logo} />
         </Header.Left>
 
         <Header.Mid>
-          <NavigationList navigation={header.navigation} />
+          <NavigationList navigation={header!.navigation} />
         </Header.Mid>
 
         <Header.Right>
@@ -78,11 +78,11 @@ export default function SalesLayout({ children, data }: Props) {
 
       <SecondaryHeader elevation={0}>
         <SecondaryHeader.Left>
-          <CategoryList categories={header.categoryMenus} />
+          <CategoryList categories={header!.categoryMenus} />
         </SecondaryHeader.Left>
 
         <SecondaryHeader.Right>
-          <SearchInput1 categories={header.categories} />
+          <SearchInput1 categories={header!.categories} />
         </SecondaryHeader.Right>
       </SecondaryHeader>
 
@@ -91,35 +91,35 @@ export default function SalesLayout({ children, data }: Props) {
       <Footer1>
         <Footer1.Brand>
           <Link href="/">
-            <Image src={footer.logo} alt="logo" width={105} height={50} />
+            <Image src={footer!.logo} alt="logo" width={105} height={50} />
           </Link>
 
           <Typography
             variant="body1"
             sx={{ mt: 1, mb: 3, maxWidth: 370, color: "white", lineHeight: 1.7 }}
           >
-            {footer.description}
+            {footer!.description}
           </Typography>
 
-          <FooterApps playStoreUrl={footer.playStoreUrl} appleStoreUrl={footer.appStoreUrl} />
+          <FooterApps playStoreUrl={footer!.playStoreUrl} appleStoreUrl={footer!.appStoreUrl} />
         </Footer1.Brand>
 
         <Footer1.Widget1>
-          <FooterLinksWidget title="About Us" links={footer.about} />
+          <FooterLinksWidget title="About Us" links={footer!.about} />
         </Footer1.Widget1>
 
         <Footer1.Widget2>
-          <FooterLinksWidget title="Customer Care" links={footer.customers} />
+          <FooterLinksWidget title="Customer Care" links={footer!.customers} />
         </Footer1.Widget2>
 
         <Footer1.Contact>
           <FooterContact
-            phone={footer.contact.phone}
-            email={footer.contact.email}
-            address={footer.contact.address}
+            phone={footer!.contact.phone}
+            email={footer!.contact.email}
+            address={footer!.contact.address}
           />
 
-          <FooterSocialLinks links={footer.socials} />
+          <FooterSocialLinks links={footer!.socials} />
         </Footer1.Contact>
 
         <Footer1.Copyright>
@@ -135,7 +135,7 @@ export default function SalesLayout({ children, data }: Props) {
       </Footer1>
 
       {/* SMALLER DEVICE NAVIGATION */}
-      <MobileNavigationBar navigation={mobileNavigation.version1} />
+      <MobileNavigationBar navigation={mobileNavigation!.version1} />
     </Fragment>
   )
 }

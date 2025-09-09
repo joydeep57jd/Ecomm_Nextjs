@@ -4,11 +4,8 @@ import { MockEndPoints } from "__server__"
 
 // Axios instance
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
-  
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL
 })
-
-
 
 // Remove following 2 lines if you don't want to use MockAdapter
 export const Mock = new MockAdapter(axiosInstance)
@@ -21,11 +18,16 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`
     }
     if (config.method?.toLowerCase() === "post") {
-      const companyId = Number(process.env.NEXT_PUBLIC_COMPANY_ID) 
+      const companyId = Number(process.env.NEXT_PUBLIC_COMPANY_ID)
       if (config.data && typeof config.data === "object") {
         config.data = { ...config.data, companyId }
       } else {
         config.data = { companyId }
+      }
+      if (config.params && typeof config.params === "object") {
+        config.params = { ...config.params, companyId }
+      } else {
+        config.params = { companyId }
       }
     }
 
@@ -39,7 +41,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     return Promise.reject(error)
-  }
+  }
 )
 
-export default axiosInstance 
+export default axiosInstance
