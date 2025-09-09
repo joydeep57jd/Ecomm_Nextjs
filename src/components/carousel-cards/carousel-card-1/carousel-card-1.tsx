@@ -1,6 +1,6 @@
-import Link from "next/link"
+// import Link from "next/link"
 import Grid from "@mui/material/Grid"
-import Button from "@mui/material/Button"
+// import Button from "@mui/material/Button"
 // GLOBAL CUSTOM COMPONENTS
 import LazyImage from "components/LazyImage"
 // STYLED COMPONENT
@@ -10,8 +10,8 @@ import { StyledRoot } from "./styles"
 interface Props {
   title: string;
   imgUrl: string;
-  buttonLink: string;
-  buttonText: string;
+  buttonLink?: string;
+  buttonText?: string;
   description: string;
   buttonColor?: "dark" | "primary";
 }
@@ -20,9 +20,9 @@ interface Props {
 export default function CarouselCard1({
   title,
   imgUrl,
-  buttonText,
+ 
   description,
-  buttonColor = "primary"
+  
 }: Props) {
   return (
     <StyledRoot>
@@ -31,7 +31,7 @@ export default function CarouselCard1({
           <h1 className="title">{title}</h1>
           <p className="description">{description}</p>
 
-          <Button
+          {/* <Button
             size="large"
             disableElevation
             variant="contained"
@@ -41,7 +41,7 @@ export default function CarouselCard1({
             className="button-link"
           >
             {buttonText}
-          </Button>
+          </Button> */}
         </Grid>
 
         <Grid size={{ md: 6, xs: 12 }}>

@@ -1,43 +1,43 @@
 export const mainCarouselData = [
   {
-    title: "50% Off For Your First Shopping",
+    title: "Wireless Earbuds",
     imgUrl: "/assets/images/market-1/airpod-1.png",
-    description: "Get Free Shipping on all orders over $99.00",
+    description: "Seamless sound, sleek design—your audio companion",
     buttonText: "Shop Now",
     buttonLink: "#"
   },
   {
-    title: "50% Off For Your First Shopping",
+    title: "Casual Outfits",
     imgUrl: "/assets/images/market-1/casual-set.png",
-    description: "Get Free Shipping on all orders over $99.00",
+    description: "Effortless style for warm days and relaxed getaways.",
     buttonText: "Shop Now",
     buttonLink: "#"
   },
   {
-    title: "50% Off For Your First Shopping",
+    title: "Black Sneakers",
     imgUrl: "/assets/images/market-1/shoes.png",
-    description: "Get Free Shipping on all orders over $99.00",
+    description: "Precision crafted comfort with urban sophistication.",
     buttonText: "Shop Now",
     buttonLink: "#"
   },
   {
-    title: "50% Off For Your First Shopping",
+    title: "Spices",
     imgUrl: "/assets/images/market-1/spice.png",
-    description: "Get Free Shipping on all orders over $99.00",
+    description: "Elevate flavor with nature’s finest aromatic spices.",
     buttonText: "Shop Now",
     buttonLink: "#"
   },
   {
-    title: "50% Off For Your First Shopping",
+    title: "Kitchen Appliances",
     imgUrl: "/assets/images/market-1/mixer.png",
-    description: "Get Free Shipping on all orders over $99.00",
+    description: "Blend, mix, and serve with modern kitchen essentials",
     buttonText: "Shop Now",
     buttonLink: "#"
   },
   {
-    title: "50% Off For Your First Shopping",
+    title: "Basket of Fresh Vegetables",
     imgUrl: "/assets/images/market-1/vegitable.png",
-    description: "Get Free Shipping on all orders over $99.00",
+    description: "Colorful produce for vibrant, healthy living.",
     buttonText: "Shop Now",
     buttonLink: "#"
   }

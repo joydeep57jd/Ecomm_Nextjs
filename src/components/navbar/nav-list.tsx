@@ -67,7 +67,7 @@ export function NavigationList({ navigation }: Props) {
             }}
           >
             <FlexBox alignItems="flex-end" gap={0.3} sx={NAV_LINK_STYLES}>
-              {nav.title}{" "}
+              {nav.title}{" "} hello4
               <KeyboardArrowDown
                 sx={{
                   color: "grey.500",

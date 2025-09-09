@@ -27,7 +27,8 @@ export const syncGuestCart = async (items: CartProductItem[]) => {
     carttItemVariant: items.map((item) => ({
       itemId: item.id,
       itemVariantId: item.variantid,
-      itemQty: item.quantity
+      itemQty: item.quantity,
+      itemPrice: item.price_regular
     }))
   }
 
