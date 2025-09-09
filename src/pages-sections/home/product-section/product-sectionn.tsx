@@ -1,3 +1,5 @@
+"use client"
+
 import Box from "@mui/material/Box"
 // GLOBAL CUSTOM COMPONENTS
 import Container from "components/Container"
@@ -7,19 +9,30 @@ import ProductsCarousel from "./products-carousel"
 // API FUNCTIONS
 import { HomeAPI } from "@/utils/api"
 import { Section, SectionItem } from "@/models/Home.model"
+import { useEffect, useState } from "react"
 
-export default async function ProductSection() {
- const res = await HomeAPI.homePage(1)
-  const sections: Section[] = res.data.responseCompanyTemplateSections
+export default function ProductSection() {
+  const [sections, setSections] = useState<Section[]>([])
+
+  useEffect(() => {
+    const getSections = async () => {
+      try {
+        const { data } = await HomeAPI.homePage()
+        setSections(data.responseCompanyTemplateSections)
+      } catch (error) {
+        console.error("Error fetching sections:", error)
+      }
+    }
+    getSections()
+  }, [])
 
   if (!sections || sections.length === 0) return null
 
-  
+
   return (
     <Container>
       {sections.map((section) => {
-        const products: SectionItem[] =
-          section.responseSectionItemAndImage?.sectionItems || []
+        const products: SectionItem[] = section.responseSectionItemAndImage?.sectionItems || []
 
         if (products.length === 0) return null
 
@@ -44,10 +57,10 @@ export default async function ProductSection() {
                     ].filter(Boolean) as string[],
                     discount: product.mrp
                       ? Math.round(
-                          ((product.mrp - (product.salePrice || product.price)) /
-                            product.mrp) *
-                            100
-                        )
+                        ((product.mrp - (product.salePrice || product.price)) /
+                          product.mrp) *
+                        100
+                      )
                       : 0,
                     categories: [section.sectionName || "Products"],
                     rating: 0,

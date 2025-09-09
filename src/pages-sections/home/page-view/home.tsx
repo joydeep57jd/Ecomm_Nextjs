@@ -1,9 +1,6 @@
 import { Fragment } from "react"
 // LOCAL CUSTOM COMPONENTS
 
-
-
-
 import Section9 from "../section-9"
 import HeroSection from "../hero-section"
 import ProductSection from "../product-section"
@@ -16,10 +13,10 @@ export default function HomePageView() {
 
       {/* FLASH DEALS SECTION */}
       <ProductSection />
-     
+
 
       {/* CUSTOM SOLUTIONS SECTION */}
-    
+
 
       {/* SERVICES SECTION */}
       <Section9 />
