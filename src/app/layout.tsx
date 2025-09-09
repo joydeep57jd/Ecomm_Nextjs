@@ -1,6 +1,5 @@
 import type { ReactNode } from "react"
 import { Geist } from "next/font/google"
-import { GoogleAnalytics } from "@next/third-parties/google"
 
 export const geist = Geist({
   subsets: ["latin"]
@@ -38,8 +37,6 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
             <ProgressBar />
           </ThemeProvider>
         </CartProvider>
-
-        <GoogleAnalytics gaId="G-XKPD36JXY0" />
       </body>
     </html>
   )

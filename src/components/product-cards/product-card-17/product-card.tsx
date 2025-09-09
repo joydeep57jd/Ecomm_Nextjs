@@ -37,7 +37,7 @@ export default function ProductCard17({ product, bgWhite = false }: Props) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             loading={images.length > 1 ? "lazy" : "eager"}
           />
-        
+
 
           {/* {images.length > 1 && (
             <Image

@@ -7,14 +7,14 @@ import { typography } from "./typography"
 // ========================================================
 declare module "@mui/material/Button" {
   interface ButtonPropsColorOverrides {
-    dark: true;
-    paste: true;
-    marron: true;
-    orange: true;
+    dark: true
+    paste: true
+    marron: true
+    orange: true
   }
 
   interface ButtonPropsSizeOverrides {
-    normal: true;
+    normal: true
   }
 }
 // =========================================================
@@ -63,7 +63,10 @@ export const components: ThemeComponents = {
     },
     styleOverrides: {
       root: {
-        borderRadius: 12
+        borderRadius: 12,
+        "&:hover .thumbnail": {
+          display: "block !important"
+        }
       }
     }
   },
