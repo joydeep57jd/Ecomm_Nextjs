@@ -18,6 +18,7 @@ import ProgressBar from "components/progress"
 
 // IMPORT i18n SUPPORT FILE
 import "i18n"
+import HeaderLayout from "@/components/layouts/header-layout"
 
 // ==============================================================
 interface RootLayoutProps {
@@ -32,8 +33,10 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
       <body id="body" className={geist.className}>
         <CartProvider>
           <ThemeProvider>
-            {modal}
-            {children}
+            <HeaderLayout>
+              {modal}
+              {children}
+            </HeaderLayout>
             <ProgressBar />
           </ThemeProvider>
         </CartProvider>
