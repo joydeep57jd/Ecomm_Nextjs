@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react"
 import ShopLayout1 from "components/layouts/shop-layout-1"
 // API FUNCTIONS
-import api from "@/utils/api/category"
+import api from "@/utils/api/layout"
 
 export default async function Layout1({ children }: PropsWithChildren) {
   const data = await api.getLayoutData()

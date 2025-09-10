@@ -21,7 +21,7 @@ export function NavigationList({ navigation }: Props) {
 
   const renderSubSubCategory = (children: SubSubCategory[]) => {
     return children.map((nav) => (
-      <NavLink href={`/category/${nav.id}`} key={nav.name}>
+      <NavLink href={`/products/search?sub-sub-catid=${nav.id}`} key={nav.name}>
         <MenuItem>{nav.name}</MenuItem>
       </NavLink>
     ))
@@ -35,7 +35,7 @@ export function NavigationList({ navigation }: Props) {
             title: nav.name,
             child: nav.sub_sub_category.map((sub) => ({
               title: sub.name,
-              url: `/category/${sub.id}`,
+              url: `/products/search?sub-catid=${sub.id}`,
             })),
           }} key={nav.name}>
             {renderSubSubCategory(nav.sub_sub_category)}
@@ -44,7 +44,7 @@ export function NavigationList({ navigation }: Props) {
       }
 
       return (
-        <NavLink href={`/category/${nav.id}`} key={nav.name}>
+        <NavLink href={`/products/search?sub-catid=${nav.id}`} key={nav.name}>
           <MenuItem>{nav.name}</MenuItem>
         </NavLink>
       )
@@ -66,6 +66,7 @@ export function NavigationList({ navigation }: Props) {
           }
         }}
       >
+        <NavLink href={`/products/search?catid=${nav.id}`} key={nav.name}>
         <FlexBox alignItems="flex-end" gap={0.3} sx={NAV_LINK_STYLES}>
           {nav.name}
           <KeyboardArrowDown
@@ -75,6 +76,7 @@ export function NavigationList({ navigation }: Props) {
             }}
           />
         </FlexBox>
+        </NavLink>
 
         <ChildNavListWrapper className="child-nav-item">
           <Card

@@ -23,7 +23,7 @@ const getLayoutData = async (): Promise<LayoutModel> => {
     companyInfoData = companyInfoResponse.value.data.data
   }
 
-  // console.warn(companyInfoData)
+  
 
   return {
     header: {

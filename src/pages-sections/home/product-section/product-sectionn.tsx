@@ -28,7 +28,7 @@ export default function ProductSection() {
 
   if (!sections || sections.length === 0) return null
 
-  console.warn("Sections:", sections)
+  
 
 
   return (
