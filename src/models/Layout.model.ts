@@ -36,6 +36,14 @@ interface MobileNavigation {
   version2: MobileNavItem[]
 }
 
+export interface Address {
+  address1: string
+  address2?: string
+  pin: string
+  state: string
+  country: string
+}
+
 export interface Footer {
   logo: string
   description: string
@@ -44,7 +52,11 @@ export interface Footer {
   about: Link[]
   customers: Link[]
   socials: Socials
-  contact: { phone: string; email: string; address: string }
+  contact: {
+    phone: string
+    email: string
+    address: Address
+  }
 }
 
 export interface Topbar {

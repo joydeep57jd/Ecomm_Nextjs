@@ -1,3 +1,7 @@
+/* eslint-disable unused-imports/no-unused-imports */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+
 import { Fragment, PropsWithChildren } from "react"
 import Link from "next/link"
 import Image from "next/image"
@@ -93,10 +97,10 @@ export default function ShopLayout1({ children, data }: Props) {
         </SecondaryHeader.Left> */}
 
         <SecondaryHeader.Right>
-          {
-            header &&
-            <SearchInput1 categories={header.categories} />
-          }
+          
+           
+            <SearchInput1 categories={header!.categories} />
+          
         </SecondaryHeader.Right>
       </SecondaryHeader>
 
@@ -113,7 +117,7 @@ export default function ShopLayout1({ children, data }: Props) {
         <Footer1>
           <Footer1.Brand>
             <Link href="/">
-              <Image src={footer.logo} alt="logo" width={105} height={50} />
+              <Image src={footer.logo} alt="logo" width={200} height={65} />
             </Link>
 
             <Typography
@@ -123,7 +127,7 @@ export default function ShopLayout1({ children, data }: Props) {
               {footer.description}
             </Typography>
 
-            <FooterApps playStoreUrl={footer.playStoreUrl} appleStoreUrl={footer.appStoreUrl} />
+            {/* <FooterApps playStoreUrl={footer.playStoreUrl} appleStoreUrl={footer.appStoreUrl} /> */}
           </Footer1.Brand>
 
           <Footer1.Widget1>
@@ -138,7 +142,10 @@ export default function ShopLayout1({ children, data }: Props) {
             <FooterContact
               phone={footer.contact.phone}
               email={footer.contact.email}
-              address={footer.contact.address}
+              address={{
+                ...footer.contact.address,
+                address2: footer.contact.address.address2 ?? ""
+              }}
             />
 
             <FooterSocialLinks links={footer.socials} />
@@ -151,7 +158,7 @@ export default function ShopLayout1({ children, data }: Props) {
               variant="body2"
               sx={{ py: 3, textAlign: "center", span: { fontWeight: 500 } }}
             >
-              &copy; Copyright {new Date().getFullYear()} <span>UI Lib</span>, All rights reserved.
+              &copy; Copyright {new Date().getFullYear()} , Powered by <span> Wizard Communications Pvt Ltd..</span>
             </Typography>
           </Footer1.Copyright>
         </Footer1>

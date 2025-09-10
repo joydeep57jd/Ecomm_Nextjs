@@ -45,7 +45,7 @@ interface Props {
 }
 // ==============================================================
 
-export function SearchInput1({ categories }: Props) {
+export function SearchInput1({  }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [search, setSearch] = useState("")
@@ -69,7 +69,7 @@ export function SearchInput1({ categories }: Props) {
     }
   }
 
-  if (!categories || !categories.length) return null
+
 
   return (
     <TextField

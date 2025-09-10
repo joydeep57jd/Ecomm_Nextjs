@@ -15,7 +15,7 @@ export const mainCarouselData = [
   },
   {
     title: "Black Sneakers",
-    imgUrl: "/assets/images/market-1/shoes.png",
+    imgUrl: "/assets/images/market-1/shoes-big.png",
     description: "Precision crafted comfort with urban sophistication.",
     buttonText: "Shop Now",
     buttonLink: "#"
@@ -36,7 +36,7 @@ export const mainCarouselData = [
   },
   {
     title: "Basket of Fresh Vegetables",
-    imgUrl: "/assets/images/market-1/vegitable.png",
+    imgUrl: "/assets/images/market-1/vegitable-big.png",
     description: "Colorful produce for vibrant, healthy living.",
     buttonText: "Shop Now",
     buttonLink: "#"

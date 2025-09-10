@@ -23,6 +23,8 @@ const getLayoutData = async (): Promise<LayoutModel> => {
     companyInfoData = companyInfoResponse.value.data.data
   }
 
+  // console.warn(companyInfoData)
+
   return {
     header: {
       categories: [],
@@ -45,8 +47,14 @@ const getLayoutData = async (): Promise<LayoutModel> => {
       about: [],
       appStoreUrl: "",
       contact: {
-        address: companyInfoData!.address.line1,
-        email: companyInfoData!.contactEmail,
+        address: {
+          address1: companyInfoData!.address.address1,
+          address2: companyInfoData!.address.address2 || "",
+          pin: companyInfoData!.address.pin,
+          state: companyInfoData!.address.state,
+          country: companyInfoData!.address.country
+        },
+        email: companyInfoData!.email.custservice,
         phone: companyInfoData!.contactPhone
       },
       customers: [],

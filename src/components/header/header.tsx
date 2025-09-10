@@ -54,7 +54,7 @@ Header.Logo = function ({ url }: HeaderLogoProps) {
         width={200}
         height={80}
         className="h-12 w-auto"
-        sizes="(max-width: 768px) 80px, 105px"
+        sizes="(max-width: 768px) 100px, 125px"
         sx={{ objectFit: "contain" }}
       />
     </Link>

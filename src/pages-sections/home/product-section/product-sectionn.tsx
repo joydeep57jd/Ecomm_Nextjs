@@ -28,6 +28,8 @@ export default function ProductSection() {
 
   if (!sections || sections.length === 0) return null
 
+  console.warn("Sections:", sections)
+
 
   return (
     <Container>
@@ -45,6 +47,7 @@ export default function ProductSection() {
               <Box pb={0.6} key={product.itemId}>
                 <ProductCard17
                   product={{
+                    
                     id: String(product.itemId),
                     slug: `product-${product.itemId}`,
                     title: product.name,

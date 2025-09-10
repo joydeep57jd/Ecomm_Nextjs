@@ -1,3 +1,5 @@
+
+
 export interface ProductImage {
   id: number
   alt: string | null
@@ -14,6 +16,7 @@ export interface SectionItem {
   salePrice: number
   imagePath: string
   images?: ProductImage[]
+  offer?: string
   
 }
 
@@ -48,5 +51,6 @@ export  interface Product {
   discount: number
   categories: string[]
   rating?: number
+    offer?: string
 }
 

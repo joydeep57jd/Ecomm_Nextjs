@@ -116,7 +116,10 @@ export default function SalesLayout({ children, data }: Props) {
           <FooterContact
             phone={footer!.contact.phone}
             email={footer!.contact.email}
-            address={footer!.contact.address}
+            address={{
+              ...footer!.contact.address,
+              address2: footer!.contact.address.address2 ?? ""
+            }}
           />
 
           <FooterSocialLinks links={footer!.socials} />
