@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+import { Suspense, type ReactNode } from "react"
 import { Geist } from "next/font/google"
 
 export const geist = Geist({
@@ -31,15 +31,17 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body id="body" className={geist.className}>
-        <CartProvider>
-          <ThemeProvider>
-            <HeaderLayout>
-              {modal}
-              {children}
-            </HeaderLayout>
-            <ProgressBar />
-          </ThemeProvider>
-        </CartProvider>
+        <Suspense fallback={<div>Loading...</div>}>
+          <CartProvider>
+            <ThemeProvider>
+              <HeaderLayout>
+                {modal}
+                {children}
+              </HeaderLayout>
+              <ProgressBar />
+            </ThemeProvider>
+          </CartProvider>
+        </Suspense>
       </body>
     </html>
   )
