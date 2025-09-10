@@ -31,8 +31,11 @@ export function calculateDiscount(price: number, discount: number) {
  */
 
 export function currency(price: number, fraction: number = 2) {
-  return Intl.NumberFormat("en-US", {
-    currency: "USD",
+  const numberFormat = process.env.NEXT_PUBLIC_NUMBER_FORMAT || "en-US"
+  const currencyFormat = process.env.NEXT_PUBLIC_CURRENCY_FORMAT || "USD"
+
+  return Intl.NumberFormat(numberFormat, {
+    currency: currencyFormat,
     style: "currency",
     maximumFractionDigits: fraction
   }).format(price)

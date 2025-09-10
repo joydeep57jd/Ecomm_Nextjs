@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
+import { useRouter, useSearchParams } from "next/navigation"
 import Card from "@mui/material/Card"
 import MenuItem from "@mui/material/MenuItem"
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown"
@@ -12,6 +14,7 @@ import NavItemChild from "./nav-item-child"
 import { NAV_LINK_STYLES, ChildNavListWrapper } from "./styles"
 // DATA TYPES
 import { Category, SubCategory, SubSubCategory } from "@/models/Category.modal"
+import { useCallback } from "react"
 
 // ==============================================================
 type Props = { navigation: Category[] };
@@ -19,9 +22,19 @@ type Props = { navigation: Category[] };
 
 export function NavigationList({ navigation }: Props) {
 
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const navigateTo = useCallback((e: any, paramKeyName: string, paramValue: string) => {
+    e.preventDefault()
+    const params = new URLSearchParams(searchParams)
+    params.set(paramKeyName, paramValue)
+    router.push(`/products/search?${params.toString()}`)
+  }, [router, searchParams])
+
   const renderSubSubCategory = (children: SubSubCategory[]) => {
     return children.map((nav) => (
-      <NavLink href={`/products/search?sub-sub-catid=${nav.id}`} key={nav.name}>
+      <NavLink onClick={(e) => navigateTo(e, "subSubCategory", nav.id)} href={`/products/search?subSubCategory=${nav.id}`} key={nav.name}>
         <MenuItem>{nav.name}</MenuItem>
       </NavLink>
     ))
@@ -35,7 +48,7 @@ export function NavigationList({ navigation }: Props) {
             title: nav.name,
             child: nav.sub_sub_category.map((sub) => ({
               title: sub.name,
-              url: `/products/search?sub-catid=${sub.id}`,
+              url: `/products/search?subCategory=${sub.id}`,
             })),
           }} key={nav.name}>
             {renderSubSubCategory(nav.sub_sub_category)}
@@ -44,7 +57,7 @@ export function NavigationList({ navigation }: Props) {
       }
 
       return (
-        <NavLink href={`/products/search?sub-catid=${nav.id}`} key={nav.name}>
+        <NavLink onClick={(e) => navigateTo(e, "subCategory", nav.id)} href={`/products/search?subCategory=${nav.id}`} key={nav.name}>
           <MenuItem>{nav.name}</MenuItem>
         </NavLink>
       )
@@ -66,16 +79,16 @@ export function NavigationList({ navigation }: Props) {
           }
         }}
       >
-        <NavLink href={`/products/search?catid=${nav.id}`} key={nav.name}>
-        <FlexBox alignItems="flex-end" gap={0.3} sx={NAV_LINK_STYLES}>
-          {nav.name}
-          <KeyboardArrowDown
-            sx={{
-              color: "grey.500",
-              fontSize: "1.1rem"
-            }}
-          />
-        </FlexBox>
+        <NavLink onClick={(e) => navigateTo(e, "category", nav.id)} href={`/products/search?category=${nav.id}`} key={nav.name}>
+          <FlexBox alignItems="flex-end" gap={0.3} sx={NAV_LINK_STYLES}>
+            {nav.name}
+            <KeyboardArrowDown
+              sx={{
+                color: "grey.500",
+                fontSize: "1.1rem"
+              }}
+            />
+          </FlexBox>
         </NavLink>
 
         <ChildNavListWrapper className="child-nav-item">

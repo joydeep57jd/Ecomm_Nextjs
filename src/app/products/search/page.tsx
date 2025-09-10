@@ -2,7 +2,8 @@ import { Metadata } from "next"
 // PAGE VIEW COMPONENT
 import { ProductSearchPageView } from "pages-sections/product-details/page-view"
 // API FUNCTIONS
-import { getFilters, getProducts } from "utils/__api__/product-search"
+import { getFilters } from "utils/__api__/product-search"
+import { getAllProducts } from "utils/api/product"
 
 export const metadata: Metadata = {
   title: "Product Search - Bazaar Next.js E-commerce Template",
@@ -15,35 +16,43 @@ export const metadata: Metadata = {
 // ==============================================================
 interface Props {
   searchParams: Promise<{
-    q: string;
-    sale: string;
+    search: string;
     page: string;
     sort: string;
-    prices: string;
-    colors: string;
-    brands: string;
-    rating: string;
     category: string;
+    subCategory: string;
+    subSubCategory: string;
   }>;
 }
 // ==============================================================
 
 export default async function ProductSearch({ searchParams }: Props) {
-  const { q, page, sort, sale, prices, colors, brands, rating, category } = await searchParams
+  const { search, page, category, subCategory, } = await searchParams
 
-  const [filters, data] = await Promise.all([
+  const [filters, productsResponse] = await Promise.all([
     getFilters(),
-    getProducts({ q, page, sort, sale, prices, colors, brands, rating, category })
+    getAllProducts({
+      ...(search ? { searchCriteria: search } : {}),
+      ...(category ? { categoryId: parseInt(category) } : {}),
+      ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
+      pageNo: +(page ?? "1"),
+      pageSize: 20,
+    })
   ])
+
+  const size = productsResponse.pagination.pageSize
+  const lastIndex = productsResponse.pagination.pageNumber * productsResponse.pagination.pageSize
+  const firstIndex = (productsResponse.pagination.pageNumber - 1) * productsResponse.pagination.pageSize + 1
+  const pageCount = Math.ceil(productsResponse.pagination.totalRecords / size)
 
   return (
     <ProductSearchPageView
       filters={filters}
-      products={data.products}
-      pageCount={data.pageCount}
-      totalProducts={data.totalProducts}
-      lastIndex={data.lastIndex}
-      firstIndex={data.firstIndex}
+      products={productsResponse.dataList}
+      pageCount={pageCount}
+      totalProducts={productsResponse.pagination.totalRecords}
+      lastIndex={productsResponse.dataList.length < size ? firstIndex + productsResponse.dataList.length - 1 : lastIndex}
+      firstIndex={firstIndex}
     />
   )
 }

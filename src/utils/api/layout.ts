@@ -23,13 +23,11 @@ const getLayoutData = async (): Promise<LayoutModel> => {
     companyInfoData = companyInfoResponse.value.data.data
   }
 
-  
-
   return {
     header: {
       categories: [],
       categoryMenus: [],
-      logo: companyInfoData!.companyLogo,
+      logo: companyInfoData!?.companyLogo,
       navigation: categories
     },
 

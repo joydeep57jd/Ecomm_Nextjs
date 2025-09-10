@@ -45,17 +45,15 @@ interface Props {
 }
 // ==============================================================
 
-export function SearchInput1({  }: Props) {
+export function SearchInput1({ }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [search, setSearch] = useState("")
 
   const handleSearch = useCallback(() => {
-    if (search.trim()) {
-      const params = new URLSearchParams(searchParams)
-      params.set("q", search)
-      router.push(`/products/search?${params.toString()}`)
-    }
+    const params = new URLSearchParams(searchParams)
+    params.set("search", search)
+    router.push(`/products/search?${params.toString()}`)
   }, [search, router, searchParams])
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {

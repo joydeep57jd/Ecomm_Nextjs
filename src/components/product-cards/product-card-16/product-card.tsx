@@ -11,33 +11,37 @@ import { calculateDiscount, currency } from "lib"
 // STYLED COMPONENTS
 import { PriceText, StyledRoot } from "./styles"
 // CUSTOM DATA MODEL
-import Product from "models/Product.model"
+import { DataList } from "@/models/AllProduct.model"
 
 // ==============================================================
-type Props = { product: Product };
+type Props = { product: DataList };
 // ==============================================================
 
 export default function ProductCard16({ product }: Props) {
-  const { slug, title, thumbnail, price, discount, rating } = product
+
+  const imageAltTag = product.imageList?.[0]?.alt || "Product Image"
+  const thumbnail = product.imageList?.[0]?.fullImagepath || "/assets/images/products/iphone-x.png"
+  const discount = product.savePricePctg || 0
+  const price = +((product.mrp || 0) - discount).toFixed(2)
 
   return (
     <StyledRoot>
-      <Link href={`/products/${slug}`}>
+      <Link href={`/products/${product.itemId}`}>
         <div className="img-wrapper">
-          <LazyImage alt={title} width={380} height={379} src={thumbnail} />
+          <LazyImage alt={imageAltTag} width={380} height={379} src={thumbnail} />
           {discount ? <DiscountChip discount={discount} sx={{ left: 20, top: 20 }} /> : null}
         </div>
       </Link>
 
       <div className="content">
         <div>
-          <Link href={`/products/${slug}`}>
+          <Link href={`/products/${product.itemId}`}>
             <Typography variant="h6" sx={{ mb: 1 }}>
-              {title}
+              {product.itemName}
             </Typography>
           </Link>
 
-          <Rating readOnly value={rating} size="small" precision={0.5} />
+          <Rating readOnly value={0} size="small" precision={0.5} />
 
           <PriceText>
             {calculateDiscount(price, discount)}
@@ -46,7 +50,7 @@ export default function ProductCard16({ product }: Props) {
         </div>
 
         {/* ADD TO CART BUTTON */}
-        <AddToCart product={product} />
+        <AddToCart />
       </div>
     </StyledRoot>
   )

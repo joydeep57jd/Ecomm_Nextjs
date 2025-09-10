@@ -35,15 +35,15 @@ export const getFilters = cache(async () => {
 })
 
 interface Params {
-  q: string;
-  page: string;
-  sale: string;
-  sort: string;
-  prices: string;
-  colors: string;
-  brands: string;
-  rating: string;
-  category: string;
+  q?: string
+  page?: string
+  sale?: string
+  sort?: string
+  prices?: string
+  colors?: string
+  brands?: string
+  rating?: string
+  category?: string
 }
 
 export const getProducts = cache(

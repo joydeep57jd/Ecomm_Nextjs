@@ -2,27 +2,19 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 // MUI
-import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
 import MenuItem from "@mui/material/MenuItem"
 import TextField from "@mui/material/TextField"
 import Container from "@mui/material/Container"
-import IconButton from "@mui/material/IconButton"
 import Pagination from "@mui/material/Pagination"
 import Typography from "@mui/material/Typography"
 // MUI ICON COMPONENTS
-import Apps from "@mui/icons-material/Apps"
-import ViewList from "@mui/icons-material/ViewList"
-import FilterList from "@mui/icons-material/FilterList"
 // GLOBAL CUSTOM COMPONENTS
-import Sidenav from "components/side-nav"
 import { FlexBetween, FlexBox } from "components/flex-box"
-import ProductFilters from "components/products-view/filters"
 import ProductsGridView from "components/products-view/products-grid-view"
-import ProductsListView from "components/products-view/products-list-view"
 // TYPES
 import Filters from "models/Filters"
-import Product from "models/Product.model"
+import { DataList } from "@/models/AllProduct.model"
 
 const SORT_OPTIONS = [
   { label: "Relevance", value: "relevance" },
@@ -34,7 +26,7 @@ const SORT_OPTIONS = [
 // ==============================================================
 interface Props {
   filters: Filters;
-  products: Product[];
+  products: DataList[];
   pageCount: number;
   lastIndex: number;
   firstIndex: number;
@@ -43,7 +35,6 @@ interface Props {
 // ==============================================================
 
 export default function ProductSearchPageView({
-  filters,
   products,
   pageCount,
   lastIndex,
@@ -56,7 +47,6 @@ export default function ProductSearchPageView({
 
   const query = searchParams.get("q")
   const page = searchParams.get("page") || "1"
-  const view = searchParams.get("view") || "grid"
   const sort = searchParams.get("sort") || "relevance"
 
   const handleChangeSearchParams = (key: string, value: string) => {
@@ -108,7 +98,7 @@ export default function ProductSearchPageView({
               </TextField>
             </FlexBox>
 
-            <FlexBox alignItems="center" my="0.25rem">
+            {/* <FlexBox alignItems="center" my="0.25rem">
               <Typography variant="body1" sx={{ color: "grey.600", mr: 1 }}>
                 View:
               </Typography>
@@ -121,7 +111,7 @@ export default function ProductSearchPageView({
                 <ViewList fontSize="small" color={view === "list" ? "primary" : "inherit"} />
               </IconButton>
 
-              {/* SHOW IN THE SMALL DEVICE */}
+              
               <Box display={{ md: "none", xs: "block" }}>
                 <Sidenav
                   handler={(close) => (
@@ -135,37 +125,43 @@ export default function ProductSearchPageView({
                   </Box>
                 </Sidenav>
               </Box>
-            </FlexBox>
+            </FlexBox> */}
           </FlexBox>
         </FlexBetween>
 
         <Grid container spacing={4}>
           {/* PRODUCT FILTER SIDEBAR AREA */}
-          <Grid size={{ xl: 2, md: 3 }} sx={{ display: { md: "block", xs: "none" } }}>
+          {/* <Grid size={{ xl: 2, md: 3 }} sx={{ display: { md: "block", xs: "none" } }}>
             <ProductFilters filters={filters} />
-          </Grid>
+          </Grid> */}
 
           {/* PRODUCT VIEW AREA */}
-          <Grid size={{ xl: 10, md: 9, xs: 12 }}>
-            {view === "grid" ? (
+          <Grid size={{ xl: 12, md: 12, xs: 12 }}>
+            {/* {view === "grid" ? (
               <ProductsGridView products={products} />
             ) : (
               <ProductsListView products={products} />
-            )}
+            )} */}
 
-            <FlexBetween flexWrap="wrap" mt={6}>
-              <Typography variant="body1" sx={{ color: "grey.600" }}>
-                Showing {firstIndex}-{lastIndex} of {totalProducts} Products
-              </Typography>
+            <ProductsGridView products={products} />
 
-              <Pagination
-                color="primary"
-                variant="outlined"
-                page={+page}
-                count={pageCount}
-                onChange={(_, page) => handleChangeSearchParams("page", page.toString())}
-              />
-            </FlexBetween>
+            {
+              !!pageCount &&
+              <FlexBetween flexWrap="wrap" mt={6}>
+                <Typography variant="body1" sx={{ color: "grey.600" }}>
+                  Showing {firstIndex}-{lastIndex} of {totalProducts} Products
+                </Typography>
+
+                <Pagination
+                  color="primary"
+                  variant="outlined"
+                  page={+page}
+                  count={pageCount}
+                  onChange={(_, page) => handleChangeSearchParams("page", page.toString())}
+                />
+              </FlexBetween>
+            }
+
           </Grid>
         </Grid>
       </Container>
