@@ -5,7 +5,6 @@ import api from "@/utils/api/category"
 
 export default async function HeaderLayout({ children }: PropsWithChildren) {
   const data = await api.getLayoutData()
-  console.warn(data)
 
   return <ShopLayout1 data={data}>{children}</ShopLayout1>
 }

@@ -90,7 +90,7 @@ export const API_URL = {
   },
 
   MISC: {
-    GET_COMPANY_INFO: "/frontend/GetCompanyDetails?companyId=",
+    GET_COMPANY_INFO: "/frontend/GetCompanyDetails",
     GET_IP: "https://ipinfo.io?token=c49d0e3562b4b7",
     GET_CONFIG: "/frontend/config.json",
     GET_TEMPLATE: "/frontend/GetTemplate",

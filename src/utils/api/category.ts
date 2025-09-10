@@ -8,25 +8,20 @@ import { CompanyInfo } from "@/models/Companyinfo.model"
 
 const getLayoutData = async (): Promise<LayoutModel> => {
   let categories: Category[] = []
-  let companyInfoData:CompanyInfo 
+  let companyInfoData: CompanyInfo
 
-  
-
-  const [categoryResponse,companyInfoResponse] = await Promise.allSettled([
+  const [categoryResponse, companyInfoResponse] = await Promise.allSettled([
     axios.post<{ data: Category[] }>(`${API_URL.ITEMS.GET_CATEGORY}`, {}),
-    axios.post<{ data:CompanyInfo }>(`${API_URL.MISC.GET_COMPANY_INFO}`, {})
+    axios.post<{ data: CompanyInfo }>(`${API_URL.MISC.GET_COMPANY_INFO}`, {})
   ])
 
   if (categoryResponse.status === "fulfilled") {
     categories = categoryResponse.value.data.data
   }
 
-  if(companyInfoResponse.status === "fulfilled"){
+  if (companyInfoResponse.status === "fulfilled") {
     companyInfoData = companyInfoResponse.value.data.data
-    
   }
-
-  console.warn(companyInfoData)
 
   return {
     header: {
@@ -35,18 +30,25 @@ const getLayoutData = async (): Promise<LayoutModel> => {
       logo: companyInfoData!.companyLogo,
       navigation: categories
     },
-    
 
-topbar: {
+    topbar: {
       label: companyInfoData!.name,
       languageOptions: {},
-      socials: { facebook: companyInfoData!.facebook, instagram: companyInfoData!.instagram,  twitter:companyInfoData!.twitter, },
+      socials: {
+        facebook: companyInfoData!.facebook,
+        instagram: companyInfoData!.instagram,
+        twitter: companyInfoData!.twitter
+      },
       title: companyInfoData!.name
     },
     footer: {
       about: [],
       appStoreUrl: "",
-      contact: { address:companyInfoData!.address.line1, email:companyInfoData!.contactEmail, phone:companyInfoData!.contactPhone },
+      contact: {
+        address: companyInfoData!.address.line1,
+        email: companyInfoData!.contactEmail,
+        phone: companyInfoData!.contactPhone
+      },
       customers: [],
       description: "",
       logo: companyInfoData!.companyFooterLogo,
@@ -63,11 +65,8 @@ topbar: {
       logo: "/logo.png",
       version1: [],
       version2: []
-    },
-
-    
+    }
   }
-  
 }
 
 export default { getLayoutData }
