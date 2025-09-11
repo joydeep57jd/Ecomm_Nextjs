@@ -4,7 +4,10 @@ export interface PreviewFile extends File {
 
 export interface SlugParams {
   params: Promise<{ slug: string }>;
+  searchParams?: { [key: string]: string  | undefined };
 }
+
+
 
 export interface IdParams {
   params: Promise<{ id: string }>;

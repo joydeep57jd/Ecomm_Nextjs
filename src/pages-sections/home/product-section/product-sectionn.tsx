@@ -49,7 +49,7 @@ export default function ProductSection() {
                   product={{
                     
                     id: String(product.itemId),
-                    slug: `product-${product.itemId}`,
+                    slug: product.itemId,
                     title: product.name,
                     price: product.salePrice || product.price,
                     thumbnail:

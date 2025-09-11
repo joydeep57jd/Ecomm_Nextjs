@@ -1,10 +1,8 @@
-import Link from "next/link"
 // MUI
 import Grid from "@mui/material/Grid"
 import Rating from "@mui/material/Rating"
 import Typography from "@mui/material/Typography"
 // LOCAL CUSTOM COMPONENTS
-import AddToCart from "./add-to-cart"
 import ProductGallery from "./product-gallery"
 import ProductVariantSelector from "./product-variant-selector"
 // CUSTOM UTILS LIBRARY FUNCTION
@@ -12,10 +10,15 @@ import { currency } from "lib"
 // STYLED COMPONENTS
 import { StyledRoot } from "./styles"
 // CUSTOM DATA MODEL
-import Product from "models/Product.model"
+
+import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
 
 // ================================================================
-type Props = { product: Product };
+type Props = { 
+ product: SingleProductResponse;
+  variantMap:Map<string,VariantOption[]>
+
+ };
 // ================================================================
 
 export default function ProductIntro({ product }: Props) {
@@ -24,22 +27,22 @@ export default function ProductIntro({ product }: Props) {
       <Grid container spacing={3} justifyContent="space-around">
         {/* IMAGE GALLERY AREA */}
         <Grid size={{ lg: 6, md: 7, xs: 12 }}>
-          <ProductGallery images={product.images!} />
+          <ProductGallery images={product.imageList} />
         </Grid>
 
         <Grid size={{ lg: 5, md: 5, xs: 12 }}>
-          <Typography variant="h1">{product.title}</Typography>
+          <Typography variant="h1">{product.variantDetails.itemName}</Typography>
 
           <Typography variant="body1">
             Category: <strong>Bag</strong>
           </Typography>
 
           <Typography variant="body1">
-            Product Code: <strong>ERE238</strong>
+            Product Code: <strong>{product.variantDetails.itemCode}</strong>
           </Typography>
 
           <Typography variant="body1" fontSize={30} fontWeight={700} sx={{ my: 1 }}>
-            $484.00{" "}
+            {product.priceAndStock.salePrice}{" "}
             <Typography
               component="span"
               sx={{
@@ -49,22 +52,22 @@ export default function ProductIntro({ product }: Props) {
                 textDecoration: "line-through"
               }}
             >
-              $550.00
+              {product.priceAndStock.mrp}
             </Typography>
           </Typography>
 
           {/* PRODUCT BRAND */}
-          {product.brand && (
+          {/* {product. && (
             <p className="brand">
               Brand: <strong>{product.brand}</strong>
             </p>
-          )}
+          )} */}
 
           {/* PRODUCT RATING */}
           <div className="rating">
             <span>Rated:</span>
-            <Rating readOnly color="warn" size="small" value={product.rating} />
-            <Typography variant="h6">({product.reviews?.length || 0})</Typography>
+            <Rating readOnly color="warn" size="small" value={product.variantDetails.itemRating} />
+            {/* <Typography variant="h6">({product.reviews?.length || 0})</Typography> */}
           </div>
 
           {/* PRODUCT VARIANTS */}
@@ -73,24 +76,21 @@ export default function ProductIntro({ product }: Props) {
           {/* PRICE & STOCK */}
           <div className="price">
             <Typography variant="h2" sx={{ color: "primary.main", mb: 0.5, lineHeight: 1 }}>
-              {currency(product.price)}
+              {currency(product.priceAndStock.salePrice)}
             </Typography>
 
-            <p>Stock Available</p>
+            <p>{
+              product.priceAndStock.stockQty >0? "Stock Available":"Out of Stock"
+              }
+            </p>
+          
           </div>
 
           {/* ADD TO CART BUTTON */}
-          <AddToCart product={product} />
+          {/* <AddToCart product={product} /> */}
 
           {/* SHOP NAME */}
-          {product.shop && (
-            <p className="shop">
-              Sold By:
-              <Link href={`/shops/${product.shop.slug}`}>
-                <strong>{product.shop.name}</strong>
-              </Link>
-            </p>
-          )}
+         
         </Grid>
       </Grid>
     </StyledRoot>

@@ -4,24 +4,25 @@ import Image from "next/image"
 import { Fragment, useState } from "react"
 // STYLED COMPONENTS
 import { PreviewImage, ProductImageWrapper } from "./styles"
+import { ImageList } from "@/models/AllProduct.model"
 
-export default function ProductGallery({ images }: { images: string[] }) {
+export default function ProductGallery({ images }: { images: ImageList[] }) {
   const [currentImage, setCurrentImage] = useState(0)
 
   return (
     <Fragment>
       <ProductImageWrapper>
-        <Image fill alt="product" src={images[currentImage]} sizes="(400px 400px)" />
+        <Image fill alt="product" src={images[currentImage].fullImagepath} sizes="(400px 400px)" />
       </ProductImageWrapper>
 
       <div className="preview-images">
-        {images.map((url, ind) => (
+        {images.map((image, ind) => (
           <PreviewImage
             key={ind}
             onClick={() => setCurrentImage(ind)}
             selected={currentImage === ind}
           >
-            <Image fill alt="product" src={url} sizes="(48px 48px)" />
+            <Image fill alt="product" src={image.fullImagepath} sizes="(48px 48px)" />
           </PreviewImage>
         ))}
       </div>

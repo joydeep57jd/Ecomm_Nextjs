@@ -7,6 +7,8 @@ import api from "utils/__api__/products"
 import { getFrequentlyBought, getRelatedProducts } from "utils/__api__/related-products"
 // CUSTOM DATA MODEL
 import { SlugParams } from "models/Common"
+import { getProduct, getVariantOption } from "@/utils/api/product"
+import { VariantOption } from "@/models/SingleProduct.model"
 
 export async function generateMetadata({ params }: SlugParams): Promise<Metadata> {
   const { slug } = await params
@@ -21,18 +23,32 @@ export async function generateMetadata({ params }: SlugParams): Promise<Metadata
   }
 }
 
-export default async function ProductDetails({ params }: SlugParams) {
+export default async function ProductDetails({ params,searchParams }: SlugParams) {
   const { slug } = await params
-  const [product, relatedProducts, frequentlyBought] = await Promise.all([
-    api.getProduct(slug),
+  
+  
+  const [variantOptions, relatedProducts, frequentlyBought] = await Promise.all([
+    getVariantOption(slug),
     getRelatedProducts(),
     getFrequentlyBought()
   ])
+  const variantMap = new Map<string,VariantOption[]>()
+  let defaultVariant = ""
+  variantOptions.forEach(variant => {
+    if (variantMap.has(variant.optionName)) {
+      variantMap.get(variant.optionName)!.push(variant)
+    } else {
+      defaultVariant += variant.variantOptionValueId + ","
+      variantMap.set(variant.optionName, [variant])
+    }
+  })
 
-  if (!product) notFound()
+  const selectedvariant = searchParams?.variant || defaultVariant.slice(0, -1)
+  const product = await getProduct(selectedvariant)
 
   return (
     <ProductDetailsPageView
+      variantMap={variantMap}
       product={product}
       relatedProducts={relatedProducts}
       frequentlyBought={frequentlyBought}
