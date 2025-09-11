@@ -5,10 +5,11 @@ import UserInfo from "../user-info"
 import UserAnalytics from "../user-analytics"
 import DashboardHeader from "../../dashboard-header"
 // CUSTOM DATA MODEL
-import User from "models/User.model"
+
+import { UserData } from "@/models/Auth.model"
 
 // ============================================================
-type Props = { user: User };
+type Props = { user: UserData };
 // ============================================================
 
 export function ProfilePageView({ user }: Props) {
