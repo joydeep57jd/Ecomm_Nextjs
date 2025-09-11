@@ -39,7 +39,7 @@ export default function ProductTabs({ reviews, description }: Props) {
         onChange={handleChangeTab}
       >
         <Tab className="inner-tab" label="Description" />
-        <Tab className="inner-tab" label="Review (3)" />
+        {/* <Tab className="inner-tab" label="Review (3)" /> */}
       </StyledTabs>
 
       <div className="mb-3">

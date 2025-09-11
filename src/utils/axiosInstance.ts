@@ -20,9 +20,9 @@ axiosInstance.interceptors.request.use(
     if (config.method?.toLowerCase() === "post") {
       const companyId = Number(process.env.NEXT_PUBLIC_COMPANY_ID)
       if (config.data && typeof config.data === "object") {
-        config.data = { ...config.data, companyId, CompanyId: companyId }
+        config.data = { ...config.data, companyId }
       } else {
-        config.data = { companyId, CompanyId: companyId }
+        config.data = { companyId }
       }
       if (config.params && typeof config.params === "object") {
         config.params = { ...config.params, companyId }

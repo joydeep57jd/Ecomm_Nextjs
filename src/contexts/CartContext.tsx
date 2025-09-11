@@ -58,9 +58,7 @@ interface ContextProps {
 // ==============================================================
 
 export const CartContext = createContext<ContextProps>({} as ContextProps)
-
 const reducer = (state: InitialState, action: CartActionType) => {
-  console.warn("Action:", action)
   switch (action.type) {
     case "CHANGE_CART_AMOUNT":
       const cartList = state.cart

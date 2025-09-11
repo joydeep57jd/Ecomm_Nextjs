@@ -25,7 +25,7 @@ export default function ProductCard10({ product }: Props) {
           <LazyImage width={300} height={300} alt={title} src={thumbnail} className="product-img" />
         </Link>
 
-        <HoverActions slug={slug} />
+        <HoverActions slug={slug.toString()} />
       </CardMedia>
 
       <CardContent>

@@ -12,16 +12,17 @@ import { StyledRoot } from "./styles"
 // CUSTOM DATA MODEL
 
 import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
+import Product from "@/models/Product.model"
+import AddToCart from "./add-to-cart"
 
 // ================================================================
-type Props = { 
- product: SingleProductResponse;
-  variantMap:Map<string,VariantOption[]>
-
- };
+type Props = {
+  product: SingleProductResponse;
+  variantMap: Map<string, VariantOption[]>
+};
 // ================================================================
 
-export default function ProductIntro({ product }: Props) {
+export default function ProductIntro({ product, variantMap }: Props) {
   return (
     <StyledRoot>
       <Grid container spacing={3} justifyContent="space-around">
@@ -34,7 +35,7 @@ export default function ProductIntro({ product }: Props) {
           <Typography variant="h1">{product.variantDetails.itemName}</Typography>
 
           <Typography variant="body1">
-            Category: <strong>Bag</strong>
+            Category: <strong>{product.variantDetails.variantName}</strong>
           </Typography>
 
           <Typography variant="body1">
@@ -71,7 +72,7 @@ export default function ProductIntro({ product }: Props) {
           </div>
 
           {/* PRODUCT VARIANTS */}
-          <ProductVariantSelector />
+          <ProductVariantSelector variantMap={variantMap} />
 
           {/* PRICE & STOCK */}
           <div className="price">
@@ -80,17 +81,17 @@ export default function ProductIntro({ product }: Props) {
             </Typography>
 
             <p>{
-              product.priceAndStock.stockQty >0? "Stock Available":"Out of Stock"
-              }
+              product.priceAndStock.stockQty > 0 ? "Stock Available" : "Out of Stock"
+            }
             </p>
-          
+
           </div>
 
           {/* ADD TO CART BUTTON */}
-          {/* <AddToCart product={product} /> */}
+          <AddToCart product={product as unknown as Product} />
 
           {/* SHOP NAME */}
-         
+
         </Grid>
       </Grid>
     </StyledRoot>

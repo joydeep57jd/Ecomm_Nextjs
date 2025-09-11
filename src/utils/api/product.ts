@@ -10,15 +10,17 @@ export const getAllProducts = async (body: ProductRequestPayload) => {
 
 export const getVariantOption = async (slug: string) => {
   const { data } = await axios.post<{ data: VariantOption[] }>(API_URL.ITEMS.GET_FILTER_OPTIONS, {
-      itemId: slug 
+    itemId: +slug
   })
   return data.data
 }
 
-
-export const getProduct = async(optionValues:string)=>{
-  const {data} = await axios.post<{data:SingleProductResponse}>(API_URL.ITEMS.GET_VARIANT_BY_OPTIONS,{
-    optionValues
-  })
+export const getProduct = async (optionValues: string) => {
+  const { data } = await axios.post<{ data: SingleProductResponse }>(
+    API_URL.ITEMS.GET_VARIANT_BY_OPTIONS,
+    {
+      optionValues
+    }
+  )
   return data.data
 }

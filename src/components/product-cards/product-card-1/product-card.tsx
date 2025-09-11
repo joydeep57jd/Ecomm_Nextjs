@@ -59,7 +59,7 @@ export default function ProductCard1({ product, showProductSize, showRating = tr
       <ContentWrapper>
         <div className="content">
           {/* PRODUCT NAME / TITLE */}
-          <ProductTitle title={title} slug={slug} />
+          <ProductTitle title={title} slug={slug.toString()} />
 
           {/* PRODUCT RATINGS IF AVAILABLE */}
           {showRating && <Rating size="small" value={rating} color="warn" readOnly />}

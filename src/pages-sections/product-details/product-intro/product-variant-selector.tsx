@@ -3,42 +3,50 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import Chip from "@mui/material/Chip"
 import Typography from "@mui/material/Typography"
+import { VariantOption } from "@/models/SingleProduct.model"
 // DUMMY DATA
-import productVariants from "data/product-variants"
 
-export default function ProductVariantSelector() {
+interface Props {
+  variantMap: Map<string, VariantOption[]>
+}
+
+export default function ProductVariantSelector({ variantMap }: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  return productVariants.map((variant) => (
-    <div className="mb-1" key={variant.id}>
+  return Array.from(variantMap.entries()).map(([variantLabel, variants], index) => (
+    <div className="mb-1" key={variantLabel}>
       <Typography variant="h6" sx={{ mb: 1 }}>
-        {variant.title}
+        {variantLabel}
       </Typography>
 
       <div className="variant-group">
-        {variant.values.map(({ id, value }) => {
-          const variantNameLowerCase = variant.title.toLowerCase()
-
-          // Base variant params on current params so we can preserve any other param state in the url.
+        {variants.map((variant) => {
           const optionSearchParams = new URLSearchParams(searchParams)
-
-          // Update the variant params using the current variant to reflect how the url *would* change,
-          // if the variant was clicked.
-          optionSearchParams.set(variantNameLowerCase, value)
+          optionSearchParams.set(variant.optionName, variant.optionValue)
+          const currentVaraintId = searchParams.get("variant")
+          if (currentVaraintId) {
+            const newVarintId = currentVaraintId?.split(",").map((variantId, variantIndex) => variantIndex === index ? variant.variantOptionValueId : variantId).join() ?? ""
+            optionSearchParams.set("variant", newVarintId)
+          } else {
+            const newVarintId = Array.from(variantMap.entries()).map(([, variants], variantIndex) => variantIndex === index ? variant.variantOptionValueId : variants[0].variantOptionValueId).join()
+            optionSearchParams.set("variant", newVarintId)
+          }
 
           const optionUrl = () => {
             router.push(`${pathname}?${optionSearchParams}`, { scroll: false })
           }
 
           // The variant is active if it's in the url params.
-          const isActive = searchParams.get(variantNameLowerCase) === value
+          const defaultVariant = variants[0].optionValue
+          const selectedVariant = searchParams.get(variant.optionName)
+          const isActive = (selectedVariant || defaultVariant) === variant.optionValue
 
           return (
             <Chip
-              key={id}
-              label={value}
+              key={variant.variantOptionValueId}
+              label={(variant.optionValue)}
               size="small"
               color="primary"
               onClick={optionUrl}
