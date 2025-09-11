@@ -30,7 +30,7 @@ export default function FrequentlyBought({ products }: Props) {
             <FrequentlyProductCard
               id={item.id}
               key={item.id}
-              slug={item.slug}
+              slug={item.slug.toString()}
               price={item.price}
               title={item.title}
               imgUrl={item.thumbnail}

@@ -3,7 +3,7 @@ import Review from "./Review.model"
 
 export default interface Product {
   unit?: string
-  slug: number 
+  slug: string | number
   price: number
   title: string
   rating?: number

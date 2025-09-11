@@ -30,7 +30,7 @@ export default function HoverActions({ product }: Props) {
     setTimeout(() => {
       dispatch({
         type: "CHANGE_CART_AMOUNT",
-        payload: { id, slug, price, title, thumbnail, qty: 1 }
+        payload: { id, slug:slug.toString(), price, title, thumbnail, qty: 1 }
       })
 
       setCartLoading(false)

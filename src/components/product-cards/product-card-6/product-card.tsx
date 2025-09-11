@@ -49,7 +49,7 @@ export default function ProductCard6({ hideRating, product }: Props) {
         <ProductPrice discount={discount} price={price} />
 
         {/* PRODUCT NAME / TITLE */}
-        <ProductTitle slug={slug} title={title} />
+        <ProductTitle slug={slug.toString()} title={title} />
 
         {/* PRODUCT RATINGS IF AVAILABLE */}
         <ProductRating rating={rating} showRating={!hideRating} />

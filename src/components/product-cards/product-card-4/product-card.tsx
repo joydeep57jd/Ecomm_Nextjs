@@ -38,7 +38,7 @@ export default function ProductCard4({ product }: Props) {
       <ContentWrapper>
         <div className="content">
           {/* PRODUCT NAME / TITLE */}
-          <ProductTitle title={title} slug={slug} />
+          <ProductTitle title={title} slug={slug.toString()} />
 
           {/* PRODUCT RATING / REVIEW  */}
           <ProductRating my={1} rating={rating} />

@@ -38,7 +38,7 @@ export default function ProductCard3({ product }: Props) {
 
       <ContentWrapper>
         {/* PRODUCT NAME / TITLE */}
-        <ProductTitle title={title} slug={slug} />
+        <ProductTitle title={title} slug={slug.toString()} />
 
         {/* PRODUCT RATING / REVIEW  */}
         <ProductRating rating={rating} my={0.5} />

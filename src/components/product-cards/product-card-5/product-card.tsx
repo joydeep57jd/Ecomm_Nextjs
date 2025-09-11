@@ -42,7 +42,7 @@ export default function ProductCard5({ product }: Props) {
       </ImageWrapper>
 
       <ContentWrapper>
-        <ProductTitle slug={slug} title={title} />
+        <ProductTitle slug={slug.toString()} title={title} />
 
         <ProductRating rating={rating} />
 

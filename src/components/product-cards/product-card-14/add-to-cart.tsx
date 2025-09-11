@@ -23,7 +23,7 @@ export default function AddToCart({ product }: Props) {
     const timer = setTimeout(() => {
       dispatch({
         type: "CHANGE_CART_AMOUNT",
-        payload: { id, slug, price, title, thumbnail, qty: 1 }
+        payload: { id, slug:slug.toString(), price, title, thumbnail, qty: 1 }
       })
 
       setIsLoading(false)
