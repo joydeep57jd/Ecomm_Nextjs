@@ -1,11 +1,22 @@
 import axios from "../axiosInstance"
 import { API_URL } from "../constants"
-import{ LoginCredentials, OTPCredentials, SignupData, ForgotPasswordData } from "../../models/Auth.model"
+import {
+  LoginResponse,
+  OTPCredentials,
+  SignupData,
+  ForgotPasswordData,
+  CustomerPayload,
+  CustomerResponse,
+  LoginRequest
+} from "../../models/Auth.model"
 
+export const varifyCustomer = async (payload: CustomerPayload): Promise<CustomerResponse> => {
+  const response = await axios.post<CustomerResponse>(API_URL.MISC.VARIFY_CUSTOMER, payload)
+  return response.data
+}
 
-
-export const login = async (credentials: LoginCredentials) => {
-  const response = await axios.post(API_URL.AUTH.LOGIN, credentials)
+export const login = async (credentials: LoginRequest): Promise<LoginResponse> => {
+  const response = await axios.post<LoginResponse>(API_URL.AUTH.LOGIN, credentials)
   return response.data
 }
 

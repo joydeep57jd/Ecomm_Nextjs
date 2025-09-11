@@ -27,7 +27,7 @@ export function NavigationList({ navigation }: Props) {
 
   const navigateTo = useCallback((e: any, paramKeyName: string, paramValue: string) => {
     e.preventDefault()
-    const params = new URLSearchParams(searchParams)
+    const params = new URLSearchParams()
     params.set(paramKeyName, paramValue)
     router.push(`/products/search?${params.toString()}`)
   }, [router, searchParams])

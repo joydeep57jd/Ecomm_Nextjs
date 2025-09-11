@@ -96,7 +96,7 @@ export const API_URL = {
     GET_TEMPLATE: "/frontend/GetTemplate",
     VALIDATE_DISCOUNT: "/frontend/ValidateDiscount",
     GET_DELIVERY_CHARGE: "/frontend/GetDeliveryCharge",
-    SEND_OTP: "/frontend/VerifyAlreadyCustomer",
+    VARIFY_CUSTOMER: "/frontend/VerifyAlreadyCustomer",
     VALIDATE_OTP: "/frontend/VerifyCustomerOTP",
     GET_FAQ: "/frontend/GetFAQ"
   }
