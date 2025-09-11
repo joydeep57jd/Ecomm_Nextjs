@@ -27,7 +27,7 @@ interface Props {
 // ==============================================================
 
 export default async function ProductSearch({ searchParams }: Props) {
-  const { search, page, category, subCategory, } = await searchParams
+  const { search, page, category, subCategory, subSubCategory } = await searchParams
 
   const [filters, productsResponse] = await Promise.all([
     getFilters(),
@@ -35,6 +35,7 @@ export default async function ProductSearch({ searchParams }: Props) {
       ...(search ? { searchCriteria: search } : {}),
       ...(category ? { categoryId: parseInt(category) } : {}),
       ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
+      ...(subSubCategory && { subSubCategoryId: parseInt(subSubCategory) }),
       pageNo: +(page ?? "1"),
       pageSize: 20,
     })

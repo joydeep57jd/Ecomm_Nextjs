@@ -3,7 +3,7 @@
 import Button from "@mui/material/Button"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import {   useState } from "react"
+import { useState } from "react"
 
 // GLOBAL CUSTOM COMPONENTS
 import { TextField, FormProvider } from "components/form-hook"
@@ -12,73 +12,71 @@ import Label from "../components/label"
 import EyeToggleButton from "../components/eye-toggle-button"
 // LOCAL CUSTOM HOOK
 import usePasswordVisible from "../use-password-visible"
-import { validationSchema } from "@/schema/auth/login.schema"
+import { loginSchema, LoginSchemaType } from "@/schema/auth/login.schema"
 import { login, varifyCustomer } from "@/utils/api/auth"
-import { CustomerPayload, LoginRequest, LoginResponse } from "@/models/Auth.model"
-
+import { CustomerPayload, LoginRequest } from "@/models/Auth.model"
+import { useRouter } from "next/navigation"
+import { setItem } from "@/utils/services/local-storage.service"
+import { useUser } from "@/contexts/UserContenxt"
 
 // LOGIN FORM FIELD VALIDATION SCHEMA
 
-
 export default function LoginPageView() {
-  
- 
-  
   const { visiblePassword, togglePasswordVisible } = usePasswordVisible()
-  const [alreadyCustomer, setAlreadyCustomer] = useState<boolean | null>(null)
+  const { setUser } = useUser()
+  const [alreadyCustomer, setAlreadyCustomer] = useState<boolean>(false)
+  const [isApiCallInprogress, setisApiCallInprogress] = useState(false)
 
-  const initialValues = { phoneNo: "", password: "" }
+  const router = useRouter()
 
-  const methods = useForm({
+  const initialValues: LoginSchemaType = { phoneNo: "", password: "" }
+
+  const methods = useForm<LoginSchemaType>({
     defaultValues: initialValues,
-    resolver: yupResolver(validationSchema)
+    resolver: yupResolver(loginSchema(alreadyCustomer))
   })
 
   const {
     handleSubmit,
-    formState: { isSubmitting }
   } = methods
 
-   const handleVerify = async (values: { phoneNo: string }) => {
+  const handleVerify = async (values: { phoneNo: string }) => {
     try {
+      setisApiCallInprogress(true)
       const payload: CustomerPayload = {
-        PhoneCode: "+91", 
+        PhoneCode: "+91",
         PhoneNo: values.phoneNo,
       }
-
       const res = await varifyCustomer(payload)
       setAlreadyCustomer(res.alreadyCustomer)
     } catch (err) {
       console.error("Verification failed", err)
+    } finally {
+      setisApiCallInprogress(false)
     }
   }
 
-   const handleLogin = async (values: { phoneNo: string; password: string }) => {
+  const handleLogin = async (values: LoginSchemaType) => {
     try {
+      setisApiCallInprogress(true)
       const payload: LoginRequest = {
-        UserName: values.phoneNo, 
-        Password: values.password,
+        UserName: values.phoneNo,
+        Password: values.password!,
       }
-
-      const res: LoginResponse = await login(payload)
-      console.warn("Login success:", res)
+      const data = await login(payload)
+      setItem("userDetails", data)
+      setUser(data)
+      router.back()
     } catch (err) {
       console.error("Login failed", err)
+    } finally {
+      setisApiCallInprogress(false)
     }
   }
 
 
-    const handleSubmitForm = handleSubmit((values) => {
-    if (alreadyCustomer === null) {
-      handleVerify(values)
-    } else if (alreadyCustomer) {
-      handleLogin(values)
-
-    } else {
-      alert("New customer, redirect to signup flow")
-      
-
-    }
+  const handleSubmitForm = handleSubmit((values: LoginSchemaType) => {
+    !alreadyCustomer ? handleVerify(values) : handleLogin(values)
   })
 
   return (
@@ -88,29 +86,32 @@ export default function LoginPageView() {
         <TextField
           fullWidth
           name="phoneNo"
-          
           type="number"
           size="medium"
           placeholder="1234567890"
         />
       </div>
 
-      <div className="mb-2">
-        <Label>Password</Label>
-        <TextField
-          fullWidth
-          size="medium"
-          name="password"
-          autoComplete="on"
-          placeholder="*********"
-          type={visiblePassword ? "text" : "password"}
-          slotProps={{
-            input: {
-              endAdornment: <EyeToggleButton show={visiblePassword} click={togglePasswordVisible} />
-            }
-          }}
-        />
-      </div>
+      {
+        alreadyCustomer &&
+        <div className="mb-2">
+          <Label>Password</Label>
+          <TextField
+            fullWidth
+            size="medium"
+            name="password"
+            autoComplete="on"
+            placeholder="*********"
+            type={visiblePassword ? "text" : "password"}
+            slotProps={{
+              input: {
+                endAdornment: <EyeToggleButton show={visiblePassword} click={togglePasswordVisible} />
+              }
+            }}
+          />
+        </div>
+      }
+
 
       <Button
         fullWidth
@@ -118,7 +119,7 @@ export default function LoginPageView() {
         type="submit"
         color="primary"
         variant="contained"
-        loading={isSubmitting}
+        loading={isApiCallInprogress}
       >
         Login
       </Button>

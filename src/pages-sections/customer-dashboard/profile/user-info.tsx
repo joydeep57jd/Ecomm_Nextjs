@@ -4,12 +4,13 @@ import Card from "@mui/material/Card"
 import Typography from "@mui/material/Typography"
 // GLOBAL CUSTOM COMPONENTS
 import FlexBox from "components/flex-box/flex-box"
+import User from "@/models/User.model"
 // CUSTOM DATA MODEL
 
-import {  UserData } from "@/models/Auth.model"
+// import {  UserData } from "@/models/Auth.model"
 
 // ==============================================================
-type Props = { user: UserData};
+type Props = { user: User }
 // ==============================================================
 
 export default function UserInfo({ user }: Props) {
@@ -29,9 +30,9 @@ export default function UserInfo({ user }: Props) {
           justifyContent: { md: "space-between", xs: "flex-start" }
         }}
       >
-        <TableRowItem title="First Name" value={user.firstName} />
-        <TableRowItem title="Last Name" value={user.lastName} />
-        <TableRowItem title="Email" value={user.userEmail} />
+        <TableRowItem title="First Name" value={user.name.firstName} />
+        <TableRowItem title="Last Name" value={user.name.lastName} />
+        <TableRowItem title="Email" value={user.email} />
         <TableRowItem title="Phone" value={user.phone} />
         {/* <TableRowItem
           title="Birth date"

@@ -1,23 +1,26 @@
 import axios from "../axiosInstance"
 import { API_URL } from "../constants"
 import {
-  LoginResponse,
   OTPCredentials,
   SignupData,
   ForgotPasswordData,
   CustomerPayload,
   CustomerResponse,
-  LoginRequest
+  LoginRequest,
+  UserData
 } from "../../models/Auth.model"
 
 export const varifyCustomer = async (payload: CustomerPayload): Promise<CustomerResponse> => {
-  const response = await axios.post<CustomerResponse>(API_URL.MISC.VARIFY_CUSTOMER, payload)
-  return response.data
+  const response = await axios.post<{ data: CustomerResponse }>(
+    API_URL.MISC.VARIFY_CUSTOMER,
+    payload
+  )
+  return response.data.data
 }
 
-export const login = async (credentials: LoginRequest): Promise<LoginResponse> => {
-  const response = await axios.post<LoginResponse>(API_URL.AUTH.LOGIN, credentials)
-  return response.data
+export const login = async (credentials: LoginRequest): Promise<UserData> => {
+  const response = await axios.post<{ data: UserData }>(API_URL.AUTH.LOGIN, credentials)
+  return response.data.data
 }
 
 export const loginWithOTP = async (credentials: OTPCredentials) => {

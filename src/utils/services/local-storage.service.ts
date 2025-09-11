@@ -13,9 +13,9 @@ export const setItem = (key: string, value: any) => {
 export const getItem = (key: string): any | null => {
   if (typeof window === "undefined") return null
 
-   const value =  localStorage.getItem(`${keyPrefix}${key}`)
-    if (typeof value==="undefined") return null
-    return JSON.parse(decrypt(value!))
+  const value = localStorage.getItem(`${keyPrefix}${key}`)
+  if (typeof value === "undefined") return null
+  return JSON.parse(decrypt(value!))
 }
 
 const encrypt = (data: string): string => {
@@ -28,7 +28,6 @@ const decrypt = (ciphertext: string): string => {
   const originalText = bytes.toString(CryptoJS.enc.Utf8)
   return originalText
 }
-
 
 export const removeItem = (key: string) => {
   if (typeof window === "undefined") return

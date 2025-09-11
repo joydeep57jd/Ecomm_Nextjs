@@ -19,6 +19,7 @@ import ProgressBar from "components/progress"
 // IMPORT i18n SUPPORT FILE
 import "i18n"
 import HeaderLayout from "@/components/layouts/header-layout"
+import { UserProvider } from "@/contexts/UserContenxt"
 
 // ==============================================================
 interface RootLayoutProps {
@@ -32,15 +33,17 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <body id="body" className={geist.className}>
         <Suspense fallback={<div>Loading...</div>}>
-          <CartProvider>
-            <ThemeProvider>
-              <HeaderLayout>
-                {modal}
-                {children}
-              </HeaderLayout>
-              <ProgressBar />
-            </ThemeProvider>
-          </CartProvider>
+          <UserProvider>
+            <CartProvider>
+              <ThemeProvider>
+                <HeaderLayout>
+                  {modal}
+                  {children}
+                </HeaderLayout>
+                <ProgressBar />
+              </ThemeProvider>
+            </CartProvider>
+          </UserProvider>
         </Suspense>
       </body>
     </html>

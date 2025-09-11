@@ -1,10 +1,15 @@
+'use client'
+
 import Link from "next/link"
 import SvgIcon from "@mui/material/SvgIcon"
 import IconButton from "@mui/material/IconButton"
+import { useUser } from "@/contexts/UserContenxt"
 
 export function HeaderLogin() {
+  const { user } = useUser()
+
   return (
-    <IconButton LinkComponent={Link} href="/login">
+    <IconButton LinkComponent={Link} href={user ? "/profile" : "/login"}>
       <SvgIcon fontSize="small">
         <svg viewBox="0 0 24 24">
           <g fill="none" stroke="currentColor" strokeWidth="1.5">

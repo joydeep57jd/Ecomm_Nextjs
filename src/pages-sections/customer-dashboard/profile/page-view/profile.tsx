@@ -6,10 +6,10 @@ import UserAnalytics from "../user-analytics"
 import DashboardHeader from "../../dashboard-header"
 // CUSTOM DATA MODEL
 
-import { UserData } from "@/models/Auth.model"
+import User from "@/models/User.model"
 
 // ============================================================
-type Props = { user: UserData };
+type Props = { user: User };
 // ============================================================
 
 export function ProfilePageView({ user }: Props) {
