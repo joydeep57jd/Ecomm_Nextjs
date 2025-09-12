@@ -1,61 +1,58 @@
-
-
 export interface CartProductItem {
-  quantity:           number;
-  batchId:            number;
-  id:                 number;
-  name:               string;
-  variantid:          number;
-  variantName:        string;
-  size:               string;
-  weight:             string;
-  color:              string;
-  material:           string;
-  mrp:                number;
-  savePrice:          number;
-  savePricePctg:      number;
-  price_regular:      number;
-  price_member:       number;
-  promo_price:        number;
-  promo_name:         null;
-  promo_percentage:   null;
-  images:             Image[];
-  category:           string;
-  brandicon:          string;
-  desc:               string;
-  item_code:          string;
-  colorCode:          null;
-  virtualTryOnType:   null;
-  selectedVariant:    boolean;
-  offer:              Offer;
-  metaTagList:        null;
-  tagList:            null;
-  stockQty:           number;
-  itemRating:         number;
-  isWishListAdded:    boolean;
-  customerWishItemId: number;
+  quantity: number
+  batchId: number
+  id: number
+  name: string
+  variantid: number
+  variantName: string
+  size: string
+  weight: string
+  color: string
+  material: string
+  mrp: number
+  savePrice: number
+  savePricePctg: number
+  price_regular: number
+  price_member: number
+  promo_price: number
+  promo_name: null
+  promo_percentage: null
+  images: Image[]
+  category: string
+  brandicon: string
+  desc: string
+  item_code: string
+  colorCode: null
+  virtualTryOnType: null
+  selectedVariant: boolean
+  offer: Offer
+  metaTagList: null
+  tagList: null
+  stockQty: number
+  itemRating: number
+  isWishListAdded: boolean
+  customerWishItemId: number
 }
 
 export interface Image {
-  id:            number;
-  name:          string;
-  alt:           string;
-  fullImagepath: string;
+  id: number
+  name: string
+  alt: string
+  fullImagepath: string
 }
 
 export interface Offer {
-  offerId:           number;
-  offerName:         string;
-  offerStartDate:    string;
-  offerEndDate:      string;
-  offerDescription:  string;
-  offerDisclaimer:   string;
-  offerIsPercentage: boolean;
-  offerValue:        number;
-  offerSalePrice:    number;
-  offerSavePrice:    number;
+  offerId: number
+  offerName: string
+  offerStartDate: string
+  offerEndDate: string
+  offerDescription: string
+  offerDisclaimer: string
+  offerIsPercentage: boolean
+  offerValue: number
+  offerSalePrice: number
+  offerSavePrice: number
 }
-
 
 export interface GuestCartItem {
   itemId: number
@@ -69,4 +66,13 @@ export interface AddToCartRequest {
 
   userId: string
   carttItemVariant: GuestCartItem[]
+}
+
+export interface Cart {
+  productId: number
+  productName: string
+  productPrice: number
+  productQty: number
+  productImage:string
+  itemVariantId:number
 }

@@ -4,7 +4,7 @@ export interface AllProductResponse {
 }
 
 export interface DataList {
-  id: string
+  id: number
   itemId: number
   itemName: string
   itemDesc: string

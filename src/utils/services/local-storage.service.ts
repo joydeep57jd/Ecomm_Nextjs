@@ -15,6 +15,7 @@ export const getItem = (key: string): any | null => {
 
   const value = localStorage.getItem(`${keyPrefix}${key}`)
   if (typeof value === "undefined") return null
+  if (!value) return null
   return JSON.parse(decrypt(value!))
 }
 

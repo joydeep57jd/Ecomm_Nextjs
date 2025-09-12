@@ -1,15 +1,15 @@
-import { AddToCartRequest, CartProductItem } from "@/models/CartProductItem.models"
+import { AddToCartRequest, Cart,  } from "@/models/CartProductItem.models"
 import { getItem, removeItem, setItem } from "./local-storage.service"
 import { addToCart } from "../api/cart"
 
 const CART_KEY = "guest_cart"
 
-export const getCartProducts = (): CartProductItem[] => {
+export const getCartProducts = (): Cart[] => {
   const data = getItem(CART_KEY)
   return data ? JSON.parse(data) : []
 }
 
-export const setCart = (items: CartProductItem[]) => {
+export const setCart = (items: Cart[]) => {
   setItem(CART_KEY, JSON.stringify(items))
 }
 
@@ -17,7 +17,7 @@ export const clearCart = () => {
   removeItem(CART_KEY)
 }
 
-export const syncGuestCart = async (items: CartProductItem[]) => {
+export const syncGuestCart = async (items: Cart[]) => {
   const guestItems = getCartProducts()
   if (!guestItems.length) return
 
@@ -25,10 +25,10 @@ export const syncGuestCart = async (items: CartProductItem[]) => {
     customerid: 0,
     userId: "",
     carttItemVariant: items.map((item) => ({
-      itemId: item.id,
-      itemVariantId: item.variantid,
-      itemQty: item.quantity,
-      itemPrice: item.price_regular
+      itemId: item.productId,
+      itemVariantId: item.itemVariantId,
+      itemQty: item.productQty,
+      itemPrice: item.productPrice
     }))
   }
 

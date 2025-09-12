@@ -8,5 +8,10 @@ export const addToCart = async (cart: AddToCartRequest) => {
   return response.data
 }
 
+export const getCart = async (customerid: number) => {
+  const response = await axios.post(API_URL.CART.GET, { customerid })
+  return response.data
+}
+
 
 

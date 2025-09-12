@@ -8,11 +8,14 @@ import useCart from "hooks/useCart"
 // STYLED COMPONENTS
 import { HoverWrapper } from "./styles"
 // CUSTOM DATA MODEL
-import Product from "models/Product.model"
+
+import { getCartProducts, setCart, syncGuestCart } from "@/utils/services/cart.service"
+import { Cart } from "@/models/CartProductItem.models"
+import { DataList } from "@/models/AllProduct.model"
 
 // ========================================================
 interface Props {
-  product: Product;
+  product: DataList;
 }
 // ========================================================
 
@@ -23,19 +26,31 @@ export default function HoverActions({ product }: Props) {
   const [isCartLoading, setCartLoading] = useState(false)
   const [isQuickViewLoading, setQuickViewLoading] = useState(false)
 
-  const handleAddToCart = useCallback(() => {
-    
+  const handleAddToCart = useCallback(async () => {
     setCartLoading(true)
+    try {
+      
+      const existing = getCartProducts()
+      const updated:Cart[] = [
+        ...existing,
+      {productId:product.id,productName:product.itemName,productQty:1,productPrice:product.savePrice,productImage:product.imageList[0].fullImagepath,itemVariantId:product.itemId}   
+      ]
+      setCart(updated)
 
-    setTimeout(() => {
+      // 2. Sync with backend
+      await syncGuestCart(updated)
+
+     
       dispatch({
         type: "CHANGE_CART_AMOUNT",
-        payload: { id, slug:slug.toString(), price, title, thumbnail, qty: 1 }
+        payload: {}
       })
-
+    } catch (err) {
+      console.error("Add to cart failed", err)
+    } finally {
       setCartLoading(false)
-    }, 500)
-  }, [dispatch, slug, id, price, title, thumbnail])
+    }
+  }, [dispatch, id, slug, title, price, thumbnail])
 
   const handleQuickView = useCallback(() => {
     setQuickViewLoading(true)
