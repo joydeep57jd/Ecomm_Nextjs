@@ -15,18 +15,24 @@ import EmptyCartView from "./components/empty-view"
 // GLOBAL CUSTOM COMPONENT
 import { FlexBetween } from "components/flex-box"
 import OverlayScrollbar from "components/overlay-scrollbar"
+import { Cart } from "@/models/CartProductItem.models"
+import { useUser } from "@/contexts/UserContenxt"
 // CUSTOM DATA MODEL
-import { CartItem } from "contexts/CartContext"
 
 export default function MiniCart() {
   const router = useRouter()
+  const { user } = useUser()
   const { state, dispatch } = useCart()
   const CART_LENGTH = state.cart.length
 
-  const handleCartAmountChange = (amount: number, product: CartItem) => () => {
+  const handleCartAmountChange = (amount: number, product: Cart) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { ...product, qty: amount }
+      payload: {
+        ...product, qty: amount
+      },
+      isLoggedIn: !!user,
+      user: user ?? undefined
     })
   }
 
@@ -50,7 +56,7 @@ export default function MiniCart() {
         {CART_LENGTH > 0 ? (
           <OverlayScrollbar>
             {state.cart.map((item) => (
-              <MiniCartItem item={item} key={item.id} onCart={handleCartAmountChange} />
+              <MiniCartItem item={item} key={item.productId} onCart={handleCartAmountChange} />
             ))}
           </OverlayScrollbar>
         ) : (

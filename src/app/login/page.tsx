@@ -1,14 +1,18 @@
-import type { Metadata } from "next"
-import { LoginPageView } from "pages-sections/sessions/page-view"
+"use client"
+import { useRouter } from 'next/navigation'
+import React, { useEffect } from 'react'
 
-export const metadata: Metadata = {
-  title: "Login - Bazaar Next.js E-commerce Template",
-  description:
-    "Bazaar is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store",
-  authors: [{ name: "UI-LIB", url: "https://ui-lib.com" }],
-  keywords: ["e-commerce", "e-commerce template", "next.js", "react"]
+
+const Login = () => {
+  const router = useRouter()
+
+  useEffect(() => {
+    router.back()
+  }, [])
+
+  return (
+    <></>
+  )
 }
 
-export default function Login() {
-  return <LoginPageView />
-}
+export default Login

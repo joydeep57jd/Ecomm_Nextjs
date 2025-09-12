@@ -20,4 +20,5 @@ export default interface Product {
   categories: string[]
   reviews?: Review[]
   published?: boolean
+  variantId?: number
 }

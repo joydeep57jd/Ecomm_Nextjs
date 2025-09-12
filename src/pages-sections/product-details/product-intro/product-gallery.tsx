@@ -2,7 +2,6 @@
 
 import Image from "next/image"
 import { Fragment, useState } from "react"
-// STYLED COMPONENTS
 import { PreviewImage, ProductImageWrapper } from "./styles"
 import { ImageList } from "@/models/AllProduct.model"
 
@@ -12,7 +11,8 @@ export default function ProductGallery({ images }: { images: ImageList[] }) {
   return (
     <Fragment>
       <ProductImageWrapper>
-        <Image fill alt="product" src={images[currentImage].fullImagepath} sizes="(400px 400px)" />
+        <img src={images[currentImage].fullImagepath} className="w-full h-auto" alt="product" />
+        {/* <Image fill alt="product" src={images[currentImage].fullImagepath} sizes="(400px 400px)" /> */}
       </ProductImageWrapper>
 
       <div className="preview-images">

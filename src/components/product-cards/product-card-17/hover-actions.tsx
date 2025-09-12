@@ -9,19 +9,20 @@ import useCart from "hooks/useCart"
 import { HoverWrapper } from "./styles"
 // CUSTOM DATA MODEL
 
-import { getCartProducts, setCart, syncGuestCart } from "@/utils/services/cart.service"
+import { getCartProducts, setCart } from "@/utils/services/cart.service"
 import { Cart } from "@/models/CartProductItem.models"
-import { DataList } from "@/models/AllProduct.model"
+import Product from "@/models/Product.model"
+import { useUser } from "@/contexts/UserContenxt"
 
 // ========================================================
 interface Props {
-  product: DataList;
+  product: Product;
 }
 // ========================================================
 
 export default function HoverActions({ product }: Props) {
-  const { id, slug, title, price, thumbnail } = product
 
+  const { user } = useUser()
   const { dispatch } = useCart()
   const [isCartLoading, setCartLoading] = useState(false)
   const [isQuickViewLoading, setQuickViewLoading] = useState(false)
@@ -29,28 +30,26 @@ export default function HoverActions({ product }: Props) {
   const handleAddToCart = useCallback(async () => {
     setCartLoading(true)
     try {
-      
+      const newProduct = { productId: +product.id, productName: product.title, qty: 1, productPrice: product.price, productImage: product.images[0], itemVariantId: product.variantId ?? 0 }
       const existing = getCartProducts()
-      const updated:Cart[] = [
-        ...existing,
-      {productId:product.id,productName:product.itemName,productQty:1,productPrice:product.savePrice,productImage:product.imageList[0].fullImagepath,itemVariantId:product.itemId}   
+      const updated: Cart[] = [
+        ...existing, newProduct
       ]
       setCart(updated)
 
-      // 2. Sync with backend
-      await syncGuestCart(updated)
 
-     
       dispatch({
         type: "CHANGE_CART_AMOUNT",
-        payload: {}
+        payload: newProduct,
+        isLoggedIn: !!user,
+        user: user ?? undefined
       })
     } catch (err) {
       console.error("Add to cart failed", err)
     } finally {
       setCartLoading(false)
     }
-  }, [dispatch, id, slug, title, price, thumbnail])
+  }, [dispatch])
 
   const handleQuickView = useCallback(() => {
     setQuickViewLoading(true)
@@ -75,7 +74,7 @@ export default function HoverActions({ product }: Props) {
         </Button>
       </Link>
 
-      <Link scroll={false} href={`/products/${slug}/view`} onNavigate={handleNavigate}>
+      <Link scroll={false} href={`/products/${product.id}`} onNavigate={handleNavigate}>
         <Button
           fullWidth
           disableElevation

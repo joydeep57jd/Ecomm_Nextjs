@@ -18,12 +18,16 @@ import { CustomerPayload, LoginRequest } from "@/models/Auth.model"
 import { useRouter } from "next/navigation"
 import { setItem } from "@/utils/services/local-storage.service"
 import { useUser } from "@/contexts/UserContenxt"
+import { getCart } from "@/utils/api/cart"
+import useCart from "@/hooks/useCart"
+import { Cart } from "@/models/CartProductItem.models"
 
 // LOGIN FORM FIELD VALIDATION SCHEMA
 
 export default function LoginPageView() {
   const { visiblePassword, togglePasswordVisible } = usePasswordVisible()
   const { setUser } = useUser()
+  const { state, dispatch } = useCart()
   const [alreadyCustomer, setAlreadyCustomer] = useState<boolean>(false)
   const [isApiCallInprogress, setisApiCallInprogress] = useState(false)
 
@@ -64,6 +68,38 @@ export default function LoginPageView() {
         Password: values.password!,
       }
       const data = await login(payload)
+      const remoteCarts = await getCart(+data.customerId)
+      const localCarts = state.cart
+      console.warn(localCarts)
+
+      const finalCarts: Cart[] = remoteCarts.map(cart => ({
+        itemVariantId: cart.variantid,
+        productId: cart.id,
+        productImage: cart.images[0].fullImagepath,
+        productName: cart.name,
+        productPrice: cart.price_regular,
+        qty: cart.quantity
+      }))
+      localCarts.forEach((cart) => {
+        const remoteCartIndex = finalCarts.findIndex(remoteCart => remoteCart.productId === cart.productId)
+        if (remoteCartIndex !== -1) {
+          finalCarts[remoteCartIndex].qty = finalCarts[remoteCartIndex].qty + cart.qty
+        } else {
+          finalCarts.push(cart)
+        }
+      })
+
+      console.warn(finalCarts)
+
+
+      dispatch({
+        type: "SET_CART",
+        carts: finalCarts,
+        isLoggedIn: true,
+        isSyncRequired: true,
+        user: data
+      })
+
       setItem("userDetails", data)
       setUser(data)
       router.back()

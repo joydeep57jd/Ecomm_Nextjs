@@ -1,5 +1,3 @@
-
-
 export interface ProductImage {
   id: number
   alt: string | null
@@ -8,7 +6,6 @@ export interface ProductImage {
 }
 
 export interface SectionItem {
-    
   itemId: number
   name: string
   mrp: number
@@ -17,7 +14,6 @@ export interface SectionItem {
   imagePath: string
   images?: ProductImage[]
   offer?: string
-  
 }
 
 export interface Section {
@@ -39,9 +35,7 @@ export interface Props {
   buttonColor?: "dark" | "primary"
 }
 
-
-
-export  interface Product {
+export interface Product {
   id: string
   slug: string
   title: string
@@ -51,6 +45,5 @@ export  interface Product {
   discount: number
   categories: string[]
   rating?: number
-    offer?: string
+  offer?: string
 }
-

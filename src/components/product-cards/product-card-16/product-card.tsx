@@ -50,7 +50,14 @@ export default function ProductCard16({ product }: Props) {
         </div>
 
         {/* ADD TO CART BUTTON */}
-        <AddToCart />
+        <AddToCart cart={{
+          productId: +product.id,
+          productName: product.itemName,
+          productPrice: product.memberPrice,
+          qty: 1,
+          productImage: product.imageList[0].fullImagepath,
+          itemVariantId: 0
+        }} />
       </div>
     </StyledRoot>
   )

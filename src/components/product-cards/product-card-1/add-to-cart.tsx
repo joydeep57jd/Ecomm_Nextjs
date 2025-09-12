@@ -5,28 +5,32 @@ import Button from "@mui/material/Button"
 import Add from "@mui/icons-material/Add"
 // GLOBAL CUSTOM HOOKS
 // CUSTOM DATA MODEL
-import Product from "models/Product.model"
+import { useUser } from "@/contexts/UserContenxt"
+import { Cart } from "@/models/CartProductItem.models"
+import useCart from "@/hooks/useCart"
+import { useRouter } from "next/navigation"
 
 // ==============================================================
-type Props = { product: Product };
+type Props = { cart: Cart };
 // ==============================================================
 
-export default function AddToCart({ product }: Props) {
-  const { id, slug, title, price, thumbnail } = product
+export default function AddToCart({ cart }: Props) {
 
-  // const { dispatch } = useCart()
-  // const router = useRouter()
+  const { user } = useUser()
+  const { dispatch } = useCart()
+  const router = useRouter()
   const [isLoading, setLoading] = useState(false)
-  console.warn(id, slug, title, price, thumbnail)
   const handleAddToCart = () => {
     setLoading(true)
     setTimeout(() => {
-      // dispatch({
-      //   type: "CHANGE_CART_AMOUNT",
-      //   payload: { id, slug, price, title, thumbnail, qty: 1 }
-      // })
+      dispatch({
+        type: "CHANGE_CART_AMOUNT",
+        payload: { ...cart, qty: 1 },
+        isLoggedIn: !!user,
+        user: user ?? undefined
+      })
 
-      // router.push("/mini-cart", { scroll: false })
+      router.push("/mini-cart", { scroll: false })
       setLoading(false)
     }, 500)
   }

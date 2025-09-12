@@ -20,6 +20,7 @@ import ProgressBar from "components/progress"
 import "i18n"
 import HeaderLayout from "@/components/layouts/header-layout"
 import { UserProvider } from "@/contexts/UserContenxt"
+import SyncCart from "./mini-cart/sync-cart"
 
 // ==============================================================
 interface RootLayoutProps {
@@ -37,6 +38,7 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
             <CartProvider>
               <ThemeProvider>
                 <HeaderLayout>
+                  <SyncCart />
                   {modal}
                   {children}
                 </HeaderLayout>

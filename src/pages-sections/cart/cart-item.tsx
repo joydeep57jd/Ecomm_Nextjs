@@ -10,14 +10,13 @@ import Trash from "icons/Trash"
 import useCart from "hooks/useCart"
 import { currency } from "lib"
 import { ContentWrapper, ImageWrapper, QuantityButton, Wrapper } from "./styles"
-import { CartItem as CartModel } from "contexts/CartContext"
+import { Cart } from "@/models/CartProductItem.models"
 
 // =========================================================
-type Props = { item: CartModel };
+type Props = { item: Cart };
 // =========================================================
 
 export default function CartItem({ item }: Props) {
-  const { id, title, price, thumbnail, slug, qty } = item
 
   const { dispatch } = useCart()
 
@@ -25,11 +24,7 @@ export default function CartItem({ item }: Props) {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
       payload: {
-        id,
-        title,
-        price,
-        thumbnail,
-        slug,
+        ...item,
         qty: amount
       }
     })
@@ -38,36 +33,36 @@ export default function CartItem({ item }: Props) {
   return (
     <Wrapper elevation={0}>
       <ImageWrapper>
-        <Image alt={title} fill src={thumbnail} sizes="100px" />
+        <Image alt={item.productName} fill src={item.productImage} sizes="100px" />
       </ImageWrapper>
 
       <ContentWrapper>
         <Stack spacing={0.5} overflow="hidden">
-          <Link href={`/products/${slug}`}>
+          <Link href={`/products/${item.productId}`}>
             <Typography noWrap variant="body1" fontSize={16}>
-              {title}
+              {item.productName}
             </Typography>
           </Link>
 
           <Typography noWrap variant="body1" fontWeight={600}>
-            {currency(price)}
+            {currency(item.productPrice)}
           </Typography>
         </Stack>
 
         <div className="quantity-buttons-wrapper">
-          <QuantityButton disabled={qty === 1} onClick={handleCartAmountChange(qty - 1)}>
+          <QuantityButton disabled={item.qty === 1} onClick={handleCartAmountChange(item.qty - 1)}>
             <Remove fontSize="small" />
           </QuantityButton>
 
-          <Typography variant="h6">{qty}</Typography>
+          <Typography variant="h6">{item.qty}</Typography>
 
-          <QuantityButton disabled={qty === 10} onClick={handleCartAmountChange(qty + 1)}>
+          <QuantityButton disabled={item.qty === 10} onClick={handleCartAmountChange(item.qty + 1)}>
             <Add fontSize="small" />
           </QuantityButton>
         </div>
 
         <Typography noWrap variant="body1" fontSize={16} fontWeight={600}>
-          {currency(price * qty)}
+          {currency(item.productPrice * item.qty)}
         </Typography>
 
         <IconButton className="remove-item" size="small" onClick={handleCartAmountChange(0)}>

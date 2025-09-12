@@ -28,7 +28,7 @@ export default function ProductSection() {
 
   if (!sections || sections.length === 0) return null
 
-  
+
 
 
   return (
@@ -47,7 +47,6 @@ export default function ProductSection() {
               <Box pb={0.6} key={product.itemId}>
                 <ProductCard17
                   product={{
-                    
                     id: String(product.itemId),
                     slug: product.itemId,
                     title: product.name,
@@ -66,7 +65,7 @@ export default function ProductSection() {
                       )
                       : 0,
                     categories: [section.sectionName || "Products"],
-                    
+                    variantId: 0
                   }}
                 />
               </Box>

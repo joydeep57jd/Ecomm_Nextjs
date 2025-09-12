@@ -72,7 +72,14 @@ export default function ProductCard1({ product, showProductSize, showRating = tr
         </div>
 
         {/* ADD TO CART BUTTON */}
-        <AddToCart product={product} />
+        <AddToCart cart={{
+          productId: +product.id,
+          productName: product.title,
+          productPrice: product.price,
+          qty: 1,
+          productImage: product.images[0],
+          itemVariantId: product.variantId ?? 0
+        }} />
       </ContentWrapper>
     </StyledCard>
   )

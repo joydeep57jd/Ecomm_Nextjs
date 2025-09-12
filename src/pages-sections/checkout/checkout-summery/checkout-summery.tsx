@@ -16,7 +16,7 @@ import useCart from "hooks/useCart"
 export default function CheckoutSummary() {
   const { state } = useCart()
 
-  const total = state.cart.reduce((acc, item) => acc + item.price * item.qty, 0)
+  const total = state.cart.reduce((acc, item) => acc + item.productPrice * item.qty, 0)
 
   return (
     <Card

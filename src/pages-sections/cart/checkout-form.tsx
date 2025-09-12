@@ -24,7 +24,7 @@ const STATE_LIST = [
 export default function CheckoutForm() {
   const { state } = useCart()
 
-  const getTotalPrice = () => state.cart.reduce((acc, item) => acc + item.price * item.qty, 0)
+  const getTotalPrice = () => state.cart.reduce((acc, item) => acc + item.productPrice * item.qty, 0)
 
   return (
     <Card

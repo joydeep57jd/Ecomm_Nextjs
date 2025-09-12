@@ -1,6 +1,7 @@
-import { AddToCartRequest, Cart,  } from "@/models/CartProductItem.models"
+import { AddToCartRequest, Cart } from "@/models/CartProductItem.models"
 import { getItem, removeItem, setItem } from "./local-storage.service"
 import { addToCart } from "../api/cart"
+import { UserData } from "@/models/Auth.model"
 
 const CART_KEY = "guest_cart"
 
@@ -17,17 +18,16 @@ export const clearCart = () => {
   removeItem(CART_KEY)
 }
 
-export const syncGuestCart = async (items: Cart[]) => {
-  const guestItems = getCartProducts()
-  if (!guestItems.length) return
+export const syncGuestCart = async (items: Cart[], user?: UserData) => {
+  if (!items.length || !user) return
 
-  const payload:AddToCartRequest = {
-    customerid: 0,
-    userId: "",
+  const payload: AddToCartRequest = {
+    customerid: +user.customerId,
+    userId: user.id,
     carttItemVariant: items.map((item) => ({
       itemId: item.productId,
       itemVariantId: item.itemVariantId,
-      itemQty: item.productQty,
+      itemQty: item.qty,
       itemPrice: item.productPrice
     }))
   }

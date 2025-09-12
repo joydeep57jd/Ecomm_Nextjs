@@ -32,7 +32,7 @@ export default function CheckoutSummary() {
       }
     }
 
-    const subtotal = state.cart.reduce((sum, item) => sum + item.price * item.qty, 0)
+    const subtotal = state.cart.reduce((sum, item) => sum + item.productPrice * item.qty, 0)
     const tax = 40
     const shipping = 0
     const discount = 0
@@ -50,12 +50,12 @@ export default function CheckoutSummary() {
       </Typography>
 
       {state.cart.map((item) => (
-        <FlexBetween mb={1.5} key={item.id}>
+        <FlexBetween mb={1.5} key={item.productId}>
           <Typography variant="body1">
-            <strong>{item.qty}</strong> x {item.title}
+            <strong>{item.qty}</strong> x {item.productName}
           </Typography>
 
-          <Typography variant="body1">{currency(item.price)}</Typography>
+          <Typography variant="body1">{currency(item.productPrice)}</Typography>
         </FlexBetween>
       ))}
 

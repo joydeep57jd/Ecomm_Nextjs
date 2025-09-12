@@ -55,7 +55,14 @@ export default function ProductCard9({ product }: Props) {
           </div>
 
           {/* PRODUCT ADD TO CART BUTTON */}
-          <AddToCartButton product={product} />
+          <AddToCartButton cart={{
+            productId: +product.id,
+            productName: product.title,
+            productPrice: product.price,
+            qty: 1,
+            productImage: product.images[0],
+            itemVariantId: product.variantId ?? 0
+          }} />
         </div>
       </ContentWrapper>
     </Wrapper>

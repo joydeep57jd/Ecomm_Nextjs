@@ -19,6 +19,34 @@ export interface DataList {
   imageList: ImageList[]
 }
 
+export interface HomePageProduct {
+  companyTemplateSectionItemMappingId: number
+  itemId: number
+  variantId: number
+  isActive: boolean
+  primaryText: null
+  secondaryText: null
+  tertiaryText: null
+  displayOrder: number
+  name: string
+  imagePath: string
+  price: number
+  mrp: number
+  salePrice: number
+  taxPercentage: number
+  membrPrice: number
+  images: Image[]
+  offer: null
+  stockQty: number
+}
+
+export interface Image {
+  id: number
+  name: null
+  alt: string
+  fullImagepath: string
+}
+
 export interface ImageList {
   id: number
   name: string

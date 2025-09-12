@@ -65,7 +65,16 @@ export const components: ThemeComponents = {
       root: {
         borderRadius: 12,
         "&:hover .thumbnail": {
-          display: "block !important"
+          display: "block !important",
+          maxHeight: "360px !important",
+          minHeight: "360px !important",
+          objectFit: "cover"
+        },
+        ".thumbnail": {
+          display: "block !important",
+          maxHeight: "360px !important",
+          minHeight: "360px !important",
+          objectFit: "cover"
         }
       }
     }

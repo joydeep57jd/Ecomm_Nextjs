@@ -14,7 +14,7 @@ import FlexBox from "components/flex-box/flex-box"
 // CUSTOM UTILS LIBRARY FUNCTION
 import { currency } from "lib"
 // CUSTOM DATA MODEL
-import { CartItem } from "contexts/CartContext"
+import { Cart } from "@/models/CartProductItem.models"
 
 // STYLED COMPONENTS
 const StyledRoot = styled("div")(({ theme }) => ({
@@ -55,27 +55,27 @@ const QuantityWrapper = styled("div")(({ theme }) => ({
 
 // ==============================================================
 interface Props {
-  item: CartItem;
-  onCart: (amount: number, product: CartItem) => () => void;
+  item: Cart;
+  onCart: (amount: number, product: Cart) => () => void;
 }
 // ==============================================================
 
 export default function MiniCartItem({ item, onCart }: Props) {
   return (
     <StyledRoot>
-      <Link href={`/products/${item.slug}`}>
+      <Link href={`/products/${item.productId}`}>
         <StyledAvatar variant="rounded">
-          <Image alt={item.title} src={item.thumbnail} fill sizes="(100px, 100px)" />
+          <Image alt={item.productName} src={item.productImage} fill sizes="(100px, 100px)" />
         </StyledAvatar>
       </Link>
 
       <ContentWrapper>
         <Typography noWrap variant="body1">
-          {item.title}
+          {item.productName}
         </Typography>
 
         <Typography variant="body1" fontWeight={500} sx={{ mt: 0.25, mb: 1.5 }}>
-          {currency(item.price * item.qty)}
+          {currency(item.productPrice * item.qty)}
         </Typography>
 
         <FlexBox alignItems="center" justifyContent="space-between" gap={1}>
