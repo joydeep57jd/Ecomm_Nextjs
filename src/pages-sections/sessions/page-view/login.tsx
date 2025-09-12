@@ -40,16 +40,14 @@ export default function LoginPageView() {
     resolver: yupResolver(loginSchema(alreadyCustomer))
   })
 
-  const {
-    handleSubmit,
-  } = methods
+  const { handleSubmit } = methods
 
   const handleVerify = async (values: { phoneNo: string }) => {
     try {
       setisApiCallInprogress(true)
       const payload: CustomerPayload = {
         PhoneCode: "+91",
-        PhoneNo: values.phoneNo,
+        PhoneNo: values.phoneNo
       }
       const res = await varifyCustomer(payload)
       setAlreadyCustomer(res.alreadyCustomer)
@@ -65,23 +63,25 @@ export default function LoginPageView() {
       setisApiCallInprogress(true)
       const payload: LoginRequest = {
         UserName: values.phoneNo,
-        Password: values.password!,
+        Password: values.password!
       }
       const data = await login(payload)
       const remoteCarts = await getCart(+data.customerId)
-      const localCarts = state.cart
+      const localCarts = state.cart || []
       console.warn(localCarts)
 
-      const finalCarts: Cart[] = remoteCarts.map(cart => ({
-        itemVariantId: cart.variantid,
-        productId: cart.id,
-        productImage: cart.images[0].fullImagepath,
-        productName: cart.name,
-        productPrice: cart.price_regular,
-        qty: cart.quantity
+      const finalCarts: Cart[] = (Array.isArray(remoteCarts) ? remoteCarts : []).map((cart) => ({
+        itemVariantId: cart?.variantid,
+        productId: cart?.id,
+        productImage: cart?.images[0].fullImagepath,
+        productName: cart?.name,
+        productPrice: cart?.price_regular,
+        qty: cart?.quantity
       }))
       localCarts.forEach((cart) => {
-        const remoteCartIndex = finalCarts.findIndex(remoteCart => remoteCart.productId === cart.productId)
+        const remoteCartIndex = finalCarts.findIndex(
+          (remoteCart) => remoteCart.productId === cart.productId
+        )
         if (remoteCartIndex !== -1) {
           finalCarts[remoteCartIndex].qty = finalCarts[remoteCartIndex].qty + cart.qty
         } else {
@@ -90,7 +90,6 @@ export default function LoginPageView() {
       })
 
       console.warn(finalCarts)
-
 
       dispatch({
         type: "SET_CART",
@@ -110,7 +109,6 @@ export default function LoginPageView() {
     }
   }
 
-
   const handleSubmitForm = handleSubmit((values: LoginSchemaType) => {
     !alreadyCustomer ? handleVerify(values) : handleLogin(values)
   })
@@ -119,17 +117,10 @@ export default function LoginPageView() {
     <FormProvider methods={methods} onSubmit={handleSubmitForm}>
       <div className="mb-1">
         <Label>Phone Number</Label>
-        <TextField
-          fullWidth
-          name="phoneNo"
-          type="number"
-          size="medium"
-          placeholder="1234567890"
-        />
+        <TextField fullWidth name="phoneNo" type="number" size="medium" placeholder="1234567890" />
       </div>
 
-      {
-        alreadyCustomer &&
+      {alreadyCustomer && (
         <div className="mb-2">
           <Label>Password</Label>
           <TextField
@@ -141,13 +132,14 @@ export default function LoginPageView() {
             type={visiblePassword ? "text" : "password"}
             slotProps={{
               input: {
-                endAdornment: <EyeToggleButton show={visiblePassword} click={togglePasswordVisible} />
+                endAdornment: (
+                  <EyeToggleButton show={visiblePassword} click={togglePasswordVisible} />
+                )
               }
             }}
           />
         </div>
-      }
-
+      )}
 
       <Button
         fullWidth
@@ -157,7 +149,7 @@ export default function LoginPageView() {
         variant="contained"
         loading={isApiCallInprogress}
       >
-        Login
+        {alreadyCustomer ? "Login" : "Verify"}
       </Button>
     </FormProvider>
   )

@@ -32,14 +32,14 @@ const getLayoutData = async (): Promise<LayoutModel> => {
     },
 
     topbar: {
-      label: companyInfoData!.name,
+      label: companyInfoData!.email.custservice,
       languageOptions: {},
       socials: {
         facebook: companyInfoData!.facebook,
         instagram: companyInfoData!.instagram,
         twitter: companyInfoData!.twitter
       },
-      title: companyInfoData!.name
+      title: companyInfoData!.contactPhone
     },
     footer: {
       about: [],

@@ -1,23 +1,24 @@
 import { Fragment } from "react"
 // CUSTOM COMPONENTS
 import User3 from "icons/User3"
-import UserInfo from "../user-info"
-import UserAnalytics from "../user-analytics"
+// import UserInfo from "../user-info"
+// import UserAnalytics from "../user-analytics"
 import DashboardHeader from "../../dashboard-header"
 // CUSTOM DATA MODEL
 
-import User from "@/models/User.model"
+
+import { UserData } from "@/models/Auth.model"
 
 // ============================================================
-type Props = { user: User };
+type Props = { user: UserData };
 // ============================================================
 
-export function ProfilePageView({ user }: Props) {
+export function ProfilePageView({  }: Props) {
   return (
     <Fragment>
       <DashboardHeader title="My Profile" Icon={User3} />
-      <UserAnalytics user={user} />
-      <UserInfo user={user} />
+      {/* <UserAnalytics user={user} />
+      <UserInfo user={user} /> */}
     </Fragment>
   )
 }

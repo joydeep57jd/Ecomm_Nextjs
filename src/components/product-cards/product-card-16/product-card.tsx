@@ -22,7 +22,7 @@ export default function ProductCard16({ product }: Props) {
   const imageAltTag = product.imageList?.[0]?.alt || "Product Image"
   const thumbnail = product.imageList?.[0]?.fullImagepath || "/assets/images/products/iphone-x.png"
   const discount = product.savePricePctg || 0
-  const price = +((product.mrp || 0) - discount).toFixed(2)
+  const price = +(product.mrp).toFixed(2)
 
   return (
     <StyledRoot>
@@ -45,7 +45,7 @@ export default function ProductCard16({ product }: Props) {
 
           <PriceText>
             {calculateDiscount(price, discount)}
-            {discount && <span className="base-price">{currency(price)}</span>}
+            {discount>0 &&  <span className="base-price">{currency(price)}</span>}
           </PriceText>
         </div>
 
