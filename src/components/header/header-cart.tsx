@@ -1,19 +1,20 @@
 "use client"
 
-import Link from "next/link"
 // MUI
 import Badge from "@mui/material/Badge"
 import SvgIcon from "@mui/material/SvgIcon"
 import IconButton from "@mui/material/IconButton"
 // GLOBAL CUSTOM HOOK
 import useCart from "hooks/useCart"
+import { useCartDrawer } from "@/contexts/CartDrawerContext"
 
 export function HeaderCart() {
   const { state } = useCart()
+  const { setOpen } = useCartDrawer()
 
   return (
     <Badge badgeContent={state.cart.length} color="primary">
-      <IconButton LinkComponent={Link} href="/mini-cart">
+      <IconButton onClick={() => setOpen(true)}>
         <SvgIcon fontSize="small">
           <svg viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" strokeWidth="1.5">

@@ -7,7 +7,6 @@ import { getCartProducts, setCart, clearCart, syncGuestCart } from "@/utils/serv
 import { getItem } from "@/utils/services/local-storage.service"
 import { UserData } from "@/models/Auth.model"
 
-
 type InitialState = {
   cart: Cart[]
   isLoggedIn: boolean
@@ -47,16 +46,13 @@ const reducer = (state: InitialState, action: CartActionType) => {
       let updatedCart = []
       if (!cartItem) return state
 
-      const existIndex = cartList.findIndex((item) => item.productId === cartItem.productId)
+      const existIndex = cartList.findIndex((item) => item.itemVariantId === cartItem.itemVariantId && item.productId === cartItem.productId)
       if (cartItem.qty < 1) {
-        updatedCart = cartList.filter((item) => item.productId !== cartItem.productId)
-        setCart(updatedCart)
+        updatedCart = [...cartList]
+        updatedCart.splice(existIndex, 1)
       } else if (existIndex > -1) {
         updatedCart = [...cartList]
         updatedCart[existIndex].qty = cartItem.qty
-        setCart(updatedCart)
-        console.warn(updatedCart)
-        return { ...state, cart: updatedCart }
       } else {
         updatedCart = [...cartList, cartItem]
       }

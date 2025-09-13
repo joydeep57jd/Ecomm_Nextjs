@@ -5,7 +5,6 @@ import RemoveRedEye from "@mui/icons-material/RemoveRedEye"
 // GLOBAL CUSTOM COMPONENTS
 import LazyImage from "components/LazyImage"
 // LOCAL CUSTOM COMPONENTS
-import AddToCart from "./add-to-cart"
 import ProductPrice from "../product-price"
 import ProductTitle from "../product-title"
 import DiscountChip from "../discount-chip"
@@ -14,6 +13,7 @@ import FavoriteButton from "./favorite-button"
 import { ImageWrapper, ContentWrapper, StyledCard, HoverIconWrapper } from "./styles"
 // CUSTOM DATA MODEL
 import Product from "models/Product.model"
+import ProductAction from "@/components/product-action"
 
 // ========================================================
 interface Props {
@@ -72,7 +72,7 @@ export default function ProductCard1({ product, showProductSize, showRating = tr
         </div>
 
         {/* ADD TO CART BUTTON */}
-        <AddToCart cart={{
+        <ProductAction product={{
           productId: +product.id,
           productName: product.title,
           productPrice: product.price,

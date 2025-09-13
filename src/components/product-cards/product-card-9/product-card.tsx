@@ -7,12 +7,12 @@ import LazyImage from "components/LazyImage"
 import DiscountChip from "../discount-chip"
 import ProductPrice from "../product-price"
 import ProductTags from "./components/tags"
-import AddToCartButton from "./components/add-to-cart"
 import FavoriteButton from "./components/favorite-button"
 // CUSTOM DATA MODEL
 import Product from "models/Product.model"
 // STYLED COMPONENT
 import { ContentWrapper, Wrapper } from "./styles"
+import ProductAction from "@/components/product-action"
 
 // ===========================================================
 type Props = { product: Product };
@@ -55,7 +55,7 @@ export default function ProductCard9({ product }: Props) {
           </div>
 
           {/* PRODUCT ADD TO CART BUTTON */}
-          <AddToCartButton cart={{
+          <ProductAction product={{
             productId: +product.id,
             productName: product.title,
             productPrice: product.price,

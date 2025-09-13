@@ -50,7 +50,7 @@ export default function CheckoutSummary() {
       </Typography>
 
       {state.cart.map((item) => (
-        <FlexBetween mb={1.5} key={item.productId}>
+        <FlexBetween mb={1.5} key={item.itemVariantId}>
           <Typography variant="body1">
             <strong>{item.qty}</strong> x {item.productName}
           </Typography>

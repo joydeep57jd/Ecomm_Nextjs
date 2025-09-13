@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography"
 // GLOBAL CUSTOM COMPONENTS
 import LazyImage from "components/LazyImage"
 // LOCAL CUSTOM COMPONENTS
-import AddToCart from "./add-to-cart"
 import DiscountChip from "../discount-chip"
 // CUSTOM UTILS LIBRARY FUNCTIONS
 import { calculateDiscount, currency } from "lib"
@@ -12,6 +11,7 @@ import { calculateDiscount, currency } from "lib"
 import { PriceText, StyledRoot } from "./styles"
 // CUSTOM DATA MODEL
 import { DataList } from "@/models/AllProduct.model"
+import ProductAction from "@/components/product-action"
 
 // ==============================================================
 type Props = { product: DataList };
@@ -23,6 +23,8 @@ export default function ProductCard16({ product }: Props) {
   const thumbnail = product.imageList?.[0]?.fullImagepath || "/assets/images/products/iphone-x.png"
   const discount = product.savePricePctg || 0
   const price = +(product.mrp).toFixed(2)
+  const finalPrice = calculateDiscount(price, discount, false)
+  const formattedFinalPrice = calculateDiscount(price, discount)
 
   return (
     <StyledRoot>
@@ -44,16 +46,16 @@ export default function ProductCard16({ product }: Props) {
           <Rating readOnly value={0} size="small" precision={0.5} />
 
           <PriceText>
-            {calculateDiscount(price, discount)}
-            {discount>0 &&  <span className="base-price">{currency(price)}</span>}
+            {formattedFinalPrice}
+            {discount > 0 && <span className="base-price">{currency(price)}</span>}
           </PriceText>
         </div>
 
         {/* ADD TO CART BUTTON */}
-        <AddToCart cart={{
-          productId: +product.id,
+        <ProductAction product={{
+          productId: +product.itemId,
           productName: product.itemName,
-          productPrice: product.memberPrice,
+          productPrice: +finalPrice,
           qty: 1,
           productImage: product.imageList[0].fullImagepath,
           itemVariantId: 0

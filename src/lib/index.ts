@@ -18,9 +18,9 @@ export function getDateDifference(date: string | number | Date) {
  * @returns - RETURN NEW PRICE
  */
 
-export function calculateDiscount(price: number, discount: number) {
+export function calculateDiscount(price: number, discount: number, format = true) {
   const afterDiscount = Number((price - price * (discount / 100)).toFixed(2))
-  return currency(afterDiscount)
+  return format ? currency(afterDiscount) : afterDiscount
 }
 
 /**

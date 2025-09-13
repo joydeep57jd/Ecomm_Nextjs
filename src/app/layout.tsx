@@ -20,7 +20,9 @@ import ProgressBar from "components/progress"
 import "i18n"
 import HeaderLayout from "@/components/layouts/header-layout"
 import { UserProvider } from "@/contexts/UserContenxt"
-import SyncCart from "./mini-cart/sync-cart"
+import SyncCart from "../components/sync-cart"
+import { CartDrawerProvider } from "@/contexts/CartDrawerContext"
+import MiniCartDrawer from "./@modal/(.)mini-cart/page"
 
 // ==============================================================
 interface RootLayoutProps {
@@ -34,20 +36,23 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <body id="body" className={geist.className}>
         <Suspense fallback={<div>Loading...</div>}>
-          <UserProvider>
-            <CartProvider>
-              <ThemeProvider>
-                <HeaderLayout>
-                  <SyncCart />
-                  {modal}
-                  {children}
-                </HeaderLayout>
-                <ProgressBar />
-              </ThemeProvider>
-            </CartProvider>
-          </UserProvider>
+          <CartDrawerProvider>
+            <UserProvider>
+              <CartProvider>
+                <ThemeProvider>
+                  <HeaderLayout>
+                    <SyncCart />
+                    {modal}
+                    {children}
+                    <MiniCartDrawer />
+                  </HeaderLayout>
+                  <ProgressBar />
+                </ThemeProvider>
+              </CartProvider>
+            </UserProvider>
+          </CartDrawerProvider>
         </Suspense>
       </body>
-    </html>
+    </html >
   )
 }

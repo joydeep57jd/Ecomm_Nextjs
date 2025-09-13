@@ -2,6 +2,7 @@ import API_URL from "../constants"
 import axios from "../axiosInstance"
 import { AllProductResponse, ProductRequestPayload } from "@/models/AllProduct.model"
 import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
+import { Cart } from "@/models/CartProductItem.models"
 
 export const getAllProducts = async (body: ProductRequestPayload) => {
   const { data } = await axios.post<{ data: AllProductResponse }>(API_URL.ITEMS.GET_SEARCH, body)
@@ -23,4 +24,9 @@ export const getProduct = async (optionValues: string) => {
     }
   )
   return data.data
+}
+
+export const isProductAddedToCart = (cart: Cart[], variantId: number, productId: number) => {
+  const cartProduct = cart.find((p) => variantId === p.itemVariantId && +productId === p.productId)
+  return !!cartProduct
 }

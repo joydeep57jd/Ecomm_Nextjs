@@ -22,7 +22,7 @@ export default function CartPageView() {
     <Grid container spacing={3}>
       <Grid size={{ md: 8, xs: 12 }}>
         {state.cart.map((item) => (
-          <CartItem key={item.productId} item={item} />
+          <CartItem key={item.itemVariantId} item={item} />
         ))}
 
         <Box textAlign="end">

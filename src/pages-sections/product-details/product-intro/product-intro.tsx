@@ -13,7 +13,7 @@ import { StyledRoot } from "./styles"
 
 import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
 
-import AddToCart from "./add-to-cart"
+import ProductAction from "../../../components/product-action"
 
 // ================================================================
 type Props = {
@@ -87,10 +87,9 @@ export default function ProductIntro({ product, variantMap }: Props) {
           </div>
 
           {/* ADD TO CART BUTTON */}
-          <AddToCart cart={{
+          <ProductAction product={{
             productId: product.variantDetails.itemId,
             itemVariantId: product.variantDetails.itemVariantId,
-            
             productPrice: product.priceAndStock.salePrice,
             productName: product.variantDetails.itemName,
             productImage: product.imageList[0].fullImagepath,

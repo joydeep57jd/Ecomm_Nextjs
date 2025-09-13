@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 // MUI
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
@@ -17,12 +16,13 @@ import { FlexBetween } from "components/flex-box"
 import OverlayScrollbar from "components/overlay-scrollbar"
 import { Cart } from "@/models/CartProductItem.models"
 import { useUser } from "@/contexts/UserContenxt"
+import { useCartDrawer } from "@/contexts/CartDrawerContext"
 // CUSTOM DATA MODEL
 
 export default function MiniCart() {
-  const router = useRouter()
   const { user } = useUser()
   const { state, dispatch } = useCart()
+  const { setOpen } = useCartDrawer()
   const CART_LENGTH = state.cart.length
 
   const handleCartAmountChange = (amount: number, product: Cart) => () => {
@@ -45,7 +45,7 @@ export default function MiniCart() {
       <FlexBetween ml={3} mr={2} height={74}>
         <Typography variant="h6">Your Cart ({CART_LENGTH})</Typography>
 
-        <IconButton size="small" onClick={router.back}>
+        <IconButton size="small" onClick={() => setOpen(false)}>
           <Clear fontSize="small" />
         </IconButton>
       </FlexBetween>
@@ -56,7 +56,7 @@ export default function MiniCart() {
         {CART_LENGTH > 0 ? (
           <OverlayScrollbar>
             {state.cart.map((item) => (
-              <MiniCartItem item={item} key={item.productId} onCart={handleCartAmountChange} />
+              <MiniCartItem item={item} key={item.itemVariantId} onCart={handleCartAmountChange} />
             ))}
           </OverlayScrollbar>
         ) : (
@@ -71,6 +71,7 @@ export default function MiniCart() {
             color="primary"
             variant="contained"
             LinkComponent={Link}
+            onClick={() => setOpen(false)}
             href="/checkout-alternative"
             sx={{ height: 44, mb: 1 }}
           >
@@ -82,6 +83,7 @@ export default function MiniCart() {
             color="primary"
             variant="outlined"
             LinkComponent={Link}
+            onClick={() => setOpen(false)}
             href="/cart"
             sx={{ height: 44 }}
           >

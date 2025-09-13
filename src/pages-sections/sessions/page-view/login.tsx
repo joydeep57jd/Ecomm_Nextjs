@@ -68,8 +68,6 @@ export default function LoginPageView() {
       const data = await login(payload)
       const remoteCarts = await getCart(+data.customerId)
       const localCarts = state.cart || []
-      console.warn(localCarts)
-
       const finalCarts: Cart[] = (Array.isArray(remoteCarts) ? remoteCarts : []).map((cart) => ({
         itemVariantId: cart?.variantid,
         productId: cart?.id,
@@ -80,7 +78,7 @@ export default function LoginPageView() {
       }))
       localCarts.forEach((cart) => {
         const remoteCartIndex = finalCarts.findIndex(
-          (remoteCart) => remoteCart.productId === cart.productId
+          (remoteCart) => remoteCart.itemVariantId === cart.itemVariantId
         )
         if (remoteCartIndex !== -1) {
           finalCarts[remoteCartIndex].qty = finalCarts[remoteCartIndex].qty + cart.qty
@@ -88,8 +86,6 @@ export default function LoginPageView() {
           finalCarts.push(cart)
         }
       })
-
-      console.warn(finalCarts)
 
       dispatch({
         type: "SET_CART",
