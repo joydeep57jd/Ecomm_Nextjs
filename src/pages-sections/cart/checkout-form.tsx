@@ -3,23 +3,23 @@ import Link from "next/link"
 import Card from "@mui/material/Card"
 import Button from "@mui/material/Button"
 import Divider from "@mui/material/Divider"
-import MenuItem from "@mui/material/MenuItem"
+// import MenuItem from "@mui/material/MenuItem"
 import TextField from "@mui/material/TextField"
-import Autocomplete from "@mui/material/Autocomplete"
+// import Autocomplete from "@mui/material/Autocomplete"
 import Typography from "@mui/material/Typography"
 // GLOBAL CUSTOM HOOK
 import useCart from "hooks/useCart"
 // GLOBAL CUSTOM COMPONENTS
 import { FlexBetween, FlexBox } from "components/flex-box"
 // DUMMY CUSTOM DATA
-import countryList from "data/countryList"
+// import countryList from "data/countryList"
 // CUSTOM UTILS LIBRARY FUNCTION
 import { currency } from "lib"
 
-const STATE_LIST = [
-  { value: "new-york", label: "New York" },
-  { value: "chicago", label: "Chicago" }
-]
+// const STATE_LIST = [
+//   { value: "new-york", label: "New York" },
+//   { value: "chicago", label: "Chicago" }
+// ]
 
 export default function CheckoutForm() {
   const { state } = useCart()
@@ -71,7 +71,7 @@ export default function CheckoutForm() {
       <TextField variant="outlined" rows={3} fullWidth multiline />
 
       {/* APPLY VOUCHER TEXT FIELD */}
-      <FlexBox alignItems="center" gap={1} my={2}>
+      {/* <FlexBox alignItems="center" gap={1} my={2}>
         <TextField
           fullWidth
           size="small"
@@ -83,16 +83,16 @@ export default function CheckoutForm() {
         <Button variant="outlined" color="primary">
           Apply
         </Button>
-      </FlexBox>
-
+      </FlexBox> */}
+{/* 
       <Divider sx={{ mb: 2 }} />
 
       <Typography variant="body1" fontWeight={500} sx={{ mb: 2 }}>
         Shipping Estimates
-      </Typography>
+      </Typography> */}
 
       {/* COUNTRY TEXT FIELD */}
-      <Autocomplete
+      {/* <Autocomplete
         fullWidth
         sx={{ mb: 2 }}
         options={countryList}
@@ -105,10 +105,10 @@ export default function CheckoutForm() {
             placeholder="Select Country"
           />
         )}
-      />
+      /> */}
 
       {/* STATE/CITY TEXT FIELD */}
-      <TextField
+      {/* <TextField
         select
         fullWidth
         size="small"
@@ -122,23 +122,23 @@ export default function CheckoutForm() {
             {label}
           </MenuItem>
         ))}
-      </TextField>
+      </TextField> */}
 
       {/* ZIP-CODE TEXT FIELD */}
-      <TextField
+      {/* <TextField
         fullWidth
         size="small"
         label="Zip Code"
         placeholder="3100"
         variant="outlined"
         sx={{ mt: 2 }}
-      />
-
+      /> */}
+{/* 
       <Button variant="outlined" color="primary" fullWidth sx={{ my: 2 }}>
         Calculate Shipping
-      </Button>
+      </Button> */}
 
-      <Button fullWidth color="primary" href="/checkout" variant="contained" LinkComponent={Link}>
+      <Button fullWidth color="primary" href="/checkout-alternative" variant="contained" LinkComponent={Link} sx={{ mt: 2 }}>
         Checkout Now
       </Button>
     </Card>

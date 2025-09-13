@@ -2,52 +2,53 @@ import { useMemo } from "react"
 import { Resolver, useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
-// MUI
+
 import Grid from "@mui/material/Grid"
 import Button from "@mui/material/Button"
 import Dialog from "@mui/material/Dialog"
 import Typography from "@mui/material/Typography"
 import DialogContent from "@mui/material/DialogContent"
-// LOCAL CUSTOM COMPONENTS
-import { FormProvider, TextField } from "components/form-hook"
-// CUSTOM DATA MODEL
-import { DeliveryAddress } from "models/Common"
 
-const validationSchema = yup.object({
-  street2: yup.string().optional(),
-  name: yup.string().required("Name is required"),
-  street1: yup.string().required("Street is required"),
-  phone: yup.string().required("Phone is required"),
-  city: yup.string().required("City is required"),
-  state: yup.string().required("State is required"),
-  country: yup.string().required("Country is required"),
-  zip: yup.string().required("Zip is required")
-})
+import { FormProvider, TextField } from "components/form-hook"
+
+
+import { validationSchema } from "@/schema/profile/address.schema"
+import { DelivaryAddressData } from "@/models/Address.model"
+import { SaveAddress } from "@/utils/api/profile"
+import { useUser } from "@/contexts/UserContenxt"
+
+
 
 type FormValues = yup.InferType<typeof validationSchema>;
 
 // ==================================================================
 interface Props {
   handleCloseModal: () => void;
-  deliveryAddress?: DeliveryAddress;
+  deliveryAddress?: DelivaryAddressData;
+  onSave?: (address: DelivaryAddressData) => void;
 }
+
 // ==================================================================
 
 export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal }: Props) {
-  const initialValues: FormValues = useMemo(
-    () => ({
-      name: deliveryAddress?.name || "",
-      phone: deliveryAddress?.phone || "",
-      zip: deliveryAddress?.zip || "",
-      city: deliveryAddress?.city || "",
-      state: deliveryAddress?.state || "",
-      country: deliveryAddress?.country || "",
-      street1: deliveryAddress?.street1 || "",
-      street2: deliveryAddress?.street2 || ""
-    }),
-    [deliveryAddress]
-  )
-
+  const {user} = useUser()
+const initialValues: FormValues = useMemo(
+  () => ({
+    fname: deliveryAddress?.customer?.fname || "",
+    lname: deliveryAddress?.customer?.lname || "",
+    mname: deliveryAddress?.customer?.mname || "",
+    phone: deliveryAddress?.customer?.phone || "",
+    email: deliveryAddress?.customer?.email || "",
+    address1: deliveryAddress?.customer?.address1 || "",
+    address2: deliveryAddress?.customer?.address2 || "",
+    pin: deliveryAddress?.customer?.pin || "",
+    city: deliveryAddress?.customer?.city || "",
+    dist: deliveryAddress?.customer?.dist || "",
+    state: deliveryAddress?.customer?.state || "",
+    country: deliveryAddress?.customer?.country || "",
+  }),
+  [deliveryAddress]
+)
   const methods = useForm<FormValues>({
     defaultValues: initialValues,
     resolver: yupResolver(validationSchema) as Resolver<FormValues>
@@ -59,12 +60,29 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
     e.preventDefault()
     e.stopPropagation()
 
-    handleSubmit((values) => {
-      alert(values)
-      handleCloseModal()
-      reset()
-    })(e)
+   handleSubmit(async (values) => {
+  const payload: DelivaryAddressData = {
+    CustomerId: Number(user?.customerId), 
+    customer: {
+      userid: user?.id || "", 
+      addrid: -1,
+      ...values, 
+      
+      type: "",
+      spclrequest: null,
+      paymentmode: null,
+      deliveryslot: null,
+      UserPhoneCountryCode: "IN",
+      PhoneCode: "+91"
+    }
   }
+
+  await SaveAddress(payload)
+  handleCloseModal()
+  reset()
+})(e)
+  }
+
 
   return (
     <Dialog open onClose={handleCloseModal}>
@@ -76,31 +94,34 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
         <FormProvider methods={methods} onSubmit={handleSubmitForm}>
           <Grid container spacing={3}>
             <Grid size={{ sm: 6, xs: 12 }}>
-              <TextField fullWidth name="name" label="Enter Your Name" />
+              <TextField fullWidth name="fname" label="Enter Your Firs tName" />
+            </Grid>
+             <Grid size={{ sm: 6, xs: 12 }}>
+              <TextField fullWidth name="mname" label="Enter Your Middle Name" />
+            </Grid>
+            <Grid size={{ sm: 6, xs: 12 }}>
+              <TextField fullWidth name="lname" label="Enter Your Last Name" />
+            </Grid>
+           
+
+            <Grid size={{ sm: 6, xs: 12 }}>
+              <TextField fullWidth name="address1" label="Address line 2" />
             </Grid>
 
             <Grid size={{ sm: 6, xs: 12 }}>
-              <TextField fullWidth name="street1" label="Street line 1" />
-            </Grid>
-
-            <Grid size={{ sm: 6, xs: 12 }}>
-              <TextField fullWidth name="street2" label="Address line 2" />
+              <TextField fullWidth name="address2" label="Address line 2" />
             </Grid>
 
             <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="phone" label="Enter Your Phone" />
             </Grid>
 
-            <Grid size={{ sm: 6, xs: 12 }}>
-              <TextField fullWidth name="city" label="City" />
-            </Grid>
+           
+
+          
 
             <Grid size={{ sm: 6, xs: 12 }}>
-              <TextField fullWidth name="state" label="State" />
-            </Grid>
-
-            <Grid size={{ sm: 6, xs: 12 }}>
-              <TextField fullWidth name="zip" label="Zip" />
+              <TextField fullWidth name="pin" label="Zip" />
             </Grid>
 
             <Grid size={{ sm: 6, xs: 12 }}>

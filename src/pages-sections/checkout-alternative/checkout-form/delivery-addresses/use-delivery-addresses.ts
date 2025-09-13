@@ -1,39 +1,48 @@
-import { useState, useCallback } from "react"
-// CUSTOM DATA MODEL
-import { DeliveryAddress } from "models/Common"
+import { useState } from "react"
+import { DelivaryAddressData } from "@/models/Address.model"
 
 export default function useDeliveryAddresses() {
+  const [addresses, setAddresses] = useState<DelivaryAddressData[]>([])
   const [openModal, setOpenModal] = useState(false)
-  const [editDeliveryAddress, setEditDeliveryAddress] = useState<DeliveryAddress | undefined>(
-    undefined
-  )
+  const [editDeliveryAddress, setEditDeliveryAddress] = useState<DelivaryAddressData | undefined>()
 
-  const toggleModal = useCallback(() => {
-    setOpenModal((prev) => !prev)
-  }, [])
+  const toggleModal = () => setOpenModal((prev) => !prev)
 
-  const handleDeleteDeliveryAddress = useCallback((id: number) => {
-    if (window.confirm("Are you sure you want to delete this address?")) {
-      console.warn("delete address", id)
-    }
-  }, [])
-
-  const handleAddNewAddress = useCallback(() => {
+  const handleAddNewAddress = () => {
     setEditDeliveryAddress(undefined)
     setOpenModal(true)
-  }, [])
+  }
 
-  const handleEditDeliveryAddress = useCallback((address: DeliveryAddress) => {
+  const handleEditDeliveryAddress = (address: DelivaryAddressData) => {
     setEditDeliveryAddress(address)
     setOpenModal(true)
-  }, [])
+  }
+
+  const handleDeleteDeliveryAddress = (id: number) => {
+    setAddresses((prev) => prev.filter((a) => a.customer.addrid !== id))
+  }
+
+  const handleSaveAddress = (newAddress: DelivaryAddressData) => {
+    setAddresses((prev) => {
+     
+      const exists = prev.find((a) => a.customer.addrid === newAddress.customer.addrid)
+      if (exists) {
+        return prev.map((a) =>
+          a.customer.addrid === newAddress.customer.addrid ? newAddress : a
+        )
+      }
+      return [...prev, newAddress]
+    })
+  }
 
   return {
+    addresses,
     openModal,
     editDeliveryAddress,
     toggleModal,
     handleAddNewAddress,
     handleEditDeliveryAddress,
-    handleDeleteDeliveryAddress
+    handleDeleteDeliveryAddress,
+    handleSaveAddress,
   }
 }

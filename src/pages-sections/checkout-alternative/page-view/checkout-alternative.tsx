@@ -8,7 +8,7 @@ import CheckoutSummery from "../checkout-summery"
 import { getAddresses, getDeliveryTimes, getCards } from "utils/__api__/checkout"
 
 export default async function CheckoutAlternativePageView() {
-  const [addresses, deliveryTimes, cards] = await Promise.all([
+  const [addresses] = await Promise.all([
     getAddresses(),
     getDeliveryTimes(),
     getCards()
@@ -20,9 +20,9 @@ export default async function CheckoutAlternativePageView() {
         <Grid container spacing={3}>
           <Grid size={{ md: 8, xs: 12 }} order={{ xs: 2, md: 1 }}>
             <CheckoutForm
-              cards={cards}
+              // cards={cards}
               deliveryAddresses={addresses}
-              deliveryTimes={deliveryTimes}
+              // deliveryTimes={deliveryTimes}
             />
           </Grid>
 
