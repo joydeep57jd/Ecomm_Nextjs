@@ -36,7 +36,8 @@ export default function HoverActions({ product }: Props) {
         productImage: product.images[0],
         productName: product.title,
         productPrice: product.price,
-        qty: 1
+        qty: 1,
+        stockQty: product.stockQty
 
       }} />
 

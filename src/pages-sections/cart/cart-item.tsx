@@ -11,14 +11,16 @@ import useCart from "hooks/useCart"
 import { currency } from "lib"
 import { ContentWrapper, ImageWrapper, QuantityButton, Wrapper } from "./styles"
 import { Cart } from "@/models/CartProductItem.models"
+import { useUser } from "@/contexts/UserContenxt"
 
 // =========================================================
-type Props = { item: Cart };
+type Props = { item: Cart, getCartItems(): Promise<void> };
 // =========================================================
 
 export default function CartItem({ item }: Props) {
 
   const { dispatch } = useCart()
+  const { user } = useUser()
 
   const handleCartAmountChange = (amount: number) => () => {
     dispatch({
@@ -26,7 +28,11 @@ export default function CartItem({ item }: Props) {
       payload: {
         ...item,
         qty: amount
-      }
+      },
+      isLoggedIn: true,
+      isSyncRequired: true,
+      isOrderSummaryFetchRequired: true,
+      user: user!
     })
   }
 
@@ -56,7 +62,7 @@ export default function CartItem({ item }: Props) {
 
           <Typography variant="h6">{item.qty}</Typography>
 
-          <QuantityButton disabled={item.qty === 10} onClick={handleCartAmountChange(item.qty + 1)}>
+          <QuantityButton disabled={item.qty >= item.stockQty!} onClick={handleCartAmountChange(item.qty + 1)}>
             <Add fontSize="small" />
           </QuantityButton>
         </div>

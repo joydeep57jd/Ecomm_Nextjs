@@ -35,6 +35,7 @@ export default function AddToCart({ cart, fullWidth }: Props) {
       fullWidth={fullWidth}
       color="primary"
       variant="contained"
+      disabled={!cart.stockQty}
       onClick={handleAddToCart}
     >
       Add to Cart

@@ -18,9 +18,8 @@ import { CustomerPayload, LoginRequest } from "@/models/Auth.model"
 import { useRouter } from "next/navigation"
 import { setItem } from "@/utils/services/local-storage.service"
 import { useUser } from "@/contexts/UserContenxt"
-import { getCart } from "@/utils/api/cart"
+import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
 import useCart from "@/hooks/useCart"
-import { Cart } from "@/models/CartProductItem.models"
 
 // LOGIN FORM FIELD VALIDATION SCHEMA
 
@@ -68,18 +67,9 @@ export default function LoginPageView() {
       const data = await login(payload)
       const remoteCarts = await getCart(+data.customerId)
       const localCarts = state.cart || []
-      const finalCarts: Cart[] = (Array.isArray(remoteCarts) ? remoteCarts : []).map((cart) => ({
-        itemVariantId: cart?.variantid,
-        productId: cart?.id,
-        productImage: cart?.images[0].fullImagepath,
-        productName: cart?.name,
-        productPrice: cart?.price_regular,
-        qty: cart?.quantity
-      }))
+      const finalCarts = getLocalCartFromRemoteCart(remoteCarts)
       localCarts.forEach((cart) => {
-        const remoteCartIndex = finalCarts.findIndex(
-          (remoteCart) => remoteCart.itemVariantId === cart.itemVariantId
-        )
+        const remoteCartIndex = finalCarts.findIndex((remoteCart) => remoteCart.itemVariantId === cart.itemVariantId && cart.productId === remoteCart.productId)
         if (remoteCartIndex !== -1) {
           finalCarts[remoteCartIndex].qty = finalCarts[remoteCartIndex].qty + cart.qty
         } else {

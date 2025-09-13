@@ -65,7 +65,8 @@ export default function ProductSection() {
                       )
                       : 0,
                     categories: [section.sectionName || "Products"],
-                    variantId: 0
+                    variantId: 0,
+                    stockQty: product.stockQty
                   }}
                 />
               </Box>

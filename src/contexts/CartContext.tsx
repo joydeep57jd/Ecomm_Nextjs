@@ -2,7 +2,7 @@
 "use client"
 
 import { Cart } from "@/models/CartProductItem.models"
-import { createContext, PropsWithChildren, useMemo, useReducer } from "react"
+import { createContext, PropsWithChildren, useEffect, useMemo, useReducer } from "react"
 import { getCartProducts, setCart, clearCart, syncGuestCart } from "@/utils/services/cart.service"
 import { getItem } from "@/utils/services/local-storage.service"
 import { UserData } from "@/models/Auth.model"
@@ -10,15 +10,21 @@ import { UserData } from "@/models/Auth.model"
 type InitialState = {
   cart: Cart[]
   isLoggedIn: boolean
+  orderSummaryFetchCount: number
+  isSyncRequired: boolean
+  isOrderSummaryFetchCountUpDateRequired: boolean
+  user?: UserData
+  deleteItem?: Cart
 }
 
 interface CartActionType {
   payload?: Cart
   carts?: Cart[]
-  type: "CHANGE_CART_AMOUNT" | "CLEAR_CART" | "SYNC_WITH_SERVER" | "SET_LOGGED_IN" | "SET_CART"
+  type: "CHANGE_CART_AMOUNT" | "CLEAR_CART" | "SET_CART" | "UPDATE_FETCH_COUNT" | "SYNC_SUCCESS"
   isLoggedIn?: boolean
   user?: UserData
   isSyncRequired?: boolean
+  isOrderSummaryFetchRequired?: boolean
 }
 
 
@@ -28,7 +34,10 @@ const userDetails = getItem("userDetails")
 
 const INITIAL_STATE: InitialState = {
   cart: INITIAL_CART,
-  isLoggedIn: !!userDetails
+  isLoggedIn: !!userDetails,
+  orderSummaryFetchCount: 0,
+  isSyncRequired: false,
+  isOrderSummaryFetchCountUpDateRequired: false
 }
 
 interface ContextProps {
@@ -45,10 +54,12 @@ const reducer = (state: InitialState, action: CartActionType) => {
       const cartItem = action.payload
       let updatedCart = []
       if (!cartItem) return state
+      let deleteItem
 
       const existIndex = cartList.findIndex((item) => item.itemVariantId === cartItem.itemVariantId && item.productId === cartItem.productId)
       if (cartItem.qty < 1) {
         updatedCart = [...cartList]
+        deleteItem = { ...cartList[existIndex] }
         updatedCart.splice(existIndex, 1)
       } else if (existIndex > -1) {
         updatedCart = [...cartList]
@@ -58,36 +69,19 @@ const reducer = (state: InitialState, action: CartActionType) => {
       }
 
       setCart(updatedCart)
-      if (action.isLoggedIn) {
-        syncGuestCart(updatedCart, action.user)
-      }
-
-      return { ...state, cart: updatedCart }
+      return { ...state, cart: updatedCart, isSyncRequired: true, user: action.user, isOrderSummaryFetchCountUpDateRequired: !!action.isOrderSummaryFetchRequired, deleteItem }
 
     case "CLEAR_CART":
       clearCart()
-      return { ...state, cart: [] }
-
-    case "SET_LOGGED_IN":
-      if (action.isLoggedIn) {
-        syncGuestCart(state.cart).then(() => {
-          clearCart()
-        })
-      }
-      return { ...state, isLoggedIn: action.isLoggedIn || false }
-
-    case "SYNC_WITH_SERVER":
-      if (state.isLoggedIn && state.cart.length > 0) {
-        syncGuestCart(state.cart)
-      }
-      return state
+      return { ...state, cart: [], isSyncRequired: true, user: action.user }
 
     case "SET_CART":
       setCart(action.carts ?? [])
-      if (action.isSyncRequired) {
-        syncGuestCart(action.carts ?? [], action.user)
-      }
-      return { ...state, cart: action.carts ?? [], isLoggedIn: action.isLoggedIn ?? true }
+      return { ...state, cart: action.carts ?? [], isLoggedIn: action.isLoggedIn ?? true, isSyncRequired: true, user: action.user }
+    case "UPDATE_FETCH_COUNT":
+      return { ...state, orderSummaryFetchCount: state.orderSummaryFetchCount + 1, isOrderSummaryFetchCountUpDateRequired: false, isSyncRequired: false, deleteItem: undefined, cart: action.carts! }
+    case "SYNC_SUCCESS":
+      return { ...state, isSyncRequired: false, deleteItem: undefined, cart: action.carts! }
 
     default: {
       return state
@@ -97,6 +91,32 @@ const reducer = (state: InitialState, action: CartActionType) => {
 
 export default function CartProvider({ children }: PropsWithChildren) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE)
+
+  useEffect(() => {
+    if (state.isSyncRequired) {
+      syncData(state)
+    }
+  }, [state])
+
+  const syncData = async (state: InitialState) => {
+    const finalCartItems = [...state.cart]
+    const updatedCart = [...state.cart]
+    if (state.deleteItem) {
+      finalCartItems.push({ ...state.deleteItem, qty: 0 })
+      const index = updatedCart.findIndex(c => c.itemVariantId === state.deleteItem?.itemVariantId && c.productId === state.deleteItem?.productId)
+      if (index != -1) {
+        updatedCart.splice(index, 1)
+      }
+    }
+
+    await syncGuestCart(finalCartItems, state.user)
+
+    if (state.isOrderSummaryFetchCountUpDateRequired) {
+      dispatch({ type: "UPDATE_FETCH_COUNT", carts: updatedCart })
+    } else {
+      dispatch({ type: "SYNC_SUCCESS", carts: updatedCart })
+    }
+  }
 
   const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch])
 

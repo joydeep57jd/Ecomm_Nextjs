@@ -43,8 +43,8 @@ export default function ProductIntro({ product, variantMap }: Props) {
           </Typography>
 
           <Typography variant="body1" fontSize={30} fontWeight={700} sx={{ my: 1 }}>
-            {product.priceAndStock.salePrice}{" "}
-            {product.priceAndStock.salePrice !== product.priceAndStock.mrp && (
+            {product.priceAndStock?.salePrice}{" "}
+            {product.priceAndStock?.salePrice !== product.priceAndStock?.mrp && (
               <Typography
                 component="span"
                 sx={{
@@ -55,7 +55,7 @@ export default function ProductIntro({ product, variantMap }: Props) {
                   ml: 1
                 }}
               >
-                {currency(product.priceAndStock.mrp)}
+                {currency(product.priceAndStock?.mrp)}
               </Typography>
             )}
           </Typography>
@@ -80,20 +80,21 @@ export default function ProductIntro({ product, variantMap }: Props) {
           {/* PRICE & STOCK */}
           <div className="price">
             <Typography variant="h2" sx={{ color: "primary.main", mb: 0.5, lineHeight: 1 }}>
-              {currency(product.priceAndStock.salePrice)}
+              {currency(product.priceAndStock?.salePrice)}
             </Typography>
 
-            <p>{product.priceAndStock.stockQty > 0 ? "Stock Available" : "Out of Stock"}</p>
+            <p>{product.priceAndStock?.stockQty > 0 ? "Stock Available" : "Out of Stock"}</p>
           </div>
 
           {/* ADD TO CART BUTTON */}
           <ProductAction product={{
             productId: product.variantDetails.itemId,
             itemVariantId: product.variantDetails.itemVariantId,
-            productPrice: product.priceAndStock.salePrice,
+            productPrice: product.priceAndStock?.salePrice,
             productName: product.variantDetails.itemName,
             productImage: product.imageList[0].fullImagepath,
-            qty: 1
+            qty: 1,
+            stockQty: product.priceAndStock?.stockQty
           }} />
 
           {/* SHOP NAME */}

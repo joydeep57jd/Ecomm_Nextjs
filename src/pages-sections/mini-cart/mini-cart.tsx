@@ -56,7 +56,7 @@ export default function MiniCart() {
         {CART_LENGTH > 0 ? (
           <OverlayScrollbar>
             {state.cart.map((item) => (
-              <MiniCartItem item={item} key={item.itemVariantId} onCart={handleCartAmountChange} />
+              <MiniCartItem item={item} key={`${item.productId}-${item.itemVariantId}`} onCart={handleCartAmountChange} />
             ))}
           </OverlayScrollbar>
         ) : (
@@ -72,7 +72,7 @@ export default function MiniCart() {
             variant="contained"
             LinkComponent={Link}
             onClick={() => setOpen(false)}
-            href="/checkout-alternative"
+            href="/checkout"
             sx={{ height: 44, mb: 1 }}
           >
             Proceed to Checkout

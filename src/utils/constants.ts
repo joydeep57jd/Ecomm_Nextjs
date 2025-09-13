@@ -85,6 +85,7 @@ export const API_URL = {
 
   ADDRESS: {
     ADD: "/frontend/SaveAddress",
+    LIST: "frontend/GetCustomer",
     DELETE: "/frontend/DeleteAddress",
     VALIDATE_PIN: "/frontend/ValidatePinCode"
   },

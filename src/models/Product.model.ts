@@ -21,4 +21,5 @@ export default interface Product {
   reviews?: Review[]
   published?: boolean
   variantId?: number
+  stockQty: number
 }

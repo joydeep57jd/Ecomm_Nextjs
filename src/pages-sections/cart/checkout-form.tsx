@@ -3,28 +3,17 @@ import Link from "next/link"
 import Card from "@mui/material/Card"
 import Button from "@mui/material/Button"
 import Divider from "@mui/material/Divider"
-// import MenuItem from "@mui/material/MenuItem"
 import TextField from "@mui/material/TextField"
-// import Autocomplete from "@mui/material/Autocomplete"
-import Typography from "@mui/material/Typography"
-// GLOBAL CUSTOM HOOK
-import useCart from "hooks/useCart"
-// GLOBAL CUSTOM COMPONENTS
-import { FlexBetween, FlexBox } from "components/flex-box"
-// DUMMY CUSTOM DATA
-// import countryList from "data/countryList"
-// CUSTOM UTILS LIBRARY FUNCTION
-import { currency } from "lib"
+import { FlexBox } from "components/flex-box"
+import { CheckoutOrderResponse } from "@/models/Order.model"
+import ListItem from "../checkout/checkout-summery/list-item"
 
-// const STATE_LIST = [
-//   { value: "new-york", label: "New York" },
-//   { value: "chicago", label: "Chicago" }
-// ]
+type Props = {
+  checkoutOrderDetails: CheckoutOrderResponse
+  isLoading: boolean
+}
 
-export default function CheckoutForm() {
-  const { state } = useCart()
-
-  const getTotalPrice = () => state.cart.reduce((acc, item) => acc + item.productPrice * item.qty, 0)
+export default function CheckoutForm({ checkoutOrderDetails, isLoading }: Props) {
 
   return (
     <Card
@@ -36,7 +25,7 @@ export default function CheckoutForm() {
         backgroundColor: "grey.50"
       }}
     >
-      <FlexBetween mb={2}>
+      {/* <FlexBetween mb={2}>
         <Typography variant="body1" fontSize={16} fontWeight={600}>
           Total:
         </Typography>
@@ -44,9 +33,9 @@ export default function CheckoutForm() {
         <Typography variant="body1" fontSize={18} fontWeight={600} lineHeight={1}>
           {currency(getTotalPrice())}
         </Typography>
-      </FlexBetween>
+      </FlexBetween> */}
 
-      <Divider sx={{ mb: 2 }} />
+      {/* <Divider sx={{ mb: 2 }} />
 
       <FlexBox alignItems="center" columnGap={1} mb={2}>
         <Typography variant="body1" fontWeight={500}>
@@ -65,13 +54,13 @@ export default function CheckoutForm() {
         >
           Note
         </Typography>
-      </FlexBox>
+      </FlexBox> */}
 
       {/* COMMENTS TEXT FIELD */}
-      <TextField variant="outlined" rows={3} fullWidth multiline />
+      {/* <TextField variant="outlined" rows={3} fullWidth multiline /> */}
 
       {/* APPLY VOUCHER TEXT FIELD */}
-      {/* <FlexBox alignItems="center" gap={1} my={2}>
+      <FlexBox alignItems="center" gap={1} my={2}>
         <TextField
           fullWidth
           size="small"
@@ -83,62 +72,21 @@ export default function CheckoutForm() {
         <Button variant="outlined" color="primary">
           Apply
         </Button>
-      </FlexBox> */}
-{/* 
+      </FlexBox>
+
       <Divider sx={{ mb: 2 }} />
 
-      <Typography variant="body1" fontWeight={500} sx={{ mb: 2 }}>
-        Shipping Estimates
-      </Typography> */}
+      <ListItem title="Subtotal" value={checkoutOrderDetails?.totalamt} />
+      <ListItem title="Shipping" value={0} />
+      <ListItem title="Tax" value={checkoutOrderDetails?.totaltaxamt} />
+      <ListItem title="Discount" value={0} />
 
-      {/* COUNTRY TEXT FIELD */}
-      {/* <Autocomplete
-        fullWidth
-        sx={{ mb: 2 }}
-        options={countryList}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            size="small"
-            label="Country"
-            variant="outlined"
-            placeholder="Select Country"
-          />
-        )}
-      /> */}
 
-      {/* STATE/CITY TEXT FIELD */}
-      {/* <TextField
-        select
-        fullWidth
-        size="small"
-        label="State"
-        variant="outlined"
-        placeholder="Select State"
-        defaultValue="new-york"
-      >
-        {STATE_LIST.map(({ label, value }) => (
-          <MenuItem value={value} key={label}>
-            {label}
-          </MenuItem>
-        ))}
-      </TextField> */}
+      <Divider sx={{ mb: 2 }} />
 
-      {/* ZIP-CODE TEXT FIELD */}
-      {/* <TextField
-        fullWidth
-        size="small"
-        label="Zip Code"
-        placeholder="3100"
-        variant="outlined"
-        sx={{ mt: 2 }}
-      /> */}
-{/* 
-      <Button variant="outlined" color="primary" fullWidth sx={{ my: 2 }}>
-        Calculate Shipping
-      </Button> */}
+      <ListItem title="Total" value={checkoutOrderDetails?.grandtotalamt} />
 
-      <Button fullWidth color="primary" href="/checkout-alternative" variant="contained" LinkComponent={Link} sx={{ mt: 2 }}>
+      <Button fullWidth color="primary" href="/checkout-alternative" loading={isLoading} variant="contained" LinkComponent={Link} sx={{ mt: 2 }}>
         Checkout Now
       </Button>
     </Card>

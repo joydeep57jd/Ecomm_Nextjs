@@ -14,6 +14,7 @@ export interface SectionItem {
   imagePath: string
   images?: ProductImage[]
   offer?: string
+  stockQty: number
 }
 
 export interface Section {
