@@ -34,6 +34,7 @@ export const API_URL = {
     HISTORY_CUSTOMER: "/frontend/GetOrderHistoryCustomer",
     INVOICE: "/frontend/GetStatementInvoice",
     CHECKOUT: "/frontend/CheckOutOrder",
+    GET_DELIVEY_CHARGE: "/frontend/GetDeliveryCharge",
     PLACE_ORDER: "/frontend/PlaceOrder",
     SAVE_PAYMENT: "/frontend/SavePayment",
     CREATE_CANCEL_REQUEST: "/frontend/CreateCancelRequest",

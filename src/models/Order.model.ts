@@ -78,3 +78,10 @@ export interface Taxdetail {
   itemtotal: number
   taxType: null
 }
+
+export interface DeliveryChargeRequest {
+  totalAmount: number
+  taxAmount: number
+  netAmount: number
+  zipCode: string
+}

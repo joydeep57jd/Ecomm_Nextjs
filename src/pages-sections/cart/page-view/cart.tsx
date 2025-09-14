@@ -12,15 +12,11 @@ import { useEffect, useState } from "react"
 import Loading from "@/app/loading"
 import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
 import { useUser } from "@/contexts/UserContenxt"
-import { getOrderSummary } from "@/utils/api/order"
-import { CheckoutOrderRequest, CheckoutOrderResponse } from "@/models/Order.model"
+
 
 export default function CartPageView() {
-
   const [isCartLoaded, setIsCartLoaded] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [checkoutOrderDetails, setCheckoutOrderDetails] = useState<CheckoutOrderResponse | null>(null)
-  const { dispatch, state: { cart, orderSummaryFetchCount } } = useCart()
+  const { dispatch, state: { remoteCarts, orderSummaryFetchCount, isLoading } } = useCart()
   const { user } = useUser()
 
   useEffect(() => {
@@ -29,33 +25,17 @@ export default function CartPageView() {
 
   const getCartItems = async () => {
     try {
-      setIsLoading(true)
       const remoteCarts = await getCart(+user!.customerId)
       const finalCarts = getLocalCartFromRemoteCart(remoteCarts)
-      const checkoutOrderRequest: CheckoutOrderRequest = {
-        discoutcode: "",
-        ordered: {
-          items: remoteCarts.map(c => ({
-            batchId: c.batchId,
-            id: c.id,
-            quantity: c.quantity,
-            rate: c.price_regular,
-            status: "order placed",
-            variantid: c.variantid
-          }))
-        }
-      }
       dispatch({
         type: "SET_CART",
         carts: finalCarts,
         isLoggedIn: true,
+        remoteCarts
       })
-      const checkoutOrderResponse = await getOrderSummary(checkoutOrderRequest)
-      setCheckoutOrderDetails(checkoutOrderResponse)
     } catch {
 
     } finally {
-      setIsLoading(false)
       setIsCartLoaded(true)
     }
   }
@@ -66,15 +46,15 @@ export default function CartPageView() {
   }
 
 
-  if (cart.length === 0) {
+  if (remoteCarts?.length === 0) {
     return <EmptyCart />
   }
 
   return (
     <Grid container spacing={3}>
       <Grid size={{ md: 8, xs: 12 }}>
-        {cart.map((item) => (
-          <CartItem key={`${item.productId}-${item.itemVariantId}`} item={item} getCartItems={getCartItems} />
+        {remoteCarts!.map((item) => (
+          <CartItem key={`${item.id}-${item.variantid}`} item={item} getCartItems={getCartItems} />
         ))}
         <Box textAlign="end">
           {/* <Button
@@ -90,7 +70,7 @@ export default function CartPageView() {
       </Grid>
 
       <Grid size={{ md: 4, xs: 12 }}>
-        <CheckoutForm checkoutOrderDetails={checkoutOrderDetails!} isLoading={isLoading} />
+        <CheckoutForm isLoading={isLoading} />
       </Grid>
     </Grid>
   )

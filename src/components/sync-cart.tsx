@@ -33,7 +33,8 @@ export default function SyncCart() {
         dispatch({
             type: "SET_CART",
             carts: finalCarts,
-            isLoggedIn: true
+            isLoggedIn: true,
+            remoteCarts
         })
     }
 

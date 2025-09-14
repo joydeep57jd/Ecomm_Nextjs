@@ -23,6 +23,8 @@ import { UserProvider } from "@/contexts/UserContenxt"
 import SyncCart from "../components/sync-cart"
 import { CartDrawerProvider } from "@/contexts/CartDrawerContext"
 import MiniCartDrawer from "./@modal/(.)mini-cart/page"
+import { FlexRowCenter } from "@/components/flex-box"
+import { CircularProgress } from "@mui/material"
 
 // ==============================================================
 interface RootLayoutProps {
@@ -35,7 +37,9 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body id="body" className={geist.className}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<FlexRowCenter minHeight="100vh">
+          <CircularProgress sx={{ color: "#111827" }} />
+        </FlexRowCenter>}>
           <CartDrawerProvider>
             <UserProvider>
               <CartProvider>

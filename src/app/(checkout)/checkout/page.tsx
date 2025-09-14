@@ -1,6 +1,5 @@
+import CheckoutAlternativePageView from "@/pages-sections/checkout-alternative/page-view"
 import type { Metadata } from "next"
-import CheckoutPageView from "pages-sections/checkout/page-view"
-
 export const metadata: Metadata = {
   title: "Checkout - Bazaar Next.js E-commerce Template",
   description:
@@ -10,5 +9,5 @@ export const metadata: Metadata = {
 }
 
 export default function Checkout() {
-  return <CheckoutPageView />
+  return <CheckoutAlternativePageView />
 }

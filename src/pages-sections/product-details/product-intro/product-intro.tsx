@@ -43,7 +43,7 @@ export default function ProductIntro({ product, variantMap }: Props) {
           </Typography>
 
           <Typography variant="body1" fontSize={30} fontWeight={700} sx={{ my: 1 }}>
-            {product.priceAndStock?.salePrice}{" "}
+            {currency(product.priceAndStock?.salePrice)}{" "}
             {product.priceAndStock?.salePrice !== product.priceAndStock?.mrp && (
               <Typography
                 component="span"

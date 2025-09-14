@@ -7,11 +7,18 @@ export const SaveAddress = async (data: DelivaryAddressData) => {
   return await axios.post(API_URL.ADDRESS.ADD, data)
 }
 
-export const gerAddressList = async (customerid: number) => {
+export const getAddressList = async (customerid: number) => {
   const { data } = await axios.post<{ data: UserAddressListResponse }>(
-    ``,
+    API_URL.ADDRESS.LIST,
     {},
     { params: { customerid } }
   )
+  return data.data
+}
+
+export const deleteAddress = async (addressId: number) => {
+  const { data } = await axios.post<{ data: UserAddressListResponse }>(API_URL.ADDRESS.DELETE, {
+    addressId
+  })
   return data.data
 }

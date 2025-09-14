@@ -12,11 +12,15 @@ import useDeliveryAddresses from "./use-delivery-addresses"
 // LOCAL CUSTOM COMPONENTS
 import Card from "../card"
 import Heading from "../heading"
-import DeliveryAddressForm from "./delivery-address-form"
 // GLOBAL CUSTOM COMPONENTS
 import { FlexBetween, FlexBox } from "components/flex-box"
 // TYPES
-import { DeliveryAddress } from "models/Common"
+import { Address } from "@/models/User.model"
+import DeliveryAddressForm from "./delivery-address-form"
+import { useEffect } from "react"
+import { DelivaryAddressData } from "@/models/Address.model"
+import { useUser } from "@/contexts/UserContenxt"
+import DeleteDeliveryAddress from "./delete-delivery-address"
 
 // STYLED COMPONENTS
 const AddressCard = styled("div", {
@@ -42,31 +46,59 @@ const AddressCard = styled("div", {
 }))
 
 // ==============================================================
-type Props = { deliveryAddresses: DeliveryAddress[] };
+type Props = { deliveryAddresses: Address[], getAddresses(): Promise<void>, setSelectedPinCode(value: string): void };
 // ==============================================================
 
-export default function DeliveryAddresses({ deliveryAddresses }: Props) {
+export default function DeliveryAddresses({ deliveryAddresses, getAddresses, setSelectedPinCode }: Props) {
   const {
     openModal,
-    editDeliveryAddress,
     toggleModal,
+    editDeliveryAddress,
     handleAddNewAddress,
     handleEditDeliveryAddress,
-    handleDeleteDeliveryAddress
+    handleDeleteDeliveryAddress,
+    addresses,
+    setAddresses,
+    isReloadRequired,
+    setIsReloadRequired,
+    openDeleteModal,
+    deleteAddressId,
+    toggleDeleteModal
   } = useDeliveryAddresses()
+
+  const { user } = useUser()
+
+  useEffect(() => {
+    if (deliveryAddresses) {
+      setAddresses(deliveryAddresses.map(a => ({
+        customer: { ...a, userid: user!.id },
+        CustomerId: +user!.customerId
+      })))
+      setIsReloadRequired(false)
+    }
+  }, [deliveryAddresses])
+
+  useEffect(() => {
+    if (isReloadRequired) {
+      getAddresses()
+    }
+  }, [isReloadRequired])
+
+
 
   const { control } = useFormContext()
 
+
   const HeaderSection = (
     <FlexBetween mb={4}>
-      <Heading number={2} title="Delivery Address" mb={0} />
+      <Heading number={1} title="Delivery Address" mb={0} />
       <Button color="primary" variant="outlined" onClick={handleAddNewAddress}>
         Add New Address
       </Button>
     </FlexBetween>
   )
 
-  if (!Array.isArray(deliveryAddresses) || deliveryAddresses.length === 0) {
+  if (!Array.isArray(addresses) || addresses.length === 0) {
     return (
       <Card>
         {HeaderSection}
@@ -83,17 +115,20 @@ export default function DeliveryAddresses({ deliveryAddresses }: Props) {
       {HeaderSection}
 
       <Grid container spacing={2}>
-        {deliveryAddresses.map((address, ind) => (
-          <Grid size={{ md: 4, sm: 6, xs: 12 }} key={ind}>
+        {addresses.map((address) => (
+          <Grid size={{ md: 4, sm: 6, xs: 12 }} key={address.customer.addrid}>
             <Controller
               name="address"
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <AddressItem
                   address={address}
-                  isSelected={address.street1 === field.value}
+                  isSelected={address.customer.addrid === field.value}
                   hasError={Boolean(error)}
-                  onSelect={field.onChange}
+                  onSelect={(address) => {
+                    field.onChange(address.customer.addrid)
+                    setSelectedPinCode(address.customer.pin)
+                  }}
                   onEdit={handleEditDeliveryAddress}
                   onDelete={handleDeleteDeliveryAddress}
                 />
@@ -107,6 +142,10 @@ export default function DeliveryAddresses({ deliveryAddresses }: Props) {
       {openModal && (
         <DeliveryAddressForm handleCloseModal={toggleModal} deliveryAddress={editDeliveryAddress} />
       )}
+
+      {openDeleteModal && (
+        <DeleteDeliveryAddress addressId={deleteAddressId} handleCloseModal={toggleDeleteModal} />
+      )}
     </Card>
   )
 }
@@ -114,10 +153,10 @@ export default function DeliveryAddresses({ deliveryAddresses }: Props) {
 interface AddressItemProps {
   hasError: boolean;
   isSelected: boolean;
-  address: DeliveryAddress;
+  address: DelivaryAddressData;
   onDelete: (id: number) => void;
-  onSelect: (street: string) => void;
-  onEdit: (address: DeliveryAddress) => void;
+  onSelect: (address: DelivaryAddressData) => void;
+  onEdit: (address: DelivaryAddressData) => void;
 }
 
 function AddressItem({
@@ -129,26 +168,29 @@ function AddressItem({
   onDelete
 }: AddressItemProps) {
   return (
-    <AddressCard error={hasError} active={isSelected} onClick={() => onSelect(address.street1)}>
+    <AddressCard error={hasError} active={isSelected} onClick={() => onSelect(address)}>
       <FlexBox position="absolute" top={13} right={7}>
         <IconButton size="small" onClick={() => onEdit(address)}>
           <Pencil color="inherit" sx={{ fontSize: 16 }} />
         </IconButton>
 
-        <IconButton size="small" color="error" onClick={() => onDelete(address.id)}>
+        <IconButton size="small" color="error" onClick={() => onDelete(address.customer.addrid)}>
           <Trash color="error" sx={{ fontSize: 16 }} />
         </IconButton>
       </FlexBox>
 
       <Typography noWrap variant="h6">
-        {address.name}
+        {address.customer.fname} {address.customer.lname}
       </Typography>
 
-      <Typography variant="body1">{address.street1}</Typography>
+      <Typography variant="body1">{address.customer.phone}</Typography>
 
-      {address.street2 && <Typography variant="body1">{address.street2}</Typography>}
+      <Typography variant="body1">{address.customer.address1}</Typography>
 
-      <Typography variant="body1">{address.phone}</Typography>
+      <Typography variant="body1">{address.customer.address2 || ""}</Typography>
+
+      <Typography variant="body1">{address.customer.country} - {address.customer.pin}</Typography>
+
     </AddressCard>
   )
 }

@@ -30,7 +30,7 @@ export default function ProductCard16({ product }: Props) {
     <StyledRoot>
       <Link href={`/products/${product.itemId}`}>
         <div className="img-wrapper">
-          <LazyImage alt={imageAltTag} width={380} height={379} src={thumbnail} />
+          <LazyImage unoptimized alt={imageAltTag} width={380} height={379} src={thumbnail} />
           {discount ? <DiscountChip discount={discount} sx={{ left: 20, top: 20 }} /> : null}
         </div>
       </Link>
@@ -58,7 +58,8 @@ export default function ProductCard16({ product }: Props) {
           productPrice: +finalPrice,
           qty: 1,
           productImage: product.imageList[0].fullImagepath,
-          itemVariantId: 0
+          itemVariantId: 0,
+          stockQty: product.isSoldOut ? 0 : 1
         }} />
       </div>
     </StyledRoot>

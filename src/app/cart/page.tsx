@@ -1,3 +1,4 @@
+import Container from "@mui/material/Container"
 import type { Metadata } from "next"
 import { CartPageView } from "pages-sections/cart/page-view"
 
@@ -10,5 +11,8 @@ export const metadata: Metadata = {
 }
 
 export default function Cart() {
-  return <CartPageView />
+  return <Container maxWidth="lg" sx={{ mt: 2, mb: 4 }}>
+
+    <CartPageView />
+  </Container>
 }

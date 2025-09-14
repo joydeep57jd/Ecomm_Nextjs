@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { Resolver, useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
@@ -23,7 +23,7 @@ type FormValues = yup.InferType<typeof validationSchema>;
 
 // ==================================================================
 interface Props {
-  handleCloseModal: () => void;
+  handleCloseModal: (isReloadRequired: boolean) => void;
   deliveryAddress?: DelivaryAddressData;
   onSave?: (address: DelivaryAddressData) => void;
 }
@@ -31,24 +31,25 @@ interface Props {
 // ==================================================================
 
 export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal }: Props) {
-  const {user} = useUser()
-const initialValues: FormValues = useMemo(
-  () => ({
-    fname: deliveryAddress?.customer?.fname || "",
-    lname: deliveryAddress?.customer?.lname || "",
-    mname: deliveryAddress?.customer?.mname || "",
-    phone: deliveryAddress?.customer?.phone || "",
-    email: deliveryAddress?.customer?.email || "",
-    address1: deliveryAddress?.customer?.address1 || "",
-    address2: deliveryAddress?.customer?.address2 || "",
-    pin: deliveryAddress?.customer?.pin || "",
-    city: deliveryAddress?.customer?.city || "",
-    dist: deliveryAddress?.customer?.dist || "",
-    state: deliveryAddress?.customer?.state || "",
-    country: deliveryAddress?.customer?.country || "",
-  }),
-  [deliveryAddress]
-)
+  const { user } = useUser()
+  const [isSaving, setIsSaving] = useState(false)
+  const initialValues: FormValues = useMemo(
+    () => ({
+      fname: deliveryAddress?.customer?.fname || "",
+      lname: deliveryAddress?.customer?.lname || "",
+      mname: deliveryAddress?.customer?.mname || "",
+      phone: deliveryAddress?.customer?.phone || "",
+      email: deliveryAddress?.customer?.email || "",
+      address1: deliveryAddress?.customer?.address1 || "",
+      address2: deliveryAddress?.customer?.address2 || "",
+      pin: deliveryAddress?.customer?.pin || "",
+      city: deliveryAddress?.customer?.city || "",
+      dist: deliveryAddress?.customer?.dist || "",
+      state: deliveryAddress?.customer?.state || "",
+      country: deliveryAddress?.customer?.country || "",
+    }),
+    [deliveryAddress]
+  )
   const methods = useForm<FormValues>({
     defaultValues: initialValues,
     resolver: yupResolver(validationSchema) as Resolver<FormValues>
@@ -60,27 +61,28 @@ const initialValues: FormValues = useMemo(
     e.preventDefault()
     e.stopPropagation()
 
-   handleSubmit(async (values) => {
-  const payload: DelivaryAddressData = {
-    CustomerId: Number(user?.customerId), 
-    customer: {
-      userid: user?.id || "", 
-      addrid: -1,
-      ...values, 
-      
-      type: "",
-      spclrequest: null,
-      paymentmode: null,
-      deliveryslot: null,
-      UserPhoneCountryCode: "IN",
-      PhoneCode: "+91"
-    }
-  }
+    handleSubmit(async (values) => {
+      setIsSaving(true)
+      const payload: DelivaryAddressData = {
+        CustomerId: Number(user?.customerId),
+        customer: {
+          userid: user?.id || "",
+          addrid: deliveryAddress?.customer.addrid ?? -1,
+          type: "",
+          spclrequest: null,
+          paymentmode: null,
+          deliveryslot: null,
+          UserPhoneCountryCode: "IN",
+          PhoneCode: "+91",
+          ...values
+        }
+      }
 
-  await SaveAddress(payload)
-  handleCloseModal()
-  reset()
-})(e)
+      await SaveAddress(payload)
+      setIsSaving(false)
+      reset()
+      handleCloseModal(true)
+    })(e)
   }
 
 
@@ -94,18 +96,18 @@ const initialValues: FormValues = useMemo(
         <FormProvider methods={methods} onSubmit={handleSubmitForm}>
           <Grid container spacing={3}>
             <Grid size={{ sm: 6, xs: 12 }}>
-              <TextField fullWidth name="fname" label="Enter Your Firs tName" />
+              <TextField fullWidth name="fname" label="Enter Your First Name" />
             </Grid>
-             <Grid size={{ sm: 6, xs: 12 }}>
+            <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="mname" label="Enter Your Middle Name" />
             </Grid>
             <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="lname" label="Enter Your Last Name" />
             </Grid>
-           
+
 
             <Grid size={{ sm: 6, xs: 12 }}>
-              <TextField fullWidth name="address1" label="Address line 2" />
+              <TextField fullWidth name="address1" label="Address line 1" />
             </Grid>
 
             <Grid size={{ sm: 6, xs: 12 }}>
@@ -116,10 +118,6 @@ const initialValues: FormValues = useMemo(
               <TextField fullWidth name="phone" label="Enter Your Phone" />
             </Grid>
 
-           
-
-          
-
             <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="pin" label="Zip" />
             </Grid>
@@ -129,7 +127,7 @@ const initialValues: FormValues = useMemo(
             </Grid>
 
             <Grid size={{ sm: 6, xs: 12 }}>
-              <Button color="primary" variant="contained" type="submit">
+              <Button color="primary" variant="contained" loading={isSaving} type="submit">
                 Save
               </Button>
             </Grid>

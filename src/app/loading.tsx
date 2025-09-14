@@ -7,7 +7,7 @@ type Props = {
 
 export default function Loading({ isSmallLoader }: Props) {
   return (
-    <FlexRowCenter minHeight={isSmallLoader ? "" : "100vh"}>
+    <FlexRowCenter height={420} className={isSmallLoader ? 'h-[calc(100vh-3rem)]' : 'h-screen'}>
       <CircularProgress color="primary" />
     </FlexRowCenter>
   )

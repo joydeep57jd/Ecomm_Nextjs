@@ -1,6 +1,5 @@
 "use client"
 
-import { useMemo } from "react"
 // MUI
 import Card from "@mui/material/Card"
 import Divider from "@mui/material/Divider"
@@ -11,6 +10,7 @@ import FlexBetween from "components/flex-box/flex-between"
 import useCart from "hooks/useCart"
 // CUSTOM UTILS LIBRARY FUNCTION
 import { currency } from "lib"
+import { CheckoutOrderResponse } from "@/models/Order.model"
 
 const CARD_STYLES = {
   padding: 3,
@@ -18,28 +18,14 @@ const CARD_STYLES = {
   borderColor: "grey.100"
 } as const
 
-export default function CheckoutSummary() {
+type Props = {
+  checkoutOrderResponse: CheckoutOrderResponse
+  deliveryCharge: number
+}
+
+export default function CheckoutSummary({ checkoutOrderResponse, deliveryCharge }: Props) {
   const { state } = useCart()
 
-  const { subtotal, tax, total, discount, shipping } = useMemo(() => {
-    if (!state?.cart?.length) {
-      return {
-        subtotal: 0,
-        tax: 0,
-        total: 0,
-        discount: 0,
-        shipping: 0
-      }
-    }
-
-    const subtotal = state.cart.reduce((sum, item) => sum + item.productPrice * item.qty, 0)
-    const tax = 40
-    const shipping = 0
-    const discount = 0
-
-    const total = subtotal + tax + shipping - discount
-    return { subtotal, tax, total, discount, shipping }
-  }, [state?.cart])
 
   if (!state || !state.cart.length) return null
 
@@ -55,20 +41,20 @@ export default function CheckoutSummary() {
             <strong>{item.qty}</strong> x {item.productName}
           </Typography>
 
-          <Typography variant="body1">{currency(item.productPrice)}</Typography>
+          <Typography variant="body1">{currency(item.productPrice * item.qty)}</Typography>
         </FlexBetween>
       ))}
 
       <Divider sx={{ my: 3 }} />
 
-      <ListItem title="Subtotal" value={subtotal} />
-      <ListItem title="Shipping" value={shipping} />
-      <ListItem title="Tax" value={tax} />
-      <ListItem title="Discount" value={discount} mb={3} />
+      <ListItem title="Subtotal" value={checkoutOrderResponse?.totalamt} />
+      <ListItem title="Shipping" value={deliveryCharge} />
+      <ListItem title="Tax" value={checkoutOrderResponse?.totaltaxamt} />
+      <ListItem title="Voucher" value={0} mb={3} />
 
       <Divider sx={{ mb: 1 }} />
 
-      <ListItem title="Total" value={total} />
+      <ListItem title="Total" value={(checkoutOrderResponse?.grandtotalamt)} />
     </Card>
   )
 }
