@@ -1,30 +1,31 @@
-import Link from "next/link"
 // MUI
 import Card from "@mui/material/Card"
 import Button from "@mui/material/Button"
 import ListItem from "../checkout/checkout-summery/list-item"
 import useCart from "@/hooks/useCart"
 import { useEffect, useState } from "react"
+import { useUser } from "@/contexts/UserContenxt"
+import { useRouter } from "next/navigation"
 
-type Props = {
-  isLoading: boolean
-}
+
 
 type PriceDetails = {
   mrp: number, discount: number, totalPrice: number
 }
 
-export default function CheckoutForm({ isLoading }: Props) {
+export default function CheckoutForm() {
+  const {user} = useUser()
+  const router = useRouter()
 
   const [priceDetails, setPriceDetails] = useState<PriceDetails | null>(null)
 
-  const { state: { remoteCarts } } = useCart()
+  const { state: { cart } } = useCart()
 
   useEffect(() => {
-    const detals = remoteCarts?.reduce((acc, cart) => {
+    const detals = cart?.reduce((acc, cart) => {
       const mrp = cart.mrp
-      const actualPrice = cart.price_regular
-      const qty = cart.quantity
+      const actualPrice = cart.productPrice
+      const qty = cart.qty
       const totalActualPrice = +(actualPrice * qty).toFixed(2)
       const totalMrp = +(mrp * qty).toFixed(2)
       const toalDiscount = +(totalMrp - totalActualPrice).toFixed(2)
@@ -37,7 +38,16 @@ export default function CheckoutForm({ isLoading }: Props) {
     }, { mrp: 0, discount: 0, totalPrice: 0 })
 
     setPriceDetails(detals!)
-  }, [remoteCarts])
+  }, [cart])
+
+  const checkOut =()=>{
+    if(user){
+      router.push("/checkout")
+    }else{
+      router.push("/login")
+    }
+
+  }
 
 
   return (
@@ -65,10 +75,10 @@ export default function CheckoutForm({ isLoading }: Props) {
         </Button>
       </FlexBox> */}
 
-      <ListItem title={`Price (${remoteCarts?.length})`} value={priceDetails?.mrp} />
+      <ListItem title={`Price (${cart?.length})`} value={priceDetails?.mrp} />
       <ListItem title="Discount" value={priceDetails?.discount} />
       <ListItem title="Total Amount" value={priceDetails?.totalPrice} />
-      <Button fullWidth color="primary" href="/checkout" loading={isLoading} variant="contained" LinkComponent={Link} sx={{ mt: 2 }}>
+      <Button fullWidth color="primary"   variant="contained"  sx={{ mt: 2 }} onClick={checkOut}>
         Checkout Now
       </Button>
     </Card>

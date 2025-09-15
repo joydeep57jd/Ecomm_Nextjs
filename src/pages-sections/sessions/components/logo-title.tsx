@@ -1,17 +1,21 @@
+"use client"
+
 import Image from "next/image"
-import Typography from "@mui/material/Typography"
-// CUSTOM COMPONENTS
+
 import FlexRowCenter from "components/flex-box/flex-row-center"
-// IMPORT IMAGES
-import logo from "../../../../public/assets/images/logo2.svg"
+
+import { getItem } from "@/utils/services/local-storage.service"
 
 export default function LogoWithTitle() {
+   const getLogo = ()=>{
+        const layout = getItem("layout" )
+        // console.warn(layout);
+        return layout?.header?.logo
+      }
   return (
     <FlexRowCenter flexDirection="column" gap={2} mb={4}>
-      <Image width={90} src={logo} alt="Bazaar Ecommerce Template" />
-      <Typography fontWeight={600} variant="h5">
-        Welcome To Bazaar
-      </Typography>
+      <Image width={110} height={30} src={getLogo()} alt="Bazaar Ecommerce Template" />
+       
     </FlexRowCenter>
   )
 }

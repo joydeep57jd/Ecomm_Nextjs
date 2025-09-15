@@ -17,9 +17,9 @@ import ProductAction from "@/components/product-action"
 
 // ========================================================
 interface Props {
-  product: Product;
-  showRating?: boolean;
-  showProductSize?: boolean;
+  product: Product
+  showRating?: boolean
+  showProductSize?: boolean
 }
 // ========================================================
 
@@ -72,14 +72,19 @@ export default function ProductCard1({ product, showProductSize, showRating = tr
         </div>
 
         {/* ADD TO CART BUTTON */}
-        <ProductAction product={{
-          productId: +product.id,
-          productName: product.title,
-          productPrice: product.price,
-          qty: 1,
-          productImage: product.images[0],
-          itemVariantId: product.variantId ?? 0
-        }} />
+        <ProductAction
+          product={{
+            productId: +product.id,
+            productName: product.title,
+            productPrice: product.price,
+            qty: 1,
+            productImage: product.images[0],
+            itemVariantId: product.variantId ?? 0,
+            variantName: product.title,
+
+            mrp: product.price
+          }}
+        />
       </ContentWrapper>
     </StyledCard>
   )

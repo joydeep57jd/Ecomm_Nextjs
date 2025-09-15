@@ -20,7 +20,10 @@ export const getLocalCartFromRemoteCart = (remoteCarts: RemoteCart[]) => {
     productName: cart?.name,
     productPrice: cart?.price_regular,
     qty: cart?.quantity,
-    stockQty: cart.stockQty
+    stockQty: cart.stockQty,
+    variantName:cart.variantName,
+    mrp:cart.mrp
+
   }))
   return finalCarts
 }

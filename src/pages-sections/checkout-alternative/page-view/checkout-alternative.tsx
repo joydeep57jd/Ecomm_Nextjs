@@ -8,7 +8,11 @@ import CheckoutSummery from "../checkout-summery"
 // API FUNCTIONS
 import { useUser } from "@/contexts/UserContenxt"
 import useCart from "@/hooks/useCart"
-import { CheckoutOrderRequest, CheckoutOrderResponse, PlaceOrderResponse } from "@/models/Order.model"
+import {
+  CheckoutOrderRequest,
+  CheckoutOrderResponse,
+  PlaceOrderResponse
+} from "@/models/Order.model"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { getAddressList } from "@/utils/api/profile"
@@ -17,33 +21,59 @@ import { getDeliveryCharge, getOrderSummary, placeOrder } from "@/utils/api/orde
 import Loading from "@/app/loading"
 import { DelivaryAddressData } from "@/models/Address.model"
 import { OrderConfirmationPageView } from "@/pages-sections/order-confirmation"
+import { UserData } from "@/models/Auth.model"
+import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
+import { Cart } from "@/models/CartProductItem.models"
 
 export default function CheckoutAlternativePageView() {
-
-  const [addressListResponse, setAddressListResponse] = useState<UserAddressListResponse | null>(null)
-  const [checkoutOrderResponse, setCheckoutOrderResponse] = useState<CheckoutOrderResponse | null>(null)
+  const [addressListResponse, setAddressListResponse] = useState<UserAddressListResponse | null>(
+    null
+  )
+  const [checkoutOrderResponse, setCheckoutOrderResponse] = useState<CheckoutOrderResponse | null>(
+    null
+  )
   const [isInitialDataLoaded, setIsInitialDataLoaded] = useState(false)
   const [selectedPinCode, setSelectedPinCode] = useState("")
   const [deliveryCharge, setDeliveryCharge] = useState(0)
-  const [selectedDelivaryAddressData, setSelectedDelivaryAddressData] = useState<DelivaryAddressData | null>(null)
+  const [selectedDelivaryAddressData, setSelectedDelivaryAddressData] =
+    useState<DelivaryAddressData | null>(null)
   const [orderResponse, setOrderResponse] = useState<PlaceOrderResponse | null>(null)
   const [placingOrder, setPlacingOrder] = useState(false)
 
   const router = useRouter()
   const { user } = useUser()
 
-  const { dispatch, state: { remoteCarts } } = useCart()
+  const {
+    dispatch,
+    state: { remoteCarts, cart }
+  } = useCart()
 
   useEffect(() => {
     if (!remoteCarts) {
-      return
-    }
-    if (!remoteCarts.length && !orderResponse) {
-      router.push("/")
+      syncUser(user!)
     }
 
     getInitialData()
   }, [remoteCarts])
+
+  useEffect(() => {
+    if (!cart.length && !orderResponse) {
+      router.push("/")
+    }
+  }, [cart])
+
+  const syncUser = async (user: UserData) => {
+    const remoteCarts = await getCart(+user.customerId)
+    const finalCarts: Cart[] = getLocalCartFromRemoteCart(remoteCarts || [])
+    dispatch({
+      type: "SET_CART",
+      carts: finalCarts,
+      isLoggedIn: true,
+      remoteCarts: remoteCarts || [],
+      isSyncRequired:false,
+      user:user!
+    })
+  }
 
   useEffect(() => {
     if (!user?.id) {
@@ -51,17 +81,12 @@ export default function CheckoutAlternativePageView() {
     }
   }, [user])
 
-
   const getInitialData = async () => {
-    await Promise.all([
-      getAddresses(),
-      getCheckoutOrder()
-    ])
+    await Promise.all([getAddresses(), getCheckoutOrder()])
     setTimeout(() => {
       setIsInitialDataLoaded(true)
     }, 0)
   }
-
 
   const getAddresses = async () => {
     const response = await getAddressList(+user?.customerId!)
@@ -72,7 +97,7 @@ export default function CheckoutAlternativePageView() {
     const checkoutOrderRequest: CheckoutOrderRequest = {
       discoutcode: "",
       ordered: {
-        items: remoteCarts!.map(c => ({
+        items: remoteCarts!.map((c) => ({
           batchId: c.batchId,
           id: c.id,
           quantity: c.quantity,
@@ -110,18 +135,50 @@ export default function CheckoutAlternativePageView() {
     }
     setPlacingOrder(true)
     const {
-      address1, address2 = "", addrid, city = '', country, fname, lname, phone, pin, userid, deliveryslot = '',
-      dist = '', email = '', mname = '', paymentmode = '', spclrequest = '', state = '', type = ''
+      address1,
+      address2 = "",
+      addrid,
+      city = "",
+      country,
+      fname,
+      lname,
+      phone,
+      pin,
+      userid,
+      deliveryslot = "",
+      dist = "",
+      email = "",
+      mname = "",
+      paymentmode = "",
+      spclrequest = "",
+      state = "",
+      type = ""
     } = selectedDelivaryAddressData.customer ?? {}
     const response = await placeOrder({
       customer: {
-        address1, address2, addrid, city, country, fname, lname, phone, pin,
-        userid, deliveryslot: deliveryslot ?? '', dist, email, mname, paymentmode: paymentmode || '', spclrequest: spclrequest || '', state, type
+        address1,
+        address2,
+        addrid,
+        city,
+        country,
+        fname,
+        lname,
+        phone,
+        pin,
+        userid,
+        deliveryslot: deliveryslot ?? "",
+        dist,
+        email,
+        mname,
+        paymentmode: paymentmode || "",
+        spclrequest: spclrequest || "",
+        state,
+        type
       },
       order: {
         orderdate: new Date().toLocaleString(),
         deliverychargeamt: deliveryCharge,
-        discount_code: '',
+        discount_code: "",
         discount_total: "0",
         grandtotalamt: checkoutOrderResponse!.grandtotalamt,
         totalamt: checkoutOrderResponse!.totalamt,
@@ -144,7 +201,9 @@ export default function CheckoutAlternativePageView() {
     return <Loading isSmallLoader={true} />
   }
 
-  return orderResponse?.orderNo ? <OrderConfirmationPageView orderResponse={orderResponse} /> : (
+  return orderResponse?.orderNo ? (
+    <OrderConfirmationPageView orderResponse={orderResponse} />
+  ) : (
     <Box bgcolor="grey.50" sx={{ py: { xs: 3, sm: 4 } }}>
       <Container maxWidth="lg">
         <Grid container spacing={3}>
@@ -160,7 +219,10 @@ export default function CheckoutAlternativePageView() {
           </Grid>
 
           <Grid size={{ md: 4, xs: 12 }} order={{ xs: 1, md: 2 }}>
-            <CheckoutSummery checkoutOrderResponse={checkoutOrderResponse!} deliveryCharge={deliveryCharge} />
+            <CheckoutSummery
+              checkoutOrderResponse={checkoutOrderResponse!}
+              deliveryCharge={deliveryCharge}
+            />
           </Grid>
         </Grid>
       </Container>

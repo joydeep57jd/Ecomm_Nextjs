@@ -61,7 +61,9 @@ export default function ProductCard9({ product }: Props) {
             productPrice: product.price,
             qty: 1,
             productImage: product.images[0],
-            itemVariantId: product.variantId ?? 0
+            itemVariantId: product.variantId ?? 0,
+            variantName:product.title,
+            mrp:product.price
           }} />
         </div>
       </ContentWrapper>

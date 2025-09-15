@@ -96,7 +96,10 @@ export default function ProductIntro({ product, variantMap }: Props) {
               productName: product.variantDetails?.itemName,
               productImage: product.imageList[0].fullImagepath,
               qty: 1,
-              stockQty: product.priceAndStock?.stockQty
+              stockQty: product.priceAndStock?.stockQty,
+              variantName:product.variantDetails.variantName,
+              mrp:product.priceAndStock.mrp
+
             }} />
           }
 

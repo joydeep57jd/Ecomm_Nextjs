@@ -1,4 +1,3 @@
-"use client"
 import Link from "next/link"
 import Image from "next/image"
 import Stack from "@mui/material/Stack"
@@ -11,12 +10,12 @@ import Trash from "icons/Trash"
 import useCart from "hooks/useCart"
 import { currency } from "lib"
 import { ContentWrapper, ImageWrapper, QuantityButton, Wrapper } from "./styles"
-import { RemoteCart } from "@/models/CartProductItem.models"
+import { Cart,  } from "@/models/CartProductItem.models"
 import { useUser } from "@/contexts/UserContenxt"
-import { getLocalCartFromRemoteCart } from "@/utils/api/cart"
+
 
 // =========================================================
-type Props = { item: RemoteCart, getCartItems(): Promise<void> };
+type Props = { item: Cart,  };
 // =========================================================
 
 export default function CartItem({ item }: Props) {
@@ -28,26 +27,26 @@ export default function CartItem({ item }: Props) {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
       payload: {
-        ...getLocalCartFromRemoteCart([item])[0],
+        ...item,
         qty: amount
       },
-      isLoggedIn: true,
-      isSyncRequired: true,
-      user: user!
+      isLoggedIn: !!user,
+      isSyncRequired: !!user,
+      user: user??undefined
     })
   }
 
   return (
     <Wrapper elevation={0}>
       <ImageWrapper>
-        <Image alt={item.name} fill src={item.images[0].fullImagepath} sizes="100px" />
+        <Image alt={item.productName} fill src={item.productImage} sizes="100px" />
       </ImageWrapper>
 
       <ContentWrapper>
         <Stack spacing={0.5} overflow="hidden">
-          <Link href={`/products/${item.id}`}>
+          <Link href={`/products/${item.productId}`}>
             <Typography noWrap variant="body1" fontSize={16}>
-              {item.name}
+              {item.productName}
             </Typography>
             <Typography noWrap variant="body2" fontSize={12}>
               {item.variantName?.split("/").slice(1).join("/")}
@@ -55,8 +54,8 @@ export default function CartItem({ item }: Props) {
           </Link>
 
           <Typography noWrap variant="body1" fontWeight={600}>
-            {currency(item.price_regular)}
-            {item.price_regular !== item.mrp && (
+            {currency(item.productPrice)}
+            {item.productPrice !== item.mrp && (
               <Typography
                 component="span"
                 sx={{
@@ -74,19 +73,19 @@ export default function CartItem({ item }: Props) {
         </Stack>
 
         <div className="quantity-buttons-wrapper">
-          <QuantityButton disabled={item.quantity === 1} onClick={handleCartAmountChange(item.quantity - 1)}>
+          <QuantityButton disabled={item.qty === 1} onClick={handleCartAmountChange(item.qty - 1)}>
             <Remove fontSize="small" />
           </QuantityButton>
 
-          <Typography variant="h6">{item.quantity}</Typography>
+          <Typography variant="h6">{item.qty}</Typography>
 
-          <QuantityButton disabled={item.quantity >= item.stockQty!} onClick={handleCartAmountChange(item.quantity + 1)}>
+          <QuantityButton disabled={item.qty >= item.stockQty!} onClick={handleCartAmountChange(item.qty + 1)}>
             <Add fontSize="small" />
           </QuantityButton>
         </div>
 
         <Typography noWrap variant="body1" fontSize={16} fontWeight={600}>
-          {currency(item.price_regular * item.quantity)}
+          {currency(item.productPrice * item.qty)}
         </Typography>
 
         <IconButton className="remove-item" size="small" onClick={handleCartAmountChange(0)}>

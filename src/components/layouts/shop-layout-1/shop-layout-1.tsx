@@ -80,7 +80,7 @@ export default function ShopLayout1({ children, data }: Props) {
             </Header.Left>
 
             <Header.Mid>
-              <NavigationList navigation={header.navigation} />
+              <NavigationList navigation={header.navigation}  layoutModel = {data}  />
             </Header.Mid>
 
             <Header.Right>

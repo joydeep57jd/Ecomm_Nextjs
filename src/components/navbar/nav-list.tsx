@@ -14,13 +14,22 @@ import NavItemChild from "./nav-item-child"
 import { NAV_LINK_STYLES, ChildNavListWrapper } from "./styles"
 // DATA TYPES
 import { Category, SubCategory, SubSubCategory } from "@/models/Category.modal"
-import { useCallback } from "react"
+import { useCallback, useEffect } from "react"
+import LayoutModel from "@/models/Layout.model"
+import { setItem } from "@/utils/services/local-storage.service"
 
 // ==============================================================
-type Props = { navigation: Category[] };
+type Props = { navigation: Category[]
+  layoutModel: LayoutModel
+ };
 // ==============================================================
 
-export function NavigationList({ navigation }: Props) {
+export function NavigationList({ navigation,layoutModel }: Props) {
+
+  useEffect(()=>{
+    setItem("layout",layoutModel)
+
+  },[layoutModel])
 
   const router = useRouter()
   const searchParams = useSearchParams()

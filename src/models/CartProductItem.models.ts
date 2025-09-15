@@ -76,6 +76,9 @@ export interface Cart {
   productImage: string
   itemVariantId: number
   stockQty?: number
+  mrp:number
+   variantName:string
+  
 }
 
 export interface RemoteCart {
