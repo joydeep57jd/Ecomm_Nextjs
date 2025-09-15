@@ -6,6 +6,7 @@ import { createContext, PropsWithChildren, useEffect, useMemo, useReducer } from
 import { getCartProducts, setCart, clearCart, syncGuestCart } from "@/utils/services/cart.service"
 import { getItem } from "@/utils/services/local-storage.service"
 import { UserData } from "@/models/Auth.model"
+import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
 
 type InitialState = {
   cart: Cart[]
@@ -84,7 +85,7 @@ const reducer = (state: InitialState, action: CartActionType) => {
       return { ...state, orderSummaryFetchCount: state.orderSummaryFetchCount + 1, isOrderSummaryFetchCountUpDateRequired: false, isSyncRequired: false, deleteItem: undefined, cart: action.carts!, isLoading: false }
 
     case "SYNC_SUCCESS":
-      return { ...state, isSyncRequired: false, deleteItem: undefined, cart: action.carts!, isLoading: false }
+      return { ...state, isSyncRequired: false, deleteItem: undefined, cart: action.carts!, isLoading: false, remoteCarts: action.remoteCarts }
 
     default: {
       return state
@@ -115,7 +116,10 @@ export default function CartProvider({ children }: PropsWithChildren) {
 
     await syncGuestCart(finalCartItems, state.user)
 
-    dispatch({ type: "SYNC_SUCCESS", carts: updatedCart })
+    const remoteCarts = await getCart(+state.user!.customerId)
+    const finalCarts: Cart[] = getLocalCartFromRemoteCart(remoteCarts || [])
+
+    dispatch({ type: "SYNC_SUCCESS", carts: finalCarts, remoteCarts: remoteCarts || [] })
   }
 
   const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch])

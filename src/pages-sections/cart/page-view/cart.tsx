@@ -26,12 +26,12 @@ export default function CartPageView() {
   const getCartItems = async () => {
     try {
       const remoteCarts = await getCart(+user!.customerId)
-      const finalCarts = getLocalCartFromRemoteCart(remoteCarts)
+      const finalCarts = getLocalCartFromRemoteCart(remoteCarts || [])
       dispatch({
         type: "SET_CART",
         carts: finalCarts,
         isLoggedIn: true,
-        remoteCarts
+        remoteCarts: remoteCarts || []
       })
     } catch {
 

@@ -6,8 +6,13 @@ import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 // STYLED COMPONENT
 import { Wrapper, StyledButton } from "./styles"
+import { PlaceOrderResponse } from "@/models/Order.model"
 
-export default function OrderConfirmationPageView() {
+type Props = {
+  orderResponse: PlaceOrderResponse
+}
+
+export default function OrderConfirmationPageView({ orderResponse }: Props) {
   return (
     <Container className="mt-2 mb-5">
       <Wrapper>
@@ -33,7 +38,7 @@ export default function OrderConfirmationPageView() {
         </Typography>
 
         <Typography fontSize={16} variant="body1" color="text.secondary">
-          Your order number is <strong>#1234567890</strong>.
+          Your order number is <strong>#{orderResponse.orderNo}</strong>.
         </Typography>
 
         <StyledButton
@@ -42,7 +47,7 @@ export default function OrderConfirmationPageView() {
           variant="contained"
           className="button-link"
           LinkComponent={Link}
-          href="/market-1"
+          href=""
         >
           Browse products
         </StyledButton>

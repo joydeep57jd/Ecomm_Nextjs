@@ -67,7 +67,7 @@ export default function LoginPageView() {
       const data = await login(payload)
       const remoteCarts = await getCart(+data.customerId)
       const localCarts = state.cart || []
-      const finalCarts = getLocalCartFromRemoteCart(remoteCarts)
+      const finalCarts = getLocalCartFromRemoteCart(remoteCarts || [])
       localCarts.forEach((cart) => {
         const remoteCartIndex = finalCarts.findIndex((remoteCart) => remoteCart.itemVariantId === cart.itemVariantId && cart.productId === remoteCart.productId)
         if (remoteCartIndex !== -1) {
@@ -82,7 +82,8 @@ export default function LoginPageView() {
         carts: finalCarts,
         isLoggedIn: true,
         isSyncRequired: true,
-        user: data
+        user: data,
+        remoteCarts: remoteCarts || []
       })
 
       setItem("userDetails", data)

@@ -8,8 +8,8 @@ import Grid from "@mui/material/Grid"
 import Button from "@mui/material/Button"
 // GLOBAL CUSTOM COMPONENTS
 import { FormProvider, TextField } from "components/form-hook"
+import { DelivaryAddressData } from "@/models/Address.model"
 // CUSTOM DATA MODEL
-import Address from "models/Address.model"
 
 const validationSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -18,14 +18,14 @@ const validationSchema = yup.object().shape({
 })
 
 // =============================================================
-type Props = { address: Address };
+type Props = { address: DelivaryAddressData };
 // =============================================================
 
 export default function AddressForm({ address }: Props) {
   const initialValues = {
-    name: address.title || "",
-    contact: address.phone || "",
-    address: address.street || ""
+    name: address.customer.fname || "",
+    contact: address.customer.phone || "",
+    address: address.customer.address1 || ""
   }
 
   const methods = useForm({

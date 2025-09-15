@@ -3,11 +3,11 @@ import Card from "@mui/material/Card"
 // CUSTOM COMPONENT
 import AddressForm from "../address-form"
 import DashboardHeader from "../../dashboard-header"
+import { DelivaryAddressData } from "@/models/Address.model"
 // CUSTOM DATA MODEL
-import Address from "models/Address.model"
 
 // =============================================================
-type Props = { address: Address };
+type Props = { address: DelivaryAddressData };
 // =============================================================
 
 export function AddressDetailsPageView({ address }: Props) {

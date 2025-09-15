@@ -50,7 +50,11 @@ export function NavigationList({ navigation }: Props) {
               title: sub.name,
               url: `/products/search?subCategory=${sub.id}`,
             })),
-          }} key={nav.name}>
+          }}
+            navigateTo={navigateTo}
+            paramKeyName="subCategory"
+            paramValue={nav.id}
+            key={nav.name}>
             {renderSubSubCategory(nav.sub_sub_category)}
           </NavItemChild>
         )

@@ -28,18 +28,18 @@ export default function ProductIntro({ product, variantMap }: Props) {
       <Grid container spacing={3} justifyContent="space-around">
         {/* IMAGE GALLERY AREA */}
         <Grid size={{ lg: 6, md: 7, xs: 12 }}>
-          <ProductGallery images={product.imageList} />
+          <ProductGallery images={product.imageList ?? []} />
         </Grid>
 
         <Grid size={{ lg: 5, md: 5, xs: 12 }}>
-          <Typography variant="h1">{product.variantDetails.itemName}</Typography>
+          <Typography variant="h1">{product.variantDetails?.itemName}</Typography>
 
           <Typography variant="body1">
-            Category: <strong>{product.variantDetails.variantName}</strong>
+            Category: <strong>{product.variantDetails?.variantName}</strong>
           </Typography>
 
           <Typography variant="body1">
-            Product Code: <strong>{product.variantDetails.itemCode}</strong>
+            Product Code: <strong>{product.variantDetails?.itemCode}</strong>
           </Typography>
 
           <Typography variant="body1" fontSize={30} fontWeight={700} sx={{ my: 1 }}>
@@ -70,7 +70,7 @@ export default function ProductIntro({ product, variantMap }: Props) {
           {/* PRODUCT RATING */}
           <div className="rating">
             <span>Rated:</span>
-            <Rating readOnly color="warn" size="small" value={product.variantDetails.itemRating} />
+            <Rating readOnly color="warn" size="small" value={product.variantDetails?.itemRating} />
             {/* <Typography variant="h6">({product.reviews?.length || 0})</Typography> */}
           </div>
 
@@ -87,15 +87,18 @@ export default function ProductIntro({ product, variantMap }: Props) {
           </div>
 
           {/* ADD TO CART BUTTON */}
-          <ProductAction product={{
-            productId: product.variantDetails.itemId,
-            itemVariantId: product.variantDetails.itemVariantId,
-            productPrice: product.priceAndStock?.salePrice,
-            productName: product.variantDetails.itemName,
-            productImage: product.imageList[0].fullImagepath,
-            qty: 1,
-            stockQty: product.priceAndStock?.stockQty
-          }} />
+          {
+            product.imageList?.length > 0 && product.priceAndStock &&
+            <ProductAction product={{
+              productId: product.variantDetails?.itemId,
+              itemVariantId: product.variantDetails?.itemVariantId,
+              productPrice: product.priceAndStock?.salePrice,
+              productName: product.variantDetails?.itemName,
+              productImage: product.imageList[0].fullImagepath,
+              qty: 1,
+              stockQty: product.priceAndStock?.stockQty
+            }} />
+          }
 
           {/* SHOP NAME */}
         </Grid>

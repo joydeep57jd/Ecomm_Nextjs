@@ -15,6 +15,7 @@ import Voucher from "./payments/voucher"
 import FormLabel from "@/pages-sections/payment/form-label"
 import { Address } from "@/models/User.model"
 import DeliveryAddresses from "./delivery-addresses"
+import { DelivaryAddressData } from "@/models/Address.model"
 
 const validationSchema = yup.object().shape({
   card: yup.string().optional(),
@@ -43,19 +44,16 @@ const validationSchema = yup.object().shape({
 
 type FormValues = yup.InferType<typeof validationSchema>;
 
-// ==============================================================
-// Props
-// ==============================================================
 interface Props {
-  // cards: PaymentCard[];
-  // deliveryTimes: DeliveryTime[];
   deliveryAddresses: Address[];
   getAddresses(): Promise<void>
   setSelectedPinCode(value: string): void
+  setSelectedDelivaryAddressData(data: DelivaryAddressData): void
+  order(): Promise<void>
+  placingOrder: boolean
 }
-// ==============================================================
 
-export default function CheckoutForm({ deliveryAddresses, getAddresses, setSelectedPinCode }: Props) {
+export default function CheckoutForm({ deliveryAddresses, getAddresses, setSelectedPinCode, order, setSelectedDelivaryAddressData, placingOrder }: Props) {
   const [paymentMethod, setPaymentMethod] = useState<"credit-card" | "paypal" | "cod">("cod")
 
   const initialValues: FormValues = {
@@ -98,15 +96,12 @@ export default function CheckoutForm({ deliveryAddresses, getAddresses, setSelec
     <FormProvider methods={methods} onSubmit={handleSubmitForm}>
       {/* <DeliveryDate deliveryTimes={deliveryTimes} /> */}
 
-      <DeliveryAddresses deliveryAddresses={deliveryAddresses} getAddresses={getAddresses} setSelectedPinCode={setSelectedPinCode} />
+      <DeliveryAddresses deliveryAddresses={deliveryAddresses} getAddresses={getAddresses} setSelectedDelivaryAddressData={setSelectedDelivaryAddressData} setSelectedPinCode={setSelectedPinCode} />
 
       <Card>
         <Heading number={2} title="Payment Details" />
         <Fragment>
-          <Card
-
-
-          >
+          <Card>
             {/* CREDIT CARD OPTION */}
             {/* <FormLabel
               name="credit-card"
@@ -136,16 +131,8 @@ export default function CheckoutForm({ deliveryAddresses, getAddresses, setSelec
             />
           </Card>
 
-          {/* BUTTONS SECTION */}
-
-
-
 
         </Fragment>
-
-        {/* {!watch("card") && <PaymentForm />} */}
-
-        {/* <CardList cards={cards} /> */}
 
         <Voucher />
 
@@ -154,7 +141,8 @@ export default function CheckoutForm({ deliveryAddresses, getAddresses, setSelec
           type="submit"
           color="primary"
           variant="contained"
-          loading={isSubmitting}
+          loading={isSubmitting || placingOrder}
+          onClick={order}
         >
           Place Order
         </Button>

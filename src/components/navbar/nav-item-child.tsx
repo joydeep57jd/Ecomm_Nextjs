@@ -16,10 +16,13 @@ import { MenuItemWithChild } from "models/Navigation.model"
 // ==============================================================
 interface Props extends PropsWithChildren {
   nav: MenuItemWithChild;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  navigateTo(e: any, paramKeyName: string, paramValue: string): void
+  paramKeyName: string, paramValue: string
 }
 // ==============================================================
 
-export default function NavItemChild({ nav, children }: Props) {
+export default function NavItemChild({ nav, children, navigateTo, paramKeyName, paramValue }: Props) {
   const pathname = usePathname()
   const { checkOverflow, elementRef, isRightOverflowing } = useOverflowDetect()
 
@@ -27,7 +30,7 @@ export default function NavItemChild({ nav, children }: Props) {
 
   return (
     <ParentNav minWidth={200} active={isActive ? 1 : 0} onMouseEnter={checkOverflow}>
-      <MenuItem color="grey.700">
+      <MenuItem onClick={(e) => navigateTo(e, paramKeyName, paramValue)} color="grey.700">
         <Typography component="span" sx={{ flex: "1 1 0" }}>
           {nav.title}
         </Typography>

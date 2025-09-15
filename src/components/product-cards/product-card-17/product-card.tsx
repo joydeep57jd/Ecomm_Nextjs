@@ -3,7 +3,7 @@ import Image from "next/image"
 import Typography from "@mui/material/Typography"
 // LOCAL CUSTOM COMPONENTS
 import Discount from "./discount"
-import HoverActions from "./hover-actions"
+// import HoverActions from "./hover-actions"
 // STYLED COMPONENTS
 import { ImageWrapper, ContentWrapper, StyledCard } from "./styles"
 // CUSTOM DATA MODEL
@@ -25,7 +25,7 @@ export default function ProductCard17({ product, bgWhite = false }: Props) {
     <StyledCard elevation={0} bgWhite={bgWhite}>
       <ImageWrapper>
         <Discount discount={discount} />
-        <HoverActions product={product} />
+        {/* <HoverActions product={product} /> */}
 
         <Link href={`/products/${slug}`} aria-label={`View ${title}`}>
           <Image

@@ -85,3 +85,52 @@ export interface DeliveryChargeRequest {
   netAmount: number
   zipCode: string
 }
+
+export interface PlaceOrderRequest {
+  customer: Customer
+  order: OrderData
+}
+
+export interface Customer {
+  userid: string
+  addrid: number
+  fname: string
+  mname: string
+  lname: string
+  phone: string
+  email: string
+  address1: string
+  address2: string
+  pin: string
+  city: string
+  dist: string
+  state: string
+  country: string
+  type: string
+  spclrequest: string
+  paymentmode: string
+  deliveryslot: string
+}
+
+export interface OrderData {
+  orderdate: string
+  totalamt: number
+  totaltaxamt: number
+  deliverychargeamt: number
+  grandtotalamt: number
+  discount_code: string
+  discount_total: string
+  data: CheckoutOrderItemResponse[]
+}
+
+export interface PlaceOrderResponse {
+  companyid: number
+  customer: Customer
+  customerId: number
+  order: OrderData
+  orderId: number
+  orderNo: string
+  orderStatus: string
+  status: string
+  loginInfo: Object
+}

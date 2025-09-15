@@ -10,6 +10,7 @@ import ProductDescription from "../product-description"
 // CUSTOM DATA MODEL
 import Product from "models/Product.model"
 import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
+import { useRouter } from "next/navigation"
 
 // ==============================================================
 interface Props {
@@ -21,6 +22,13 @@ interface Props {
 // ==============================================================
 
 export default function ProductDetailsPageView(props: Props) {
+
+  const router = useRouter()
+
+  if (!props.product?.variantDetails) {
+    router.push("/")
+  }
+
   return (
     <Container className="mt-2 mb-2">
       {/* PRODUCT DETAILS INFO AREA */}

@@ -4,13 +4,13 @@ import Location from "icons/Location"
 import Pagination from "../../pagination"
 import AddressListItem from "../address-item"
 import DashboardHeader from "../../dashboard-header"
+import { DelivaryAddressData } from "@/models/Address.model"
 // CUSTOM DATA MODEL
-import Address from "models/Address.model"
 
 // =======================================================
 interface Props {
   totalPages: number;
-  addresses: Address[];
+  addresses: DelivaryAddressData[];
 }
 // =======================================================
 
@@ -20,7 +20,7 @@ export function AddressPageView({ addresses, totalPages }: Props) {
       <DashboardHeader Icon={Location} title="My Addresses" />
 
       {addresses.map((address) => (
-        <AddressListItem key={address.id} address={address} />
+        <AddressListItem key={address.customer.addrid} address={address} />
       ))}
 
       <Pagination count={totalPages} />

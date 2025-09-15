@@ -6,27 +6,27 @@ import Typography from "@mui/material/Typography"
 import Pencil from "icons/Pencil"
 import TableRow from "../table-row"
 import DeleteAddressBtn from "./delete-btn"
+import { DelivaryAddressData } from "@/models/Address.model"
 // CUSTOM DATA MODEL
-import Address from "models/Address.model"
 
 // ==============================================================
-type Props = { address: Address };
+type Props = { address: DelivaryAddressData };
 // ==============================================================
 
 export default function AddressListItem({ address }: Props) {
   return (
-    <Link href={`/address/${address.id}`}>
+    <Link href={`/address/${address.customer.addrid}`}>
       <TableRow elevation={0}>
         <Typography noWrap fontWeight={500} variant="body1">
-          {address.title}
+          {address.customer.fname}
         </Typography>
 
         <Typography noWrap variant="body1">
-          {`${address.street}, ${address.city}`}
+          {`${address.customer.address1}, ${address.customer.city}`}
         </Typography>
 
         <Typography noWrap variant="body1">
-          {address.phone}
+          {address.customer.phone}
         </Typography>
 
         <Typography noWrap variant="body1" color="text.secondary" textAlign="right">
@@ -34,7 +34,7 @@ export default function AddressListItem({ address }: Props) {
             <Pencil fontSize="small" color="inherit" />
           </IconButton>
 
-          <DeleteAddressBtn id={address.id} />
+          <DeleteAddressBtn id={address.customer.addrid.toString()} />
         </Typography>
       </TableRow>
     </Link>

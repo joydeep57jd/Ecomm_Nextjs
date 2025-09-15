@@ -45,11 +45,9 @@ const AddressCard = styled("div", {
   p: { color: theme.palette.grey[700] }
 }))
 
-// ==============================================================
-type Props = { deliveryAddresses: Address[], getAddresses(): Promise<void>, setSelectedPinCode(value: string): void };
-// ==============================================================
+type Props = { deliveryAddresses: Address[], getAddresses(): Promise<void>, setSelectedPinCode(value: string): void, setSelectedDelivaryAddressData(data: DelivaryAddressData): void };
 
-export default function DeliveryAddresses({ deliveryAddresses, getAddresses, setSelectedPinCode }: Props) {
+export default function DeliveryAddresses({ deliveryAddresses, getAddresses, setSelectedPinCode, setSelectedDelivaryAddressData }: Props) {
   const {
     openModal,
     toggleModal,
@@ -128,6 +126,7 @@ export default function DeliveryAddresses({ deliveryAddresses, getAddresses, set
                   onSelect={(address) => {
                     field.onChange(address.customer.addrid)
                     setSelectedPinCode(address.customer.pin)
+                    setSelectedDelivaryAddressData(address)
                   }}
                   onEdit={handleEditDeliveryAddress}
                   onDelete={handleDeleteDeliveryAddress}

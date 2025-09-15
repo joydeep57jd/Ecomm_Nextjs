@@ -8,13 +8,15 @@ import CheckoutSummery from "../checkout-summery"
 // API FUNCTIONS
 import { useUser } from "@/contexts/UserContenxt"
 import useCart from "@/hooks/useCart"
-import { CheckoutOrderRequest, CheckoutOrderResponse } from "@/models/Order.model"
+import { CheckoutOrderRequest, CheckoutOrderResponse, PlaceOrderResponse } from "@/models/Order.model"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { getAddressList } from "@/utils/api/profile"
 import { UserAddressListResponse } from "@/models/User.model"
-import { getDeliveryCharge, getOrderSummary } from "@/utils/api/order"
+import { getDeliveryCharge, getOrderSummary, placeOrder } from "@/utils/api/order"
 import Loading from "@/app/loading"
+import { DelivaryAddressData } from "@/models/Address.model"
+import { OrderConfirmationPageView } from "@/pages-sections/order-confirmation"
 
 export default function CheckoutAlternativePageView() {
 
@@ -23,6 +25,9 @@ export default function CheckoutAlternativePageView() {
   const [isInitialDataLoaded, setIsInitialDataLoaded] = useState(false)
   const [selectedPinCode, setSelectedPinCode] = useState("")
   const [deliveryCharge, setDeliveryCharge] = useState(0)
+  const [selectedDelivaryAddressData, setSelectedDelivaryAddressData] = useState<DelivaryAddressData | null>(null)
+  const [orderResponse, setOrderResponse] = useState<PlaceOrderResponse | null>(null)
+  const [placingOrder, setPlacingOrder] = useState(false)
 
   const router = useRouter()
   const { user } = useUser()
@@ -30,6 +35,8 @@ export default function CheckoutAlternativePageView() {
   const { state: { remoteCarts } } = useCart()
 
   useEffect(() => {
+    console.warn(remoteCarts)
+
     if (!remoteCarts) {
       return
     }
@@ -48,13 +55,13 @@ export default function CheckoutAlternativePageView() {
 
 
   const getInitialData = async () => {
-    Promise.all([
+    await Promise.all([
       getAddresses(),
       getCheckoutOrder()
     ])
     setTimeout(() => {
       setIsInitialDataLoaded(true)
-    }, 10)
+    }, 0)
   }
 
 
@@ -97,21 +104,50 @@ export default function CheckoutAlternativePageView() {
     }
   }, [selectedPinCode])
 
+  const order = async () => {
+    if (!selectedDelivaryAddressData) {
+      return
+    }
+    setPlacingOrder(true)
+    const {
+      address1, address2 = "", addrid, city = '', country, fname, lname, phone, pin, userid, deliveryslot = '',
+      dist = '', email = '', mname = '', paymentmode = '', spclrequest = '', state = '', type = ''
+    } = selectedDelivaryAddressData.customer
+    const response = await placeOrder({
+      customer: {
+        address1, address2, addrid, city, country, fname, lname, phone, pin,
+        userid, deliveryslot: deliveryslot ?? '', dist, email, mname, paymentmode: paymentmode || '', spclrequest: spclrequest || '', state, type
+      },
+      order: {
+        orderdate: new Date().toLocaleString(),
+        deliverychargeamt: deliveryCharge,
+        discount_code: '',
+        discount_total: "0",
+        grandtotalamt: checkoutOrderResponse!.grandtotalamt,
+        totalamt: checkoutOrderResponse!.totalamt,
+        totaltaxamt: checkoutOrderResponse!.totaltaxamt,
+        data: checkoutOrderResponse!.item
+      }
+    })
+    setOrderResponse(response)
+  }
+
   if (!isInitialDataLoaded) {
     return <Loading isSmallLoader={true} />
   }
 
-  return (
+  return orderResponse?.orderNo ? <OrderConfirmationPageView orderResponse={orderResponse} /> : (
     <Box bgcolor="grey.50" sx={{ py: { xs: 3, sm: 4 } }}>
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid size={{ md: 8, xs: 12 }} order={{ xs: 2, md: 1 }}>
             <CheckoutForm
-              // cards={cards}
               deliveryAddresses={addressListResponse?.data!}
               getAddresses={getAddresses}
               setSelectedPinCode={setSelectedPinCode}
-            // deliveryTimes={deliveryTimes}
+              setSelectedDelivaryAddressData={setSelectedDelivaryAddressData}
+              order={order}
+              placingOrder={placingOrder}
             />
           </Grid>
 

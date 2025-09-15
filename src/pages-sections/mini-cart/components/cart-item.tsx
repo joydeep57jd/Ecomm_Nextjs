@@ -84,6 +84,7 @@ export default function MiniCartItem({ item, onCart }: Props) {
               size="small"
               color="primary"
               variant="text"
+              disabled={item.stockQty! >= item.qty}
               onClick={onCart(item.qty + 1, item)}
             >
               <Add fontSize="small" />
