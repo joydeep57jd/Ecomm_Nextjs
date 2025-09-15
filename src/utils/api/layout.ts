@@ -32,38 +32,38 @@ const getLayoutData = async (): Promise<LayoutModel> => {
     },
 
     topbar: {
-      label: companyInfoData!.email.custservice,
+      label: companyInfoData!?.email.custservice,
       languageOptions: {},
       socials: {
-        facebook: companyInfoData!.facebook,
-        instagram: companyInfoData!.instagram,
-        twitter: companyInfoData!.twitter
+        facebook: companyInfoData!?.facebook,
+        instagram: companyInfoData!?.instagram,
+        twitter: companyInfoData!?.twitter
       },
-      title: companyInfoData!.contactPhone
+      title: companyInfoData!?.contactPhone
     },
     footer: {
       about: [],
       appStoreUrl: "",
       contact: {
         address: {
-          address1: companyInfoData!.address.address1,
-          address2: companyInfoData!.address.address2 || "",
-          pin: companyInfoData!.address.pin,
-          state: companyInfoData!.address.state,
-          country: companyInfoData!.address.country
+          address1: companyInfoData!?.address.address1,
+          address2: companyInfoData!?.address.address2 || "",
+          pin: companyInfoData!?.address.pin,
+          state: companyInfoData!?.address.state,
+          country: companyInfoData!?.address.country
         },
-        email: companyInfoData!.email.custservice,
-        phone: companyInfoData!.contactPhone
+        email: companyInfoData!?.email.custservice,
+        phone: companyInfoData!?.contactPhone
       },
       customers: [],
       description: "",
-      logo: companyInfoData!.companyFooterLogo,
+      logo: companyInfoData!?.companyFooterLogo,
       playStoreUrl: "",
       socials: {
-        facebook: companyInfoData!.facebook,
-        instagram: companyInfoData!.instagram,
+        facebook: companyInfoData!?.facebook,
+        instagram: companyInfoData!?.instagram,
         google: "",
-        twitter: companyInfoData!.twitter,
+        twitter: companyInfoData!?.twitter,
         youtube: ""
       }
     },

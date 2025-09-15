@@ -112,7 +112,7 @@ export default function CheckoutAlternativePageView() {
     const {
       address1, address2 = "", addrid, city = '', country, fname, lname, phone, pin, userid, deliveryslot = '',
       dist = '', email = '', mname = '', paymentmode = '', spclrequest = '', state = '', type = ''
-    } = selectedDelivaryAddressData.customer
+    } = selectedDelivaryAddressData.customer ?? {}
     const response = await placeOrder({
       customer: {
         address1, address2, addrid, city, country, fname, lname, phone, pin,

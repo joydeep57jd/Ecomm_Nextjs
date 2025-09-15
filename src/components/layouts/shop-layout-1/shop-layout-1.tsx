@@ -138,18 +138,20 @@ export default function ShopLayout1({ children, data }: Props) {
             <FooterLinksWidget title="Customer Care" links={footer.customers} />
           </Footer1.Widget2>
 
-          <Footer1.Contact>
-            <FooterContact
-              phone={footer.contact.phone}
-              email={footer.contact.email}
-              address={{
-                ...footer.contact.address,
-                address2: footer.contact.address.address2 ?? ""
-              }}
-            />
+          {
+            footer?.contact && footer?.socials && <Footer1.Contact>
+              <FooterContact
+                phone={footer?.contact?.phone ?? ''}
+                email={footer?.contact?.email ?? ''}
+                address={{
+                  ...(footer?.contact?.address ?? {}),
+                  address2: footer?.contact?.address?.address2 ?? ""
+                }}
+              />
 
-            <FooterSocialLinks links={footer.socials} />
-          </Footer1.Contact>
+              <FooterSocialLinks links={footer?.socials} />
+            </Footer1.Contact>
+          }
 
           <Footer1.Copyright>
             <Divider sx={{ borderColor: "grey.800" }} />
