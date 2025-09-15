@@ -10,6 +10,7 @@ export default function useDeliveryAddresses() {
   const [isReloadRequired, setIsReloadRequired] = useState(false)
 
   const toggleModal = (isReloadRequired?: boolean) => {
+    console.warn(isReloadRequired)
     setOpenModal((prev) => !prev)
     setIsReloadRequired(!!isReloadRequired)
   }

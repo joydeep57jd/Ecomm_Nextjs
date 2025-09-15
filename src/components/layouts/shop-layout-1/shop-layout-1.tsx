@@ -97,10 +97,10 @@ export default function ShopLayout1({ children, data }: Props) {
         </SecondaryHeader.Left> */}
 
         <SecondaryHeader.Right>
-          
-           
-            <SearchInput1 categories={header!.categories} />
-          
+
+
+          <SearchInput1 categories={header!.categories} />
+
         </SecondaryHeader.Right>
       </SecondaryHeader>
 

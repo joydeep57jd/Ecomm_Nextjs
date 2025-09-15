@@ -1,3 +1,4 @@
+"use client"
 import { useMemo, useState } from "react"
 import { Resolver, useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"

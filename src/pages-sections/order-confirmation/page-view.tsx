@@ -47,7 +47,7 @@ export default function OrderConfirmationPageView({ orderResponse }: Props) {
           variant="contained"
           className="button-link"
           LinkComponent={Link}
-          href=""
+          href="/"
         >
           Browse products
         </StyledButton>

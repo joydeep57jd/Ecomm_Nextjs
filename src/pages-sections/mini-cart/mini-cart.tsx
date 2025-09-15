@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link"
 // MUI
 import Box from "@mui/material/Box"

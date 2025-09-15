@@ -32,15 +32,13 @@ export default function CheckoutAlternativePageView() {
   const router = useRouter()
   const { user } = useUser()
 
-  const { state: { remoteCarts } } = useCart()
+  const { dispatch, state: { remoteCarts } } = useCart()
 
   useEffect(() => {
-    console.warn(remoteCarts)
-
     if (!remoteCarts) {
       return
     }
-    if (!remoteCarts.length) {
+    if (!remoteCarts.length && !orderResponse) {
       router.push("/")
     }
 
@@ -99,13 +97,15 @@ export default function CheckoutAlternativePageView() {
   }
 
   useEffect(() => {
-    if (selectedPinCode) {
+    if (selectedPinCode && checkoutOrderResponse) {
       getDeliveryChargeDetails()
     }
   }, [selectedPinCode])
 
   const order = async () => {
-    if (!selectedDelivaryAddressData) {
+    console.warn(checkoutOrderResponse, selectedDelivaryAddressData)
+
+    if (!selectedDelivaryAddressData || !checkoutOrderResponse) {
       return
     }
     setPlacingOrder(true)
@@ -129,6 +129,14 @@ export default function CheckoutAlternativePageView() {
         data: checkoutOrderResponse!.item
       }
     })
+    dispatch({
+      type: "SET_CART",
+      carts: [],
+      remoteCarts: [],
+      isSyncRequired: false,
+      isLoggedIn: true,
+      user: user!
+    })
     setOrderResponse(response)
   }
 
@@ -142,7 +150,7 @@ export default function CheckoutAlternativePageView() {
         <Grid container spacing={3}>
           <Grid size={{ md: 8, xs: 12 }} order={{ xs: 2, md: 1 }}>
             <CheckoutForm
-              deliveryAddresses={addressListResponse?.data!}
+              deliveryAddresses={addressListResponse?.data! || []}
               getAddresses={getAddresses}
               setSelectedPinCode={setSelectedPinCode}
               setSelectedDelivaryAddressData={setSelectedDelivaryAddressData}

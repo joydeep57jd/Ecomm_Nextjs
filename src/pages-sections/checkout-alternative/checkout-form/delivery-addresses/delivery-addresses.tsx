@@ -1,3 +1,4 @@
+"use client"
 import { Controller, useFormContext } from "react-hook-form"
 import Grid from "@mui/material/Grid"
 import Button from "@mui/material/Button"
@@ -104,6 +105,9 @@ export default function DeliveryAddresses({ deliveryAddresses, getAddresses, set
         <Typography fontSize={16} variant="body1" color="text.secondary" textAlign="center">
           No delivery addresses found. Please add a new address.
         </Typography>
+        {openModal && (
+          <DeliveryAddressForm handleCloseModal={toggleModal} deliveryAddress={editDeliveryAddress} />
+        )}
       </Card>
     )
   }

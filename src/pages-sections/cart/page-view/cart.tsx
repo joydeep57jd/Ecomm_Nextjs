@@ -31,7 +31,8 @@ export default function CartPageView() {
         type: "SET_CART",
         carts: finalCarts,
         isLoggedIn: true,
-        remoteCarts: remoteCarts || []
+        remoteCarts: remoteCarts || [],
+        isSyncRequired: false,
       })
     } catch {
 

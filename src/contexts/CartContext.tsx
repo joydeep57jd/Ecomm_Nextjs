@@ -79,13 +79,13 @@ const reducer = (state: InitialState, action: CartActionType) => {
 
     case "SET_CART":
       setCart(action.carts ?? [])
-      return { ...state, cart: action.carts ?? [], isLoggedIn: action.isLoggedIn ?? true, isSyncRequired: true, user: action.user, remoteCarts: action.remoteCarts, isLoading: !!action.isSyncRequired }
+      return { ...state, cart: action.carts ?? [], isLoggedIn: action.isLoggedIn ?? true, isSyncRequired: action.isSyncRequired ?? true, user: action.user, remoteCarts: action.remoteCarts ?? undefined, isLoading: !!action.isSyncRequired }
 
     case "UPDATE_FETCH_COUNT":
       return { ...state, orderSummaryFetchCount: state.orderSummaryFetchCount + 1, isOrderSummaryFetchCountUpDateRequired: false, isSyncRequired: false, deleteItem: undefined, cart: action.carts!, isLoading: false }
 
     case "SYNC_SUCCESS":
-      return { ...state, isSyncRequired: false, deleteItem: undefined, cart: action.carts!, isLoading: false, remoteCarts: action.remoteCarts }
+      return { ...state, isSyncRequired: false, deleteItem: undefined, cart: action.carts!, isLoading: false, remoteCarts: action.remoteCarts ?? undefined }
 
     default: {
       return state
@@ -115,11 +115,14 @@ export default function CartProvider({ children }: PropsWithChildren) {
     }
 
     await syncGuestCart(finalCartItems, state.user)
+    if (state.user) {
+      const remoteCarts = await getCart(+(state.user?.customerId || "0"))
+      const finalCarts = getLocalCartFromRemoteCart(remoteCarts || [])
+      dispatch({ type: "SYNC_SUCCESS", carts: finalCarts, remoteCarts: remoteCarts || [] })
+    } else {
+      dispatch({ type: "SYNC_SUCCESS", carts: updatedCart })
+    }
 
-    const remoteCarts = await getCart(+state.user!.customerId)
-    const finalCarts: Cart[] = getLocalCartFromRemoteCart(remoteCarts || [])
-
-    dispatch({ type: "SYNC_SUCCESS", carts: finalCarts, remoteCarts: remoteCarts || [] })
   }
 
   const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch])
