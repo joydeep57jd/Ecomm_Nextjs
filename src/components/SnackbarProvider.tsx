@@ -1,3 +1,5 @@
+"use client"
+
 import { PropsWithChildren } from "react"
 import { styled } from "@mui/material/styles"
 import { SnackbarProvider as NotistackProvider } from "notistack"
@@ -8,7 +10,7 @@ const Provider = styled(NotistackProvider)(({ theme }) => ({
     boxShadow: theme.shadows[2],
     color: theme.palette.common.black,
     background: theme.palette.common.white,
-    fontFamily: theme.typography.fontFamily
+    fontFamily: theme.typography.fontFamily,
   },
 
   "&.SnackbarItem-variantSuccess .MuiSvgIcon-root": {
@@ -24,7 +26,7 @@ export default function SnackbarProvider({ children }: PropsWithChildren) {
     <Provider
       maxSnack={4}
       autoHideDuration={2000}
-      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }} 
     >
       {children}
     </Provider>

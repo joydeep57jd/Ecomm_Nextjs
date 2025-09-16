@@ -9,19 +9,10 @@ import CartItem from "../cart-item"
 import EmptyCart from "../empty-cart"
 import CheckoutForm from "../checkout-form"
 
-
-
 export default function CartPageView() {
-
-  const {  state: { cart,  } } = useCart()
-  
-
-
-
-  
-
-
-
+  const {
+    state: { cart }
+  } = useCart()
 
   if (cart?.length === 0) {
     return <EmptyCart />
@@ -31,7 +22,7 @@ export default function CartPageView() {
     <Grid container spacing={3}>
       <Grid size={{ md: 8, xs: 12 }}>
         {cart!.map((item) => (
-          <CartItem key={`${item.productId}-${item.itemVariantId}`} item={item}  />
+          <CartItem key={`${item.productId}-${item.itemVariantId}`} item={item} />
         ))}
         <Box textAlign="end">
           {/* <Button
@@ -47,7 +38,7 @@ export default function CartPageView() {
       </Grid>
 
       <Grid size={{ md: 4, xs: 12 }}>
-        <CheckoutForm  />
+        <CheckoutForm />
       </Grid>
     </Grid>
   )

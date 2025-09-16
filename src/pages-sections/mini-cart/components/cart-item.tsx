@@ -55,8 +55,8 @@ const QuantityWrapper = styled("div")(({ theme }) => ({
 
 // ==============================================================
 interface Props {
-  item: Cart;
-  onCart: (amount: number, product: Cart) => () => void;
+  item: Cart
+  onCart: (amount: number, product: Cart) => () => void
 }
 // ==============================================================
 
@@ -84,7 +84,7 @@ export default function MiniCartItem({ item, onCart }: Props) {
               size="small"
               color="primary"
               variant="text"
-              disabled={item.stockQty! >= item.qty}
+              disabled={item.qty >= (item.stockQty ?? 0)}
               onClick={onCart(item.qty + 1, item)}
             >
               <Add fontSize="small" />

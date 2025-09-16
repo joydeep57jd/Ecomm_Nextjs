@@ -69,7 +69,11 @@ export default function LoginPageView() {
       const localCarts = state.cart || []
       const finalCarts = getLocalCartFromRemoteCart(remoteCarts || [])
       localCarts.forEach((cart) => {
-        const remoteCartIndex = finalCarts.findIndex((remoteCart) => remoteCart.itemVariantId === cart.itemVariantId && cart.productId === remoteCart.productId)
+        const remoteCartIndex = finalCarts.findIndex(
+          (remoteCart) =>
+            remoteCart.itemVariantId === cart.itemVariantId &&
+            cart.productId === remoteCart.productId
+        )
         if (remoteCartIndex !== -1) {
           finalCarts[remoteCartIndex].qty = finalCarts[remoteCartIndex].qty + cart.qty
         } else {
@@ -88,6 +92,7 @@ export default function LoginPageView() {
 
       setItem("userDetails", data)
       setUser(data)
+
       router.back()
     } catch (err) {
       console.error("Login failed", err)
@@ -99,7 +104,6 @@ export default function LoginPageView() {
   const handleSubmitForm = handleSubmit((values: LoginSchemaType) => {
     !alreadyCustomer ? handleVerify(values) : handleLogin(values)
   })
- 
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmitForm}>
