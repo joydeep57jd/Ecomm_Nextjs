@@ -43,7 +43,8 @@ export default function ProductIntro({ product, variantMap }: Props) {
           </Typography>
 
           <Typography variant="body1" fontSize={30} fontWeight={700} sx={{ my: 1 }}>
-            {currency(product.priceAndStock?.salePrice)}{" "}
+                           {currency(product.priceAndStock?.salePrice)}
+
             {product.priceAndStock?.salePrice !== product.priceAndStock?.mrp && (
               <Typography
                 component="span"
@@ -80,7 +81,7 @@ export default function ProductIntro({ product, variantMap }: Props) {
           {/* PRICE & STOCK */}
           <div className="price">
             <Typography variant="h2" sx={{ color: "primary.main", mb: 0.5, lineHeight: 1 }}>
-              {currency(product.priceAndStock?.salePrice)}
+              {/* {currency(product.priceAndStock?.salePrice)} */}
             </Typography>
 
             <p>{product.priceAndStock?.stockQty > 0 ? "Stock Available" : "Out of Stock"}</p>

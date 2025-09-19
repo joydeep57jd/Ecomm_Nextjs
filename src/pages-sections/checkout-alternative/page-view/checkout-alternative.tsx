@@ -48,13 +48,15 @@ export default function CheckoutAlternativePageView() {
     state: { remoteCarts, cart }
   } = useCart()
 
-  useEffect(() => {
-    if (!remoteCarts) {
-      syncUser(user!)
-    }
+ useEffect(() => {
+  if (user  && !remoteCarts) {
+    syncUser(user)
+  }
 
+  if (user?.customerId) {
     getInitialData()
-  }, [remoteCarts])
+  }
+}, [remoteCarts, user])
 
   useEffect(() => {
     if (!cart.length && !orderResponse) {
@@ -63,6 +65,7 @@ export default function CheckoutAlternativePageView() {
   }, [cart])
 
   const syncUser = async (user: UserData) => {
+    
     const remoteCarts = await getCart(+user.customerId)
     const finalCarts: Cart[] = getLocalCartFromRemoteCart(remoteCarts || [])
     dispatch({
@@ -77,7 +80,7 @@ export default function CheckoutAlternativePageView() {
 
   useEffect(() => {
     if (!user?.id) {
-      router.push("/")
+      router.push("/login")
     }
   }, [user])
 

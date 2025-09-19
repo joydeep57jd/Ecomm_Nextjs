@@ -24,39 +24,49 @@ import SyncCart from "../components/sync-cart"
 import { CartDrawerProvider } from "@/contexts/CartDrawerContext"
 import MiniCartDrawer from "./@modal/(.)mini-cart/page"
 import { FlexRowCenter } from "@/components/flex-box"
-import { CircularProgress } from "@mui/material"
+import { CircularProgress, } from "@mui/material"
+import SnackbarProvider from "@/components/SnackbarProvider"
 
 // ==============================================================
 interface RootLayoutProps {
-  children: ReactNode;
-  modal: ReactNode;
+  children: ReactNode
+  modal: ReactNode
 }
+
+
 // ==============================================================
 
 export default function RootLayout({ children, modal }: RootLayoutProps) {
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body id="body" className={geist.className}>
-        <Suspense fallback={<FlexRowCenter minHeight="100vh">
-          <CircularProgress sx={{ color: "#111827" }} />
-        </FlexRowCenter>}>
-          <CartDrawerProvider>
-            <UserProvider>
-              <CartProvider>
-                <ThemeProvider>
-                  <HeaderLayout>
-                    <SyncCart />
-                    {modal}
-                    {children}
-                    <MiniCartDrawer />
-                  </HeaderLayout>
-                  <ProgressBar />
-                </ThemeProvider>
-              </CartProvider>
-            </UserProvider>
-          </CartDrawerProvider>
+        <Suspense
+          fallback={
+            <FlexRowCenter minHeight="100vh">
+              <CircularProgress sx={{ color: "#111827" }} />
+            </FlexRowCenter>
+          }
+        >
+          <SnackbarProvider>
+            <CartDrawerProvider>
+              <UserProvider>
+                <CartProvider>
+                  <ThemeProvider>
+                    <HeaderLayout>
+                      <SyncCart />
+                      {modal}
+                      {children}
+                      <MiniCartDrawer />
+                    </HeaderLayout>
+                    <ProgressBar />
+                  </ThemeProvider>
+                </CartProvider>
+              </UserProvider>
+            </CartDrawerProvider>
+          </SnackbarProvider>
         </Suspense>
       </body>
-    </html >
+    </html>
   )
 }
