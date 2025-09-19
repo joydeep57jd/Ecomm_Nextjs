@@ -1,24 +1,20 @@
 "use client"
 
-import { Fragment } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-// MUI
-import Box from "@mui/material/Box"
-import Rating from "@mui/material/Rating"
-import Slider from "@mui/material/Slider"
-import Button from "@mui/material/Button"
-import Divider from "@mui/material/Divider"
-import Collapse from "@mui/material/Collapse"
-import TextField from "@mui/material/TextField"
-import FormGroup from "@mui/material/FormGroup"
+
+import Accordion from "@mui/material/Accordion"
+import AccordionSummary from "@mui/material/AccordionSummary"
+import AccordionDetails from "@mui/material/AccordionDetails"
 import Typography from "@mui/material/Typography"
-import Checkbox from "@mui/material/Checkbox"
+import Box from "@mui/material/Box"
+import FormGroup from "@mui/material/FormGroup"
 import FormControlLabel from "@mui/material/FormControlLabel"
+import Checkbox from "@mui/material/Checkbox"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+// MUI
+import Divider from "@mui/material/Divider"
 // GLOBAL CUSTOM COMPONENTS
-import AccordionHeader from "components/accordion"
-import { FlexBetween, FlexBox } from "components/flex-box"
 // LOCAL CUSTOM COMPONENTS
-import CheckboxLabel from "./checkbox-label"
 // TYPES
 import Filters from "models/Filters"
 import { GetCategoryResponse } from "@/models/Category.modal"
@@ -39,7 +35,6 @@ export default function ProductFilters({ filters, categoryOptions }: Props) {
     router.push(pathname)
   }
 
-  
   const handleChangeSearchParams = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString())
 
@@ -66,73 +61,89 @@ export default function ProductFilters({ filters, categoryOptions }: Props) {
         Categories
       </Typography>
 
-   {categoryOptions.map((cat, idx) => (
-  <Fragment key={cat.variantOptionId}>
-    <AccordionHeader
-      open={false}
-      onClick={() => {}}
-      sx={{ padding: ".5rem 0", cursor: "pointer", color: "grey.700" }}
-    >
-      <Typography component="span" fontWeight={600}>
-        {cat.optionName}
-      </Typography>
-    </AccordionHeader>
+      {categoryOptions.map((cat, idx) => (
+        <Accordion key={cat.variantOptionId} sx={{ mb: 1 }}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            sx={{ padding: ".5rem 1rem", color: "grey.700" }}
+          >
+            <Typography fontWeight={600}>{cat.optionName}</Typography>
+          </AccordionSummary>
 
-    <Collapse in={true}>
-      {idx === 1 ? (
-        // ✅ Second variant option (Box style)
-        <FlexBox flexWrap="wrap" gap={1.5} sx={{ pl: 2, mb: 1 }}>
-          {cat.optionValues.map((opt) => (
-            <Box
-              key={opt.optionValueId}
-              onClick={() =>
-                handleChangeSearchParams("OptionValueIds", opt.optionValueId.toString())
-              }
-              sx={{
-                px: 2,
-                py: 1,
-                borderRadius: 2,
-                border: "1px solid",
-                borderColor: "grey.400",
-                cursor: "pointer",
-                fontSize: 14,
-                color: "grey.700",
-                "&:hover": {
-                  borderColor: "primary.main",
-                  color: "primary.main",
-                },
-              }}
-            >
-              {opt.optionValueName}
-            </Box>
-          ))}
-        </FlexBox>
-      ) : (
-        // ✅ Default style (Checkboxes)
-        <FormGroup sx={{ pl: 2, mb: 1 }}>
-          {cat.optionValues.map((opt) => (
-            <FormControlLabel
-              key={opt.optionValueId}
-              control={
-                <Checkbox
-                  size="small"
-                  onChange={() =>
-                    handleChangeSearchParams("OptionValueIds", opt.optionValueId.toString())
-                  }
-                />
-              }
-              label={opt.optionValueName}
-              sx={{ fontSize: 14, color: "grey.600" }}
-            />
-          ))}
-        </FormGroup>
-      )}
-    </Collapse>
-  </Fragment>
-))}
+          <AccordionDetails
+            sx={{
+              maxHeight: 250,
+              overflowY: "auto",
+              px: 0
+            }}
+          >
+            {idx === 1 ? (
+              <Box display="flex" flexWrap="wrap" gap={1.5} sx={{ pl: 2 }}>
+                {cat.optionValues.map((opt) => (
+                  <Box
+                    key={opt.optionValueId}
+                    onClick={() =>
+                      handleChangeSearchParams("OptionValueIds", opt.optionValueId.toString())
+                    }
+                    sx={{
+                      px: 2,
+                      py: 1,
+                      borderRadius: 2,
+                      border: "1px solid",
+                      borderColor: "grey.400",
+                      cursor: "pointer",
+                      fontSize: 14,
+                      color: "grey.700",
+                      display: "flex",
+                      flexDirection: "column", // stack vertically
+                      alignItems: "center", // center the content
+                      gap: 0.5, // small gap between text and color box
+                      "&:hover": {
+                        borderColor: "primary.main",
+                        color: "primary.main"
+                      }
+                    }}
+                  >
+                    <Typography>{opt.optionValueName}</Typography>
 
-
-      <Box component={Divider} my={3} />
+                    {/* Color box below the text */}
+                    {opt.optionValueName && (
+                      <Box
+                        sx={{
+                          width: "100%",
+                          height: 10,
+                          backgroundColor: opt.optionValueName,
+                          borderRadius: "2px",
+                          border: "1px solid #ccc"
+                        }}
+                      />
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            ) : (
+              <FormGroup sx={{ pl: 2 }}>
+                {cat.optionValues.map((opt) => (
+                  <FormControlLabel
+                    key={opt.optionValueId}
+                    control={
+                      <Checkbox
+                        size="small"
+                        onChange={() =>
+                          handleChangeSearchParams("OptionValueIds", opt.optionValueId.toString())
+                        }
+                      />
+                    }
+                    label={opt.optionValueName}
+                    sx={{ fontSize: 14, color: "grey.600" }}
+                  />
+                ))}
+              </FormGroup>
+            )}
+          </AccordionDetails>
+        </Accordion>
+      ))}
+      {/* <Box component={Divider} my={3} /> */}
 
       {/* PRICE VARIANT FILTER */}
       {/* <Typography variant="h6" sx={{ mb: 2 }}>
@@ -217,7 +228,7 @@ export default function ProductFilters({ filters, categoryOptions }: Props) {
       {/* <Typography variant="h6" sx={{ mb: 2 }}>
         Colors
       </Typography> */}
-{/* 
+      {/* 
       <FlexBox mb={2} flexWrap="wrap" gap={1.5}>
         {COLORS.map((item) => (
           <Box
