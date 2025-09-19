@@ -38,7 +38,7 @@ interface Props {
 // ==============================================================
 
 export default function ProductSearchPageView({
-    // filters, 
+    filters, 
   products,
   pageCount,
   lastIndex,
@@ -137,7 +137,7 @@ export default function ProductSearchPageView({
         <Grid container spacing={4}>
           {/* PRODUCT FILTER SIDEBAR AREA */}
           <Grid size={{  md:3, xl:2}} sx={{ display: { md: "block", xs: "none" } }}>
-            <ProductFilters   categoryOptions={categoryOptions} />
+            <ProductFilters filters={filters}   categoryOptions={categoryOptions} />
           </Grid>
 
           {/* PRODUCT VIEW AREA */}
