@@ -1,21 +1,21 @@
-import Link from "next/link"
+
 // import { format } from "date-fns/format"
 import Card from "@mui/material/Card"
 import Typography from "@mui/material/Typography"
 // GLOBAL CUSTOM COMPONENTS
 import FlexBox from "components/flex-box/flex-box"
-import User from "@/models/User.model"
+import  { UserProfile } from "@/models/User.model"
 // CUSTOM DATA MODEL
 
 // import {  UserData } from "@/models/Auth.model"
 
 // ==============================================================
-type Props = { user: User }
+type Props = { user: UserProfile }
 // ==============================================================
 
 export default function UserInfo({ user }: Props) {
   return (
-    <Link href={`/profile/${user.id}`}>
+    
       <Card
         elevation={0}
         sx={{
@@ -30,16 +30,17 @@ export default function UserInfo({ user }: Props) {
           justifyContent: { md: "space-between", xs: "flex-start" }
         }}
       >
-        <TableRowItem title="First Name" value={user.name.firstName} />
-        <TableRowItem title="Last Name" value={user.name.lastName} />
-        <TableRowItem title="Email" value={user.email} />
-        <TableRowItem title="Phone" value={user.phone} />
+        <TableRowItem title="First Name" value={user?.custFName} />
+        <TableRowItem title="Middle Name" value={user?.custMName} />
+        <TableRowItem title="Last Name" value={user?.custLName} />
+        <TableRowItem title="Email" value={user?.custEmail} />
+        <TableRowItem title="Phone" value={user?.custPhone} />
         {/* <TableRowItem
           title="Birth date"
           value={format(new Date(user.dateOfBirth), "dd MMM, yyyy")}
         /> */}
       </Card>
-    </Link>
+    
   )
 }
 

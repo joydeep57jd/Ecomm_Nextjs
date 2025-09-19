@@ -64,6 +64,7 @@ export interface ProductRequestPayload {
   searchCriteria?: string | null
   categoryId?: number
   subCategoryId?: number | null
+  OptionValueIds?:string| null
   pageNo?: number | null
   pageSize?: number | null
 }

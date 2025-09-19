@@ -63,14 +63,15 @@ export const API_URL = {
     GET_BY_VARIANT: "/frontend/GetItemsByVariantIds",
     GET_FEATURED: "/frontend/GetFeatureItems",
     GET_CATEGORY: "/frontend/GetAllCategories",
-    GET_ITEM_DETAIL_BY_SECTION: "/frontend/GetItemDetailBySectionFor",
+    // GET_ITEM_DETAIL_BY_SECTION: "/frontend/GetItemDetailBySectionFor",
     GET_SECTIONS: "/frontend/GetItemsFromSectionId",
     GET_RELATED: "/frontend/GetRelatedItem",
     GET_SEARCH: "/frontend/GetSearchItems",
     GET_FILTER_OPTIONS: "/frontend/GetItemWiseFilterOptions",
     GET_VARIANT_BY_OPTIONS: "/frontend/GetVariantByOptions",
     GET_ADDITIONAL_INFO: "/frontend/GetAdditionalInfoByItem",
-    P_ALLPRODUCT: "/frontend/GetCompanyDefaultTemplateUI"
+    P_ALLPRODUCT: "/frontend/GetCompanyDefaultTemplateUI",
+    GET_CATEGORY_OPTIONS:"/frontend/GetVariantOptionsByCategory"
   },
 
   RATING: {

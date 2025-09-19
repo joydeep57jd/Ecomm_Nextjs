@@ -12,98 +12,130 @@ import Collapse from "@mui/material/Collapse"
 import TextField from "@mui/material/TextField"
 import FormGroup from "@mui/material/FormGroup"
 import Typography from "@mui/material/Typography"
+import Checkbox from "@mui/material/Checkbox"
+import FormControlLabel from "@mui/material/FormControlLabel"
 // GLOBAL CUSTOM COMPONENTS
 import AccordionHeader from "components/accordion"
 import { FlexBetween, FlexBox } from "components/flex-box"
 // LOCAL CUSTOM COMPONENTS
 import CheckboxLabel from "./checkbox-label"
-// CUSTOM LOCAL HOOK
-import useProductFilterCard from "./use-product-filter-card"
 // TYPES
 import Filters from "models/Filters"
+import { GetCategoryResponse } from "@/models/Category.modal"
 
-export default function ProductFilters({ filters }: { filters: Filters }) {
-  const { brands: BRANDS, categories: CATEGORIES, others: OTHERS, colors: COLORS } = filters
+interface Props {
+  filters: Filters
+  categoryOptions: GetCategoryResponse[]
+}
+
+export default function ProductFilters({ filters, categoryOptions }: Props) {
+  // const { brands: BRANDS, others: OTHERS, colors: COLORS } = filters
 
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const {
-    sales,
-    brands,
-    rating,
-    colors,
-    prices,
-    collapsed,
-    setCollapsed,
-    handleChangeBrand,
-    handleChangeColor,
-    handleChangePrice,
-    handleChangeSales,
-    handleChangeSearchParams
-  } = useProductFilterCard()
-
   const handleClearFilters = () => {
     router.push(pathname)
   }
 
+  
+  const handleChangeSearchParams = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (key === "OptionValueIds") {
+      const existing = params.getAll("OptionValueIds")
+      if (existing.includes(value)) {
+        const filtered = existing.filter((v) => v !== value)
+        params.delete("OptionValueIds")
+        filtered.forEach((v) => params.append("OptionValueIds", v))
+      } else {
+        params.append("OptionValueIds", value)
+      }
+    } else {
+      params.set(key, value)
+    }
+
+    router.push(`${pathname}?${params.toString()}`)
+  }
+
   return (
     <div>
-      {/* CATEGORY VARIANT FILTER */}
+      {/* CATEGORY OPTIONS */}
       <Typography variant="h6" sx={{ mb: 1.25 }}>
         Categories
       </Typography>
 
-      {CATEGORIES.map((item) =>
-        item.children ? (
-          <Fragment key={item.title}>
-            <AccordionHeader
-              open={collapsed}
-              onClick={() => setCollapsed((state) => !state)}
-              sx={{ padding: ".5rem 0", cursor: "pointer", color: "grey.600" }}
-            >
-              <Typography component="span">{item.title}</Typography>
-            </AccordionHeader>
+   {categoryOptions.map((cat, idx) => (
+  <Fragment key={cat.variantOptionId}>
+    <AccordionHeader
+      open={false}
+      onClick={() => {}}
+      sx={{ padding: ".5rem 0", cursor: "pointer", color: "grey.700" }}
+    >
+      <Typography component="span" fontWeight={600}>
+        {cat.optionName}
+      </Typography>
+    </AccordionHeader>
 
-            <Collapse in={collapsed}>
-              {item.children.map((name) => (
-                <Typography
-                  variant="body1"
-                  key={name}
-                  sx={{
-                    py: 0.75,
-                    pl: "22px",
-                    fontSize: 14,
-                    cursor: "pointer",
-                    color: "grey.600"
-                  }}
-                >
-                  {name}
-                </Typography>
-              ))}
-            </Collapse>
-          </Fragment>
-        ) : (
-          <Typography
-            variant="body1"
-            key={item.title}
-            sx={{
-              py: 0.75,
-              fontSize: 14,
-              cursor: "pointer",
-              color: "grey.600"
-            }}
-          >
-            {item.title}
-          </Typography>
-        )
+    <Collapse in={true}>
+      {idx === 1 ? (
+        // ✅ Second variant option (Box style)
+        <FlexBox flexWrap="wrap" gap={1.5} sx={{ pl: 2, mb: 1 }}>
+          {cat.optionValues.map((opt) => (
+            <Box
+              key={opt.optionValueId}
+              onClick={() =>
+                handleChangeSearchParams("OptionValueIds", opt.optionValueId.toString())
+              }
+              sx={{
+                px: 2,
+                py: 1,
+                borderRadius: 2,
+                border: "1px solid",
+                borderColor: "grey.400",
+                cursor: "pointer",
+                fontSize: 14,
+                color: "grey.700",
+                "&:hover": {
+                  borderColor: "primary.main",
+                  color: "primary.main",
+                },
+              }}
+            >
+              {opt.optionValueName}
+            </Box>
+          ))}
+        </FlexBox>
+      ) : (
+        // ✅ Default style (Checkboxes)
+        <FormGroup sx={{ pl: 2, mb: 1 }}>
+          {cat.optionValues.map((opt) => (
+            <FormControlLabel
+              key={opt.optionValueId}
+              control={
+                <Checkbox
+                  size="small"
+                  onChange={() =>
+                    handleChangeSearchParams("OptionValueIds", opt.optionValueId.toString())
+                  }
+                />
+              }
+              label={opt.optionValueName}
+              sx={{ fontSize: 14, color: "grey.600" }}
+            />
+          ))}
+        </FormGroup>
       )}
+    </Collapse>
+  </Fragment>
+))}
+
 
       <Box component={Divider} my={3} />
 
       {/* PRICE VARIANT FILTER */}
-      <Typography variant="h6" sx={{ mb: 2 }}>
+      {/* <Typography variant="h6" sx={{ mb: 2 }}>
         Price Range
       </Typography>
 
@@ -111,40 +143,24 @@ export default function ProductFilters({ filters }: { filters: Filters }) {
         min={0}
         max={300}
         size="small"
-        value={prices}
+        value={[0, 300]}
         valueLabelDisplay="auto"
         valueLabelFormat={(v) => `$${v}`}
-        onChange={(_, v) => handleChangePrice(v as number[])}
+        onChange={(_, v) => handleChangeSearchParams("price", (v as number[]).join(","))}
       />
 
       <FlexBetween>
-        <TextField
-          fullWidth
-          size="small"
-          type="number"
-          placeholder="0"
-          value={prices[0]}
-          onChange={(e) => handleChangePrice([+e.target.value, prices[1]])}
-        />
-
+        <TextField fullWidth size="small" type="number" placeholder="0" />
         <Typography variant="h5" sx={{ px: 1, color: "grey.600" }}>
           -
         </Typography>
+        <TextField fullWidth size="small" type="number" placeholder="250" />
+      </FlexBetween> */}
 
-        <TextField
-          fullWidth
-          size="small"
-          type="number"
-          placeholder="250"
-          value={prices[1]}
-          onChange={(e) => handleChangePrice([prices[0], +e.target.value])}
-        />
-      </FlexBetween>
-
-      <Box component={Divider} my={3} />
+      {/* <Box component={Divider} my={3} /> */}
 
       {/* BRAND VARIANT FILTER */}
-      <Typography variant="h6" sx={{ mb: 2 }}>
+      {/* <Typography variant="h6" sx={{ mb: 2 }}>
         Brands
       </Typography>
 
@@ -153,30 +169,34 @@ export default function ProductFilters({ filters }: { filters: Filters }) {
           <CheckboxLabel
             key={value}
             label={label}
-            checked={brands.includes(value)}
-            onChange={() => handleChangeBrand(value)}
+            checked={false}
+            onChange={() => handleChangeSearchParams("brand", value)}
           />
         ))}
       </FormGroup>
 
-      <Box component={Divider} my={3} />
+      <Box component={Divider} my={3} /> */}
 
       {/* SALES OPTIONS */}
+      {/* <Typography variant="h6" sx={{ mb: 2 }}>
+        Sales
+      </Typography>
+
       <FormGroup>
         {OTHERS.map(({ label, value }) => (
           <CheckboxLabel
             key={value}
             label={label}
-            checked={sales.includes(value)}
-            onChange={() => handleChangeSales(value)}
+            checked={false}
+            onChange={() => handleChangeSearchParams("sales", value)}
           />
         ))}
       </FormGroup>
 
-      <Box component={Divider} my={3} />
+      <Box component={Divider} my={3} /> */}
 
       {/* RATINGS FILTER */}
-      <Typography variant="h6" sx={{ mb: 2 }}>
+      {/* <Typography variant="h6" sx={{ mb: 2 }}>
         Ratings
       </Typography>
 
@@ -184,26 +204,26 @@ export default function ProductFilters({ filters }: { filters: Filters }) {
         {[5, 4, 3, 2, 1].map((item) => (
           <CheckboxLabel
             key={item}
-            checked={rating === item}
+            checked={false}
             onChange={() => handleChangeSearchParams("rating", item.toString())}
-            label={<Rating size="small" value={item} color="warn" readOnly />}
+            label={<Rating size="small" value={item} readOnly />}
           />
         ))}
       </FormGroup>
 
-      <Box component={Divider} my={3} />
+      <Box component={Divider} my={3} /> */}
 
       {/* COLORS VARIANT FILTER */}
-      <Typography variant="h6" sx={{ mb: 2 }}>
+      {/* <Typography variant="h6" sx={{ mb: 2 }}>
         Colors
-      </Typography>
-
+      </Typography> */}
+{/* 
       <FlexBox mb={2} flexWrap="wrap" gap={1.5}>
         {COLORS.map((item) => (
           <Box
             key={item}
             bgcolor={item}
-            onClick={() => handleChangeColor(item)}
+            onClick={() => handleChangeSearchParams("color", item)}
             sx={{
               width: 25,
               height: 25,
@@ -211,14 +231,13 @@ export default function ProductFilters({ filters }: { filters: Filters }) {
               outlineOffset: 1,
               cursor: "pointer",
               borderRadius: 3,
-              outline: colors.includes(item) ? 1 : 0,
-              outlineColor: item
+              outline: "1px solid #ccc",
             }}
           />
-        ))}
-      </FlexBox>
+        ))} */}
+      {/* </FlexBox> */}
 
-      {searchParams.size > 0 && (
+      {/* {searchParams.size > 0 && (
         <Button
           fullWidth
           disableElevation
@@ -229,7 +248,7 @@ export default function ProductFilters({ filters }: { filters: Filters }) {
         >
           Clear all filters
         </Button>
-      )}
+      )} */}
     </div>
   )
 }

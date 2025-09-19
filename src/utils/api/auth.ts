@@ -21,7 +21,7 @@ export const varifyCustomer = async (payload: CustomerPayload): Promise<Customer
 export const login = async (credentials: LoginRequest): Promise<UserData> => {
   const response = await axios.post<{ data: UserData }>(API_URL.AUTH.LOGIN, credentials)
   return response.data.data
-}
+}  
 
 export const loginWithOTP = async (credentials: OTPCredentials) => {
   const response = await axios.post(API_URL.AUTH.SEND_OTP_FOR_LOGIN, credentials)

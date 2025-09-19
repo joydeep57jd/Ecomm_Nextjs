@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import { ProductSearchPageView } from "pages-sections/product-details/page-view"
 // API FUNCTIONS
 import { getFilters } from "utils/__api__/product-search"
-import { getAllProducts } from "utils/api/product"
+import { getAllProducts, getOptionsByCategory } from "utils/api/product"
 
 export const metadata: Metadata = {
   title: "Product Search - Bazaar Next.js E-commerce Template",
@@ -22,23 +22,27 @@ interface Props {
     category: string;
     subCategory: string;
     subSubCategory: string;
+    OptionValueIds:string
   }>;
 }
 // ==============================================================
 
 export default async function ProductSearch({ searchParams }: Props) {
-  const { search, page, category, subCategory, subSubCategory } = await searchParams
+  const { search, page, category, subCategory, subSubCategory,OptionValueIds } = await searchParams
+  const categoryId = category ? parseInt(category) : undefined
 
-  const [filters, productsResponse] = await Promise.all([
+   const [filters, productsResponse, categoryOptions] = await Promise.all([
     getFilters(),
     getAllProducts({
       ...(search ? { searchCriteria: search } : {}),
-      ...(category ? { categoryId: parseInt(category) } : {}),
+      ...(categoryId ? { categoryId } : {}),
       ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
       ...(subSubCategory && { subSubCategoryId: parseInt(subSubCategory) }),
+      ...(OptionValueIds ? { OptionValueIds } : { OptionValueIds: "" }),
       pageNo: +(page ?? "1"),
-      pageSize: 20,
-    })
+      pageSize: 20
+    }),
+    categoryId ? getOptionsByCategory(categoryId) : Promise.resolve([])
   ])
 
   const size = productsResponse.pagination.pageSize
@@ -49,6 +53,7 @@ export default async function ProductSearch({ searchParams }: Props) {
   return (
     <ProductSearchPageView
       filters={filters}
+       categoryOptions={categoryOptions}
       products={productsResponse.dataList}
       pageCount={pageCount}
       totalProducts={productsResponse.pagination.totalRecords}

@@ -15,6 +15,8 @@ import ProductsGridView from "components/products-view/products-grid-view"
 // TYPES
 import Filters from "models/Filters"
 import { DataList } from "@/models/AllProduct.model"
+import ProductFilters from "@/components/products-view/filters"
+import { GetCategoryResponse } from "@/models/Category.modal"
 
 const SORT_OPTIONS = [
   { label: "Relevance", value: "relevance" },
@@ -31,15 +33,18 @@ interface Props {
   lastIndex: number;
   firstIndex: number;
   totalProducts: number;
+  categoryOptions: GetCategoryResponse[] 
 }
 // ==============================================================
 
 export default function ProductSearchPageView({
+    // filters, 
   products,
   pageCount,
   lastIndex,
   firstIndex,
-  totalProducts
+  totalProducts,
+   categoryOptions
 }: Props) {
   const router = useRouter()
   const pathname = usePathname()
@@ -131,12 +136,12 @@ export default function ProductSearchPageView({
 
         <Grid container spacing={4}>
           {/* PRODUCT FILTER SIDEBAR AREA */}
-          {/* <Grid size={{ xl: 2, md: 3 }} sx={{ display: { md: "block", xs: "none" } }}>
-            <ProductFilters filters={filters} />
-          </Grid> */}
+          <Grid size={{  md:3, xl:2}} sx={{ display: { md: "block", xs: "none" } }}>
+            <ProductFilters   categoryOptions={categoryOptions} />
+          </Grid>
 
           {/* PRODUCT VIEW AREA */}
-          <Grid size={{ xl: 12, md: 12, xs: 12 }}>
+          <Grid size={{ xs:12, md:9, xl:10 }}>
             {/* {view === "grid" ? (
               <ProductsGridView products={products} />
             ) : (

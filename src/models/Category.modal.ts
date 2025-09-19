@@ -28,3 +28,18 @@ export interface SubSubCategory {
   iconimagesubSubCategory: string
   subSubCategoryItem: any[]
 }
+
+
+
+
+export interface GetCategoryResponse {
+  variantOptionId: number;
+  optionName:      string;
+  categoryId:      number;
+  optionValues:    OptionValue[];
+}
+
+export interface OptionValue {
+  optionValueId:   number;
+  optionValueName: string;
+}

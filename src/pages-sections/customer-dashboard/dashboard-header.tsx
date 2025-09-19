@@ -71,7 +71,7 @@ export default function DashboardHeader({ title, href, Icon }: Props) {
         )}
 
         <Typography noWrap variant="h2">
-          {title}
+          {title} 
         </Typography>
       </div>
 
