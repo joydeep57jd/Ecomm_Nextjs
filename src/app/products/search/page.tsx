@@ -2,7 +2,6 @@ import { Metadata } from "next"
 // PAGE VIEW COMPONENT
 import { ProductSearchPageView } from "pages-sections/product-details/page-view"
 // API FUNCTIONS
-import { getFilters } from "utils/__api__/product-search"
 import { getAllProducts, getOptionsByCategory } from "utils/api/product"
 
 export const metadata: Metadata = {
@@ -22,23 +21,33 @@ interface Props {
     category: string;
     subCategory: string;
     subSubCategory: string;
-    OptionValueIds:string
+    filter: string
   }>;
 }
 // ==============================================================
 
 export default async function ProductSearch({ searchParams }: Props) {
-  const { search, page, category, subCategory, subSubCategory,OptionValueIds } = await searchParams
+  const { search, page, category, subCategory, subSubCategory, filter } = await searchParams
   const categoryId = category ? parseInt(category) : undefined
 
-   const [filters, productsResponse, categoryOptions] = await Promise.all([
-    getFilters(),
+  const getFilterValues = () => {
+    try {
+      const filters = JSON.parse(atob(filter))
+      return Object.keys(filters).reduce((acc: number[], key: string) => {
+        return [...acc, ...filters[key]]
+      }, []).join()
+    } catch {
+      return null
+    }
+  }
+
+  const [productsResponse, categoryOptions] = await Promise.all([
     getAllProducts({
       ...(search ? { searchCriteria: search } : {}),
       ...(categoryId ? { categoryId } : {}),
       ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
       ...(subSubCategory && { subSubCategoryId: parseInt(subSubCategory) }),
-      ...(OptionValueIds ? { OptionValueIds } : { OptionValueIds: "" }),
+      ...(filter && { optionValueIds: getFilterValues() }),
       pageNo: +(page ?? "1"),
       pageSize: 20
     }),
@@ -52,8 +61,7 @@ export default async function ProductSearch({ searchParams }: Props) {
 
   return (
     <ProductSearchPageView
-      filters={filters}
-       categoryOptions={categoryOptions}
+      categoryOptions={categoryOptions}
       products={productsResponse.dataList}
       pageCount={pageCount}
       totalProducts={productsResponse.pagination.totalRecords}

@@ -6,52 +6,64 @@ import Accordion from "@mui/material/Accordion"
 import AccordionSummary from "@mui/material/AccordionSummary"
 import AccordionDetails from "@mui/material/AccordionDetails"
 import Typography from "@mui/material/Typography"
-import Box from "@mui/material/Box"
 import FormGroup from "@mui/material/FormGroup"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Checkbox from "@mui/material/Checkbox"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 // MUI
-import Divider from "@mui/material/Divider"
 // GLOBAL CUSTOM COMPONENTS
 // LOCAL CUSTOM COMPONENTS
 // TYPES
-import Filters from "models/Filters"
 import { GetCategoryResponse } from "@/models/Category.modal"
+import { useEffect, useState } from "react"
+import { Box } from "@mui/material"
 
 interface Props {
-  filters: Filters
   categoryOptions: GetCategoryResponse[]
 }
 
-export default function ProductFilters({ filters, categoryOptions }: Props) {
-  // const { brands: BRANDS, others: OTHERS, colors: COLORS } = filters
+export default function ProductFilters({ categoryOptions }: Props) {
+
+  const [selectedFilters, setSelectedFilters] = useState<Record<number, number[]>>({})
 
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const handleClearFilters = () => {
-    router.push(pathname)
+  useEffect(() => {
+    if (searchParams.get("filter")) {
+      const filter = getCurrentFilters()
+      setSelectedFilters({ ...filter })
+    }
+  }, [router, searchParams])
+
+
+  const getCurrentFilters = () => {
+    const encodedFilters = searchParams.get("filter") ?? btoa(JSON.stringify({}))
+    const filters = JSON.parse(atob(encodedFilters))
+    return filters
   }
 
-  const handleChangeSearchParams = (key: string, value: string) => {
+  const handleChangeSearchParams = (categoryId: number, value: number) => {
     const params = new URLSearchParams(searchParams.toString())
-
-    if (key === "OptionValueIds") {
-      const existing = params.getAll("OptionValueIds")
-      if (existing.includes(value)) {
-        const filtered = existing.filter((v) => v !== value)
-        params.delete("OptionValueIds")
-        filtered.forEach((v) => params.append("OptionValueIds", v))
-      } else {
-        params.append("OptionValueIds", value)
+    try {
+      const filters = getCurrentFilters()
+      if (!filters[categoryId]) {
+        filters[categoryId] = []
       }
-    } else {
-      params.set(key, value)
+      const values: number[] = selectedFilters[categoryId] ?? []
+      const existingValueIndex = values.findIndex(id => id === value)
+      if (existingValueIndex !== -1) {
+        values.splice(existingValueIndex, 1)
+      } else {
+        values.push(value)
+      }
+      filters[categoryId] = values
+      setSelectedFilters({ ...filters })
+      params.set("filter", btoa(JSON.stringify(filters)))
+      router.push(`${pathname}?${params.toString()}`)
+    } catch {
     }
-
-    router.push(`${pathname}?${params.toString()}`)
   }
 
   return (
@@ -61,7 +73,7 @@ export default function ProductFilters({ filters, categoryOptions }: Props) {
         Categories
       </Typography>
 
-      {categoryOptions.map((cat, idx) => (
+      {categoryOptions.map((cat) => (
         <Accordion key={cat.variantOptionId} sx={{ mb: 1 }}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -77,7 +89,50 @@ export default function ProductFilters({ filters, categoryOptions }: Props) {
               px: 0
             }}
           >
-            {idx === 1 ? (
+            <FormGroup sx={{ pl: 2 }}>
+              {cat.optionValues.map((opt) => (
+                <Box key={opt.optionValueId} sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  position: 'relative'
+                }}>
+                  {
+                    cat.optionName.toLowerCase().includes("colour") &&
+                    <Box
+                      sx={{
+                        width: 20,
+                        height: 20,
+                        backgroundColor: opt.optionValueName,
+                        borderRadius: "100%",
+                        border: "1px solid #ccc",
+                        position: 'absolute',
+                        left: '25px'
+                      }}
+                    />
+                  }
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        size="small"
+                        checked={!!selectedFilters[cat.categoryId]?.includes(opt.optionValueId)}
+                        onChange={() =>
+                          handleChangeSearchParams(cat.categoryId, opt.optionValueId)
+                        }
+                      />
+                    }
+                    label={opt.optionValueName}
+                    sx={{
+                      fontSize: 14, color: "grey.600",
+                      "& .MuiFormControlLabel-label": {
+                        marginLeft: cat.optionName.toLowerCase().includes("colour") ? '22px ' : 0
+                      },
+                    }}
+                  />
+
+                </Box>
+              ))}
+            </FormGroup>
+            {/* {idx === 1 ? (
               <Box display="flex" flexWrap="wrap" gap={1.5} sx={{ pl: 2 }}>
                 {cat.optionValues.map((opt) => (
                   <Box
@@ -106,7 +161,6 @@ export default function ProductFilters({ filters, categoryOptions }: Props) {
                   >
                     <Typography>{opt.optionValueName}</Typography>
 
-                    {/* Color box below the text */}
                     {opt.optionValueName && (
                       <Box
                         sx={{
@@ -139,7 +193,7 @@ export default function ProductFilters({ filters, categoryOptions }: Props) {
                   />
                 ))}
               </FormGroup>
-            )}
+            )} */}
           </AccordionDetails>
         </Accordion>
       ))}
