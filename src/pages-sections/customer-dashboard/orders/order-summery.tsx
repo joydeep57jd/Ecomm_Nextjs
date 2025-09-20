@@ -7,16 +7,16 @@ import FlexBetween from "components/flex-box/flex-between"
 // CUSTOM UTILS LIBRARY FUNCTION
 import { currency } from "lib"
 // CUSTOM DATA MODEL
-import Order from "models/Order.model"
+import { OrderListCustomer } from "@/models/OrderHistory.modal"
 
 // ==============================================================
-type Props = { order: Order };
+type Props = { order: OrderListCustomer };
 // ==============================================================
 
 export default function OrderSummery({ order }: Props) {
   return (
     <Grid container spacing={3}>
-      <Grid size={{ md: 6, xs: 12 }}>
+      {/* <Grid size={{ md: 6, xs: 12 }}>
         <Card elevation={0} sx={{ p: 3, border: "1px solid", borderColor: "grey.100" }}>
           <Typography variant="h5" sx={{ mb: 2 }}>
             Shipping Address
@@ -24,26 +24,26 @@ export default function OrderSummery({ order }: Props) {
 
           <Typography variant="body1">{order.shippingAddress}</Typography>
         </Card>
-      </Grid>
+      </Grid> */}
 
-      <Grid size={{ md: 6, xs: 12 }}>
+      <Grid size={{ md: 12, xs: 12 }}>
         <Card elevation={0} sx={{ p: 3, border: "1px solid", borderColor: "grey.100" }}>
           <Typography variant="h5" sx={{ mb: 2 }}>
             Total Summary
           </Typography>
 
-          <ListItem title="Subtotal:" value={currency(order.totalPrice)} />
-          <ListItem title="Shipping fee:" value={currency(0)} />
-          <ListItem title="Discount:" value={currency(order.discount)} />
+          <ListItem title="Subtotal:" value={currency(+order.total)} />
+          <ListItem title="Shipping fee:" value={currency(+order.delvCharge)} />
+          <ListItem title="Discount:" value={currency(+order.discount)} />
 
           <Divider sx={{ mb: 1 }} />
 
           <FlexBetween mb={2}>
             <Typography variant="h6">Total</Typography>
-            <Typography variant="h6">{currency(order.totalPrice)}</Typography>
+            <Typography variant="h6">{currency(+order.totalInvoiceAmount)}</Typography>
           </FlexBetween>
 
-          <p>Paid by Credit/Debit Card</p>
+          {/* <p>Paid by Credit/Debit Card</p> */}
         </Card>
       </Grid>
     </Grid>

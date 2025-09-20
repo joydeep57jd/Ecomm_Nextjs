@@ -46,52 +46,27 @@ export interface AddressType {
   type: string
 }
 
-
 export interface UserProfile {
-  custId:           number;
-  compId:           number;
-  custFName:        string;
-  custMName:        string;
-  custLName:        string;
-  custPhone:        string;
-  custPhoneCode:    string;
-  custEmail:        string;
-  billAddr1:        string;
-  billAddr2:        string;
-  billCityTownVill: string;
-  billPIN:          string;
-  billDist:         string;
-  billState:        string;
-  billCountry:      string;
-  custCountryCode:  string;
-  userType:         string;
+  custId: number
+  compId: number
+  custFName: string
+  custMName: string
+  custLName: string
+  custPhone: string
+  custPhoneCode: string
+  custEmail: string
+  billAddr1: string
+  billAddr2: string
+  billCityTownVill: string
+  billPIN: string
+  billDist: string
+  billState: string
+  billCountry: string
+  custCountryCode: string
+  userType: string
 }
-
-
-
 
 export interface SaveUserProfilePayload {
-  Token:              string;
-  CustomerProfileDtl: CustomerProfileDtl;
+  Token: string
+  CustomerProfileDtl: UserProfile
 }
-
-export interface CustomerProfileDtl {
-  CustId:           number;
-  CompId:           number;
-  CustFName:        string;
-  CustMName:        string;
-  CustLName:        string;
-  CustPhone:        string;
-  CustEmail:        string;
-  BillAddr1:        string;
-  BillAddr2:        string;
-  BillCityTownVill: string;
-  BillPIN:          string;
-  BillDist:         string;
-  BillState:        string;
-  BillCountry:      string;
-  UserId:           string;
-  CustPhoneCode:    string;
-  CustCountryCode:  string;
-}
-

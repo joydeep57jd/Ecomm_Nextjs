@@ -32,6 +32,7 @@ export const API_URL = {
     GENERATE: "/frontend/GetStatement",
     HISTORY: "/frontend/GetOrderHistory",
     HISTORY_CUSTOMER: "/frontend/GetOrderHistoryCustomer",
+    ORDER_DETAIL: "/frontend",
     INVOICE: "/frontend/GetStatementInvoice",
     CHECKOUT: "/frontend/CheckOutOrder",
     GET_DELIVEY_CHARGE: "/frontend/GetDeliveryCharge",
@@ -71,7 +72,7 @@ export const API_URL = {
     GET_VARIANT_BY_OPTIONS: "/frontend/GetVariantByOptions",
     GET_ADDITIONAL_INFO: "/frontend/GetAdditionalInfoByItem",
     P_ALLPRODUCT: "/frontend/GetCompanyDefaultTemplateUI",
-    GET_CATEGORY_OPTIONS:"/frontend/GetVariantOptionsByCategory"
+    GET_CATEGORY_OPTIONS: "/frontend/GetVariantOptionsByCategory"
   },
 
   RATING: {

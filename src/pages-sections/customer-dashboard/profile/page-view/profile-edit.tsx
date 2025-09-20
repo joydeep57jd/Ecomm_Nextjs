@@ -1,24 +1,20 @@
 import { Fragment } from "react"
 import Card from "@mui/material/Card"
 // LOCAL CUSTOM COMPONENT
-
-import DashboardHeader from "../../dashboard-header"
 // CUSTOM DATA MODEL
 
-import { UserData } from "@/models/Auth.model"
+import ProfileEditForm from "../edit-form"
+import { UserProfile } from "@/models/User.model"
 
 // ===========================================================
-type Props = { user: UserData };
+type Props = { user: UserProfile };
 // ===========================================================
 
-export function ProfileEditPageView({  }: Props) {
+export function ProfileEditPageView({ user }: Props) {
   return (
     <Fragment>
-      <DashboardHeader href="/profile" title="Edit Profile" />
-
       <Card sx={{ padding: { xs: 3, sm: 4 } }}>
-        {/* <ProfilePicUpload image={user.avatar} />
-        {user && <ProfileEditForm user={user} />} */}
+        {user && <ProfileEditForm user={user} />}
       </Card>
     </Fragment>
   )

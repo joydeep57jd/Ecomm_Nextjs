@@ -1,14 +1,14 @@
 import { Fragment } from "react"
 // LOCAL CUSTOM COMPONENTS
 import OrderSummery from "../order-summery"
-import OrderProgress from "../order-progress"
+// import OrderProgress from "../order-progress"
 import OrderedProducts from "../ordered-products"
 import DashboardHeader from "../../dashboard-header"
 // CUSTOM DATA MODEL
-import Order from "models/Order.model"
+import { OrderListCustomer } from "@/models/OrderHistory.modal"
 
 // =============================================================
-type Props = { order: Order };
+type Props = { order: OrderListCustomer };
 // =============================================================
 
 export function OrderDetailsPageView({ order }: Props) {
@@ -16,11 +16,11 @@ export function OrderDetailsPageView({ order }: Props) {
     <Fragment>
       <DashboardHeader href="/orders" title="Order Details" />
 
-      <OrderProgress
+      {/* <OrderProgress
         status={order.status}
         deliveredAt={order.deliveredAt}
         isDelivered={order.isDelivered}
-      />
+      /> */}
 
       <OrderedProducts order={order} />
 

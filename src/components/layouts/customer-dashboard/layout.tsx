@@ -1,10 +1,13 @@
-import type { PropsWithChildren } from "react"
+'use client'
+import { useEffect, type PropsWithChildren } from "react"
 // MUI
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
 import Container from "@mui/material/Container"
 // LOCAL CUSTOM COMPONENTS
 import { Navigation } from "./navigation"
+import { useUser } from "@/contexts/UserContenxt"
+import { useRouter } from "next/navigation"
 
 const gridStyle = {
   display: {
@@ -13,7 +16,15 @@ const gridStyle = {
   }
 }
 
-export function CustomerDashboardLayout({ children }: PropsWithChildren) {
+export default function CustomerDashboardLayout({ children }: PropsWithChildren) {
+  const { user } = useUser()
+  const router = useRouter()
+  useEffect(() => {
+    if (!user) {
+      router.push("/")
+    }
+  }, [])
+
   return (
     <Box bgcolor="grey.50" py={{ xs: 3, sm: 4 }}>
       <Container>
@@ -22,7 +33,7 @@ export function CustomerDashboardLayout({ children }: PropsWithChildren) {
             <Navigation />
           </Grid>
 
-          <Grid size={{ lg: 9, xs: 12 }}>{children}</Grid>
+          <Grid size={{ lg: 9, xs: 12 }}>{!!user && children}</Grid>
         </Grid>
       </Container>
     </Box>

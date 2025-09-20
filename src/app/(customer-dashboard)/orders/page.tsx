@@ -1,10 +1,13 @@
 "use client"
 
-import { useUser } from "@/contexts/UserContenxt";
+import Loading from "@/app/loading"
+import { useUser } from "@/contexts/UserContenxt"
+import { OrderResponse } from "@/models/OrderHistory.modal"
+import { getOrderHistory } from "@/utils/api/order"
 // import type { Metadata } from "next"
 import { OrdersPageView } from "pages-sections/customer-dashboard/orders/page-view"
+import { useEffect, useState } from "react"
 // API FUNCTIONS
-import api from "utils/__api__/orders"
 
 // export const metadata: Metadata = {
 //   title: "Orders - Bazaar Next.js E-commerce Template",
@@ -14,21 +17,29 @@ import api from "utils/__api__/orders"
 //   keywords: ["e-commerce", "e-commerce template", "next.js", "react"]
 // }
 
-// ==============================================================
-interface Props {
-  searchParams: Promise<{ page: string }>;
-}
-// ==============================================================
+export default function Orders() {
+  const pageSize = 5
 
-export default async function Orders({ searchParams }: Props) {
-  const {user} = useUser()
+  const { user } = useUser()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [orderResponse, setOrderResponse] = useState<OrderResponse | null>(null)
 
-  const { page } = await searchParams
-  const data = await api.getOrders(+page || 1)
+  useEffect(() => {
+    getOrderList()
+  }, [currentPage])
 
-  if (!data || data.orders.length === 0) {
-    return <div>Failed to load</div>
+  const getOrderList = async () => {
+    const data = await getOrderHistory({
+      RecordFrom: ((currentPage - 1) * pageSize) + 1,
+      RecordTo: pageSize * currentPage,
+      UserId: user!.id
+    })
+    setOrderResponse(data)
   }
 
-  return <OrdersPageView orders={data.orders} totalPages={data.totalPages} />
+  if (!orderResponse) {
+    return <Loading isSmallLoader={true} />
+  }
+
+  return <OrdersPageView orders={orderResponse!.orderListCustomer} totalPages={Math.ceil(orderResponse!.count / pageSize)} setCurrentPage={setCurrentPage} />
 }

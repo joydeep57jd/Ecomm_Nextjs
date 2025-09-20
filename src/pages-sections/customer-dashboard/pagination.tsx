@@ -1,7 +1,4 @@
 "use client"
-
-import { useCallback } from "react"
-import { usePathname, useRouter } from "next/navigation"
 // MUI
 import MuiPagination from "@mui/material/Pagination"
 import { styled } from "@mui/material/styles"
@@ -14,29 +11,14 @@ export const StyledPagination = styled(MuiPagination)({
 })
 
 // ==============================================================
-type Props = { count: number };
+type Props = {
+  count: number;
+  setCurrentPage(page: number): void
+};
 // ==============================================================
 
-export default function Pagination({ count }: Props) {
-  const router = useRouter()
-  const pathname = usePathname()
-
-  const handlePageChange = useCallback(
-    (_: unknown, page: number) => {
-      const searchParams = new URLSearchParams()
-
-      if (page === 1) {
-        searchParams.delete("page")
-      } else {
-        searchParams.set("page", page.toString())
-      }
-
-      router.push(`${pathname}?${searchParams.toString()}`)
-    },
-    [router, pathname]
-  )
-
+export default function Pagination({ count, setCurrentPage }: Props) {
   if (count <= 1) return null
 
-  return <StyledPagination color="primary" count={count} onChange={handlePageChange} />
+  return <StyledPagination color="primary" count={count} onChange={(e, page) => setCurrentPage(page)} />
 }

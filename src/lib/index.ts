@@ -40,5 +40,5 @@ export function currency(price: number = 0, fraction: number = 2) {
         style: "currency",
         maximumFractionDigits: fraction
       }).format(price)
-    : ""
+    : "--"
 }
