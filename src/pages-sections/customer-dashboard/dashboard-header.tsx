@@ -56,7 +56,7 @@ type Props = WithoutButton | WithButton;
 
 export default function DashboardHeader({ title, href, Icon }: Props) {
   return (
-    <StyledRoot>
+    <StyledRoot sx={{ width: '100%' }}>
       <div className="left">
         {Icon && (
           <Avatar variant="rounded" className="avatar">
@@ -71,7 +71,7 @@ export default function DashboardHeader({ title, href, Icon }: Props) {
         )}
 
         <Typography noWrap variant="h2">
-          {title} 
+          {title}
         </Typography>
       </div>
 

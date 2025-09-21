@@ -17,6 +17,7 @@ import { validationSchema } from "@/schema/profile/address.schema"
 import { DelivaryAddressData } from "@/models/Address.model"
 import { SaveAddress } from "@/utils/api/profile"
 import { useUser } from "@/contexts/UserContenxt"
+import { DialogActions, DialogTitle, Divider } from "@mui/material"
 
 
 
@@ -56,45 +57,45 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
     resolver: yupResolver(validationSchema) as Resolver<FormValues>
   })
 
-  const { reset, handleSubmit } = methods
+  const { reset, getValues, formState } = methods
 
-  const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    handleSubmit(async (values) => {
-      setIsSaving(true)
-      const payload: DelivaryAddressData = {
-        CustomerId: Number(user?.customerId),
-        customer: {
-          userid: user?.id || "",
-          addrid: deliveryAddress?.customer.addrid ?? -1,
-          type: "",
-          spclrequest: null,
-          paymentmode: null,
-          deliveryslot: null,
-          UserPhoneCountryCode: "IN",
-          PhoneCode: "+91",
-          ...values
-        }
+  const save = async () => {
+    if (!formState.isValid) return
+    setIsSaving(true)
+    const payload: DelivaryAddressData = {
+      CustomerId: Number(user?.customerId),
+      customer: {
+        userid: user?.id || "",
+        addrid: deliveryAddress?.customer.addrid ?? -1,
+        type: "",
+        spclrequest: null,
+        paymentmode: null,
+        deliveryslot: null,
+        UserPhoneCountryCode: "IN",
+        PhoneCode: "+91",
+        ...getValues()
       }
+    }
 
-      await SaveAddress(payload)
-      setIsSaving(false)
-      reset()
-      handleCloseModal(true)
-    })(e)
+    await SaveAddress(payload)
+    setIsSaving(false)
+    reset()
+    handleCloseModal(true)
+
   }
 
 
   return (
     <Dialog open onClose={handleCloseModal}>
-      <DialogContent>
-        <Typography variant="h4" sx={{ mb: 3 }}>
-          Add New Address Information
+      <DialogTitle>
+        <Typography variant="h4">
+          {deliveryAddress ? 'Edit' : 'Add New'} Address Information
         </Typography>
+      </DialogTitle>
+      <Divider />
+      <DialogContent>
 
-        <FormProvider methods={methods} onSubmit={handleSubmitForm}>
+        <FormProvider methods={methods} onSubmit={save}>
           <Grid container spacing={3}>
             <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="fname" label="Enter Your First Name" />
@@ -127,14 +128,19 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
               <TextField fullWidth name="country" label="Country" />
             </Grid>
 
-            <Grid size={{ sm: 6, xs: 12 }}>
-              <Button color="primary" variant="contained" loading={isSaving} type="submit">
-                Save
-              </Button>
-            </Grid>
           </Grid>
         </FormProvider>
       </DialogContent>
+      <Divider />
+      <DialogActions sx={{ paddingX: 3, paddingY: 2 }}>
+        <Button onClick={() => handleCloseModal(false)} color="primary" variant="outlined">
+          Cancel
+        </Button>
+        <Button onClick={save} color="primary" variant="contained" loading={isSaving}>
+          Save
+        </Button>
+
+      </DialogActions>
     </Dialog>
   )
 }

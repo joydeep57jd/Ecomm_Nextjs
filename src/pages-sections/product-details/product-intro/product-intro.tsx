@@ -28,7 +28,7 @@ export default function ProductIntro({ product, variantMap }: Props) {
       <Grid container spacing={3} justifyContent="space-around">
         {/* IMAGE GALLERY AREA */}
         <Grid size={{ lg: 6, md: 7, xs: 12 }}>
-          <ProductGallery images={product.imageList ?? []} />
+          <ProductGallery product={product} images={product.imageList ?? []} />
         </Grid>
 
         <Grid size={{ lg: 5, md: 5, xs: 12 }}>
@@ -43,7 +43,7 @@ export default function ProductIntro({ product, variantMap }: Props) {
           </Typography>
 
           <Typography variant="body1" fontSize={30} fontWeight={700} sx={{ my: 1 }}>
-                           {currency(product.priceAndStock?.salePrice)}
+            {currency(product.priceAndStock?.salePrice)}
 
             {product.priceAndStock?.salePrice !== product.priceAndStock?.mrp && (
               <Typography
@@ -98,8 +98,8 @@ export default function ProductIntro({ product, variantMap }: Props) {
               productImage: product.imageList[0].fullImagepath,
               qty: 1,
               stockQty: product.priceAndStock?.stockQty,
-              variantName:product.variantDetails.variantName,
-              mrp:product.priceAndStock.mrp
+              variantName: product.variantDetails.variantName,
+              mrp: product.priceAndStock.mrp
 
             }} />
           }

@@ -31,10 +31,12 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
     const {
         watch,
         setValue,
-        getValues
+        getValues,
+        formState
     } = methods
 
     const save = async () => {
+        if (!formState.isValid) return
         setIsSaving(true)
         try {
             const payload: SaveRatingRequest = {

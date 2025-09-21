@@ -1,3 +1,4 @@
+"use client"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
@@ -5,27 +6,39 @@ import Typography from "@mui/material/Typography"
 import NavItem from "./nav-item"
 // STYLED COMPONENTS
 import { MainContainer } from "./styles"
+import { removeItem } from "@/utils/services/local-storage.service"
+import { useUser } from "@/contexts/UserContenxt"
+import { useRouter } from "next/navigation"
 
 const MENUS = [
   {
     title: "DASHBOARD",
     list: [
-      { count: 5, icon: "Packages", href: "/orders", title: "Orders" },
-      { count: 19, icon: "HeartLine", href: "/wish-list", title: "Wishlist" },
-      { count: 1, icon: "Headset", href: "/support-tickets", title: "Support Tickets" }
+      { icon: "Packages", href: "/orders", title: "Orders" },
+      { icon: "HeartLine", href: "/wish-list", title: "Wishlist" },
     ]
   },
   {
     title: "ACCOUNT SETTINGS",
     list: [
       { icon: "User3", href: "/profile", title: "Profile Info" },
-      { count: 16, icon: "Location", href: "/address", title: "Addresses" },
-      { count: 4, icon: "CreditCard", href: "/payment-methods", title: "Payment Methods" }
+      { icon: "Location", href: "/address", title: "Addresses" },
+      // { icon: "CreditCard", href: "/payment-methods", title: "Payment Methods" }
     ]
   }
 ]
 
 export function Navigation() {
+
+  const userState = useUser()
+  const router = useRouter()
+
+  const logout = () => {
+    removeItem("guest_cart")
+    removeItem("userDetails")
+    userState.logout()
+    router.push("/")
+  }
   return (
     <MainContainer>
       {MENUS.map((item) => (
@@ -48,7 +61,7 @@ export function Navigation() {
       ))}
 
       <Box px={4} mt={6} pb={2}>
-        <Button disableElevation variant="outlined" color="primary" fullWidth>
+        <Button onClick={logout} disableElevation variant="outlined" color="primary" fullWidth>
           Logout
         </Button>
       </Box>

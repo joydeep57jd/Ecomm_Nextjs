@@ -1,29 +1,40 @@
-import type { Metadata } from "next"
-import { AddressPageView } from "pages-sections/customer-dashboard/address/page-view"
-// API FUNCTIONS
-import api from "utils/__api__/address"
+"use client"
 
-export const metadata: Metadata = {
-  title: "Address - Bazaar Next.js E-commerce Template",
-  description:
-    "Bazaar is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store",
-  authors: [{ name: "UI-LIB", url: "https://ui-lib.com" }],
-  keywords: ["e-commerce", "e-commerce template", "next.js", "react"]
-}
+import Loading from "@/app/loading"
+import { useUser } from "@/contexts/UserContenxt"
+import { UserAddressListResponse } from "@/models/User.model"
+import DeliveryAddresses from "@/pages-sections/checkout-alternative/checkout-form/delivery-addresses"
+import { getAddressList } from "@/utils/api/profile"
+import { useEffect, useState } from "react"
+import { FormProvider } from "components/form-hook"
+import { Resolver, useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
 
-// ==============================================================
-interface Props {
-  searchParams: Promise<{ page: string }>;
-}
-// ==============================================================
+export default function Address() {
+  const [addressListResponse, setAddressListResponse] = useState<UserAddressListResponse | null>(null)
+  const { user } = useUser()
 
-export default async function Address({ searchParams }: Props) {
-  const { page } = await searchParams
-  const data = await api.getAddressList(+page || 1)
+  useEffect(() => {
+    if (user) {
+      getAddresses()
+    }
+  }, [user])
 
-  if (!data || data.addressList.length === 0) {
-    return <div>Data not found</div>
+  const getAddresses = async () => {
+    const response = await getAddressList(+user?.customerId!)
+    setAddressListResponse(response)
   }
 
-  return <AddressPageView addresses={data.addressList} totalPages={data.totalPages} />
+  const methods = useForm<{}>({
+    defaultValues: {},
+    resolver: yupResolver(yup.object()) as Resolver<{}>
+  })
+
+  return <FormProvider methods={methods} onSubmit={() => { }}>
+    {
+      !addressListResponse ? <Loading isSmallLoader={true} /> : <DeliveryAddresses deliveryAddresses={addressListResponse!.data} getAddresses={getAddresses} />
+    }
+  </FormProvider>
+
 }

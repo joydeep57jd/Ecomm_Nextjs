@@ -22,6 +22,8 @@ import { useEffect } from "react"
 import { DelivaryAddressData } from "@/models/Address.model"
 import { useUser } from "@/contexts/UserContenxt"
 import DeleteDeliveryAddress from "./delete-delivery-address"
+import DashboardHeader from "@/pages-sections/customer-dashboard/dashboard-header"
+import Location from "@/icons/Location"
 
 // STYLED COMPONENTS
 const AddressCard = styled("div", {
@@ -46,7 +48,7 @@ const AddressCard = styled("div", {
   p: { color: theme.palette.grey[700] }
 }))
 
-type Props = { deliveryAddresses: Address[], getAddresses(): Promise<void>, setSelectedPinCode(value: string): void, setSelectedDelivaryAddressData(data: DelivaryAddressData): void };
+type Props = { deliveryAddresses: Address[], getAddresses(): Promise<void>, setSelectedPinCode?(value: string): void, setSelectedDelivaryAddressData?(data: DelivaryAddressData): void };
 
 export default function DeliveryAddresses({ deliveryAddresses, getAddresses, setSelectedPinCode, setSelectedDelivaryAddressData }: Props) {
   const {
@@ -88,14 +90,28 @@ export default function DeliveryAddresses({ deliveryAddresses, getAddresses, set
   const { control } = useFormContext()
 
 
-  const HeaderSection = (
-    <FlexBetween mb={4}>
+  const HeaderSection = (setSelectedPinCode && setSelectedDelivaryAddressData) ? <>
+    <FlexBetween sx={{
+      width: '100%'
+    }} mb={4}>
       <Heading number={1} title="Delivery Address" mb={0} />
       <Button color="primary" variant="outlined" onClick={handleAddNewAddress}>
         Add New Address
       </Button>
     </FlexBetween>
-  )
+  </>
+    :
+    <div>
+      <DashboardHeader Icon={Location} title="Adderesses" />
+      <div style={{
+        display: 'flex', justifyContent: 'end', marginBottom: '1.5rem'
+      }}>
+        <Button color="primary" variant="outlined" onClick={handleAddNewAddress}>
+          Add New Address
+        </Button>
+
+      </div>
+    </div>
 
   if (!Array.isArray(addresses) || addresses.length === 0) {
     return (
@@ -128,9 +144,12 @@ export default function DeliveryAddresses({ deliveryAddresses, getAddresses, set
                   isSelected={address.customer.addrid === field.value}
                   hasError={Boolean(error)}
                   onSelect={(address) => {
-                    field.onChange(address.customer.addrid)
-                    setSelectedPinCode(address.customer.pin)
-                    setSelectedDelivaryAddressData(address)
+                    if (setSelectedPinCode &&
+                      setSelectedDelivaryAddressData) {
+                      field.onChange(address.customer.addrid)
+                      setSelectedPinCode && setSelectedPinCode(address.customer.pin)
+                      setSelectedDelivaryAddressData && setSelectedDelivaryAddressData(address)
+                    }
                   }}
                   onEdit={handleEditDeliveryAddress}
                   onDelete={handleDeleteDeliveryAddress}
