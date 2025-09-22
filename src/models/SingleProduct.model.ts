@@ -54,3 +54,10 @@ export interface PriceAndStock {
   batchId: number
 }
 
+
+export interface AddInfoPayload {
+
+  variant:   number[];
+  itemId:    number;
+}
+

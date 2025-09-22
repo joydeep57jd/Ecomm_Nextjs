@@ -1,10 +1,10 @@
 import API_URL from "../constants"
 import axios from "../axiosInstance"
 import { AllProductResponse, ProductRequestPayload } from "@/models/AllProduct.model"
-import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
+import { AddInfoPayload, SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
 import { Cart } from "@/models/CartProductItem.models"
 import { GetCategoryResponse } from "@/models/Category.modal"
-
+import axiosInstance from "../axiosInstance"
 
 export const getAllProducts = async (body: ProductRequestPayload) => {
   const { data } = await axios.post<{ data: AllProductResponse }>(API_URL.ITEMS.GET_SEARCH, body)
@@ -28,10 +28,10 @@ export const getProduct = async (optionValues: string) => {
   return data.data
 }
 
-
-export const getOptionsByCategory = async(CategoryId:number)=>{
-  const {data} = await axios.post<{data:GetCategoryResponse[]}>(
-    API_URL.ITEMS.GET_CATEGORY_OPTIONS,{CategoryId}
+export const getOptionsByCategory = async (CategoryId: number) => {
+  const { data } = await axios.post<{ data: GetCategoryResponse[] }>(
+    API_URL.ITEMS.GET_CATEGORY_OPTIONS,
+    { CategoryId }
   )
   return data.data
 }
@@ -41,4 +41,12 @@ export const isProductAddedToCart = (cart: Cart[], variantId: number, productId:
   return !!cartProduct
 }
 
+export const getAdditionalInfoByItem = async (payload: AddInfoPayload) => {
+  const { data } = await axiosInstance.post<{}>(API_URL.ITEMS.GET_ADDITIONAL_INFO, payload)
+  return data
+}
 
+export const getFAQ = async (ItemId: number) => {
+  const { data } = await axiosInstance.post<{}>(API_URL.MISC.GET_FAQ, ItemId)
+  return data
+}

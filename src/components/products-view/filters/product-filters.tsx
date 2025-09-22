@@ -23,7 +23,6 @@ interface Props {
 }
 
 export default function ProductFilters({ categoryOptions }: Props) {
-
   const [selectedFilters, setSelectedFilters] = useState<Record<number, number[]>>({})
 
   const router = useRouter()
@@ -36,7 +35,6 @@ export default function ProductFilters({ categoryOptions }: Props) {
       setSelectedFilters({ ...filter })
     }
   }, [router, searchParams])
-
 
   const getCurrentFilters = () => {
     const encodedFilters = searchParams.get("filter") ?? btoa(JSON.stringify({}))
@@ -52,7 +50,7 @@ export default function ProductFilters({ categoryOptions }: Props) {
         filters[categoryId] = []
       }
       const values: number[] = selectedFilters[categoryId] ?? []
-      const existingValueIndex = values.findIndex(id => id === value)
+      const existingValueIndex = values.findIndex((id) => id === value)
       if (existingValueIndex !== -1) {
         values.splice(existingValueIndex, 1)
       } else {
@@ -62,16 +60,12 @@ export default function ProductFilters({ categoryOptions }: Props) {
       setSelectedFilters({ ...filters })
       params.set("filter", btoa(JSON.stringify(filters)))
       router.push(`${pathname}?${params.toString()}`)
-    } catch {
-    }
+    } catch {}
   }
 
   return (
     <div>
       {/* CATEGORY OPTIONS */}
-      <Typography variant="h6" sx={{ mb: 1.25 }}>
-        Categories
-      </Typography>
 
       {categoryOptions.map((cat) => (
         <Accordion key={cat.variantOptionId} sx={{ mb: 1 }}>
@@ -91,13 +85,15 @@ export default function ProductFilters({ categoryOptions }: Props) {
           >
             <FormGroup sx={{ pl: 2 }}>
               {cat.optionValues.map((opt) => (
-                <Box key={opt.optionValueId} sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  position: 'relative'
-                }}>
-                  {
-                    cat.optionName.toLowerCase().includes("colour") &&
+                <Box
+                  key={opt.optionValueId}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    position: "relative"
+                  }}
+                >
+                  {cat.optionName.toLowerCase().includes("colour") && (
                     <Box
                       sx={{
                         width: 20,
@@ -105,30 +101,28 @@ export default function ProductFilters({ categoryOptions }: Props) {
                         backgroundColor: opt.optionValueName,
                         borderRadius: "100%",
                         border: "1px solid #ccc",
-                        position: 'absolute',
-                        left: '25px'
+                        position: "absolute",
+                        left: "25px"
                       }}
                     />
-                  }
+                  )}
                   <FormControlLabel
                     control={
                       <Checkbox
                         size="small"
                         checked={!!selectedFilters[cat.categoryId]?.includes(opt.optionValueId)}
-                        onChange={() =>
-                          handleChangeSearchParams(cat.categoryId, opt.optionValueId)
-                        }
+                        onChange={() => handleChangeSearchParams(cat.categoryId, opt.optionValueId)}
                       />
                     }
                     label={opt.optionValueName}
                     sx={{
-                      fontSize: 14, color: "grey.600",
+                      fontSize: 14,
+                      color: "grey.600",
                       "& .MuiFormControlLabel-label": {
-                        marginLeft: cat.optionName.toLowerCase().includes("colour") ? '22px ' : 0
-                      },
+                        marginLeft: cat.optionName.toLowerCase().includes("colour") ? "22px " : 0
+                      }
                     }}
                   />
-
                 </Box>
               ))}
             </FormGroup>
