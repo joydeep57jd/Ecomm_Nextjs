@@ -30,3 +30,27 @@ export interface SaveWishlistItemRequest {
   note: string
   date: string
 }
+
+export interface DeleteCustomerWishItem {
+  CustomerWishItemId: number
+  customerId: number
+
+  Date: Date
+}
+
+export interface DeleteWishListCategory {
+  wishListCategoryId: number
+  customerId: number
+}
+
+export interface DeleteWishListCategoryWithItems {
+  deleteWishListCategoryWithItems: DeleteWishListCategoryWithItem[]
+}
+
+export interface DeleteWishListCategoryWithItem {
+  wishListCategoryId: number
+  returnMessage: string
+  wishListCategoryName: string
+  isDefault: boolean
+}
+

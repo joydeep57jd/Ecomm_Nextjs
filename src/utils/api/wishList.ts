@@ -1,6 +1,10 @@
 import {
+  DeleteCustomerWishItem,
+  DeleteWishListCategory,
+  DeleteWishListCategoryWithItems,
   SaveCollectionRequest,
   SaveCollectionResponse,
+
   SaveWishlistItemRequest,
   WishListCategoryResponse
 } from "@/models/WishList.modal"
@@ -26,3 +30,20 @@ export const saveWishlistCollection = async (payload: SaveCollectionRequest) => 
 export const saveWishlistItem = async (payload: SaveWishlistItemRequest) => {
   await axiosInstance.post<{ data: SaveCollectionResponse }>(API_URL.WISHLIST.SAVE_ITEM, payload)
 }
+
+
+
+export const deleteCustomerWishItem = async(payload:DeleteCustomerWishItem)=>{
+  const {data} = await axiosInstance.post(API_URL.WISHLIST.DELETE_ITEM,payload)
+  return data.data 
+
+}
+
+
+export const deleteWishListCategory = async(payload:DeleteWishListCategory)=>{
+  const {data} = await axiosInstance.post<{data:DeleteWishListCategoryWithItems}>(API_URL.WISHLIST.DELETE_CATEGORY,payload)
+  return data.data
+}
+
+
+
