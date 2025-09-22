@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import Box from "@mui/material/Box"
+import LazyImage from "@/components/LazyImage"
 
 // ==============================================================
 interface MobileHeaderProps extends ComponentProps<typeof Box> {
@@ -34,7 +34,15 @@ MobileHeader.Left = function ({ children, ...props }: MobileHeaderLeftProps) {
 MobileHeader.Logo = function ({ logoUrl }: { logoUrl: string }) {
   return (
     <Link href="/">
-      <Image width={60} height={44} src={logoUrl} alt="logo" />
+      <LazyImage
+        priority
+        src={logoUrl}
+        alt="logo"
+        width={200}
+        height={80}
+        className="h-12 w-auto"
+        sizes="(max-width: 768px) 100px, 125px"
+        sx={{ objectFit: "contain" }} />
     </Link>
   )
 }

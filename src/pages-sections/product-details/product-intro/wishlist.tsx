@@ -25,11 +25,11 @@ function Wishlist({ product }: Props) {
         }
     }
 
-    return <>
+    return <div style={{ position: 'relative' }}>
         <Avatar sx={{
             position: 'absolute',
-            right: '4rem',
-            top: '0.75rem',
+            right: '0.5rem',
+            top: '0.5rem',
             cursor: 'pointer'
         }} onClick={toggleOpen} variant="rounded" className="avatar">
             {
@@ -41,7 +41,7 @@ function Wishlist({ product }: Props) {
         {
             open && <WishlistSelector product={product} handleCloseModal={handleCloseModal} />
         }
-    </>
+    </div>
 }
 
 export default Wishlist

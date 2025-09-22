@@ -38,7 +38,7 @@ export default function ProductSection() {
 
         if (products.length === 0) return null
 
-        return (
+        return section.sectionName.toLowerCase().includes("banner") ? <></> : (
           <ProductsCarousel
             key={section.companyTemplateSectionId}
             title={section.sectionName || "Products"}

@@ -45,13 +45,11 @@ export default function ShopLayout1({ children, data }: Props) {
       </MobileHeader.Left>
 
       {
-        mobileNavigation && <MobileHeader.Logo logoUrl={mobileNavigation.logo} />
+        mobileNavigation && <MobileHeader.Logo logoUrl={header?.logo ?? ''} />
       }
 
       <MobileHeader.Right>
-        <HeaderSearch>
-          <SearchInput2 />
-        </HeaderSearch>
+        <HeaderSearch />
 
         <HeaderLogin />
         <HeaderCart />
@@ -80,7 +78,7 @@ export default function ShopLayout1({ children, data }: Props) {
             </Header.Left>
 
             <Header.Mid>
-              <NavigationList navigation={header.navigation}  layoutModel = {data}  />
+              <NavigationList navigation={header.navigation} layoutModel={data} />
             </Header.Mid>
 
             <Header.Right>
