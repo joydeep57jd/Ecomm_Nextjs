@@ -2,19 +2,19 @@ import { Fragment } from "react"
 // CUSTOM COMPONENT
 import CreditCard from "icons/CreditCard"
 import ListCard from "../list-card"
-import Pagination from "../../pagination"
+// import Pagination from "../../pagination"
 import DashboardHeader from "../../dashboard-header"
 // CUSTOM DATA MODEL
 import Payment from "models/Payment.model"
 
 // ==============================================================
 interface Props {
-  totalPages: number;
+  // totalPages: number;
   payments: Payment[];
 }
 // ==============================================================
 
-export function PaymentMethodsPageView({ payments, totalPages }: Props) {
+export function PaymentMethodsPageView({ payments,  }: Props) {
   return (
     <Fragment>
       <DashboardHeader Icon={CreditCard} title="Payment Methods" />
@@ -30,7 +30,7 @@ export function PaymentMethodsPageView({ payments, totalPages }: Props) {
         />
       ))}
 
-      <Pagination count={totalPages} />
+      {/* <Pagination count={totalPages} /> */}
     </Fragment>
   )
 }

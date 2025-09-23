@@ -24,5 +24,5 @@ export default async function PaymentMethods({ searchParams }: Props) {
     return <div>Data not found</div>
   }
 
-  return <PaymentMethodsPageView payments={data.payments} totalPages={data.totalPages} />
+  return <PaymentMethodsPageView payments={data.payments} />
 }

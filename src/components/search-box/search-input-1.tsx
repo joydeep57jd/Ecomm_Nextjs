@@ -54,6 +54,7 @@ export function SearchInput1({ }: Props) {
     const params = new URLSearchParams(searchParams)
     params.set("search", search)
     router.push(`/products/search?${params.toString()}`)
+    setSearch("")
   }, [search, router, searchParams])
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -64,6 +65,7 @@ export function SearchInput1({ }: Props) {
     if (event.key === "Enter") {
       event.preventDefault()
       handleSearch()
+      
     }
   }
 

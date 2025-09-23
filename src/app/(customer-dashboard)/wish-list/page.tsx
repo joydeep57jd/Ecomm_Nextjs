@@ -24,5 +24,5 @@ export default async function WishList({ searchParams }: Props) {
     return <div>Data not found</div>
   }
 
-  return <WishListPageView products={data.products} totalPages={data.totalPages} />
+  return <WishListPageView products={data.products}  />
 }

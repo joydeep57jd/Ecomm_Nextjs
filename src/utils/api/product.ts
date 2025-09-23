@@ -19,13 +19,27 @@ export const getVariantOption = async (slug: string) => {
   return data.data
 }
 
-export const getProduct = async (optionValues: string) => {
+export const getProduct = async ({
+  itemVariantId,
+  optionValues
+}: {
+  itemVariantId?: number
+  optionValues?: string
+}) => {
+  const payload = {
+    ItemVariantId: itemVariantId ?? 0,
+    OptionValues: optionValues ?? ""
+  }
+
+  // console.log("Payload:", payload)
+
   const { data } = await axios.post<{ data: SingleProductResponse }>(
     API_URL.ITEMS.GET_VARIANT_BY_OPTIONS,
-    {
-      optionValues
-    }
+    payload
   )
+
+  // console.log("Response:", data)
+
   return data.data
 }
 

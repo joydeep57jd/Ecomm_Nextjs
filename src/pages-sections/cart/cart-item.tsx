@@ -44,7 +44,7 @@ export default function CartItem({ item }: Props) {
 
       <ContentWrapper>
         <Stack spacing={0.5} overflow="hidden">
-          <Link href={`/products/${item.productId}`}>
+          <Link href={`/products/${item.productId}?variantId=${item.itemVariantId}`}>
             <Typography noWrap variant="body1" fontSize={16}>
               {item.productName}
             </Typography>

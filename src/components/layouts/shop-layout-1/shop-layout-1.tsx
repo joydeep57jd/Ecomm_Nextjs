@@ -113,8 +113,23 @@ export default function ShopLayout1({ children, data }: Props) {
       {
         footer &&
         <Footer1>
+            <Footer1.Brand>
+            <Link href="/">
+              <Image src={footer.logo} alt="logo" width={200} height={65} />
+            </Link>
+
+            <Typography
+              variant="body1"
+              sx={{ mt: 1, mb: 3, maxWidth: 370, color: "white", lineHeight: 1.7 }}
+            >
+              {footer.description}
+            </Typography>
+
+            {/* <FooterApps playStoreUrl={footer.playStoreUrl} appleStoreUrl={footer.appStoreUrl} /> */}
+          </Footer1.Brand>
           <Footer1.Widget1>
             <FooterLinksWidget title="About Us" links={footer.about} />
+        
           </Footer1.Widget1>
 
           <Footer1.Widget2>

@@ -29,9 +29,10 @@ export default async function ProductDetails({ params, searchParams }: SlugParam
     getRelatedProducts(),
     getFrequentlyBought()
   ])
+
   const variantMap = new Map<string, VariantOption[]>()
   let defaultVariant = ""
-  variantOptions.forEach(variant => {
+  variantOptions.forEach((variant) => {
     if (variantMap.has(variant.optionName)) {
       variantMap.get(variant.optionName)!.push(variant)
     } else {
@@ -40,10 +41,13 @@ export default async function ProductDetails({ params, searchParams }: SlugParam
     }
   })
 
-  const selectedVariant = resolvedSearchParams?.variant
+const variantId = resolvedSearchParams?.variantId 
+const selectedVariant = defaultVariant.slice(0, -1)
 
-  const selectedvariant = selectedVariant || defaultVariant.slice(0, -1)
-  const product = await getProduct(selectedvariant)
+const product = await getProduct({
+  itemVariantId: variantId ? Number(variantId) : undefined,
+  optionValues: variantId ? "" : selectedVariant
+})
 
   return (
     <ProductDetailsPageView
