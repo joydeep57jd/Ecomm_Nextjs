@@ -1,9 +1,10 @@
 'use client'
 import Loading from '@/app/loading'
-import { AllProductResponse } from '@/models/AllProduct.model'
+import { AllProductResponse, DataList } from '@/models/AllProduct.model'
 import { GetCategoryResponse } from '@/models/Category.modal'
+import { CategoryWiseFilterResponse } from '@/models/Filters'
 import { ProductSearchPageView } from '@/pages-sections/product-details/page-view'
-import { getAllProducts, getOptionsByCategory } from '@/utils/api/product'
+import { getAllProducts, getFilterCategorySection, getOptionsByCategory } from '@/utils/api/product'
 import React, { useEffect, useState } from 'react'
 
 type Props = {
@@ -45,7 +46,11 @@ function Products({ filters,
     const fetchData = async () => {
         setIsLoading(true)
         const [productsResponse, categoryOptions] = await Promise.all([
-            getAllProducts({
+            filters ? getFilterCategorySection({
+                OptionValueIds: filters,
+                PageNo: +(page ?? "1"),
+                PageSize: 20
+            }) : getAllProducts({
                 ...(search ? { searchCriteria: search } : {}),
                 ...(categoryId ? { categoryId } : {}),
                 ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
@@ -56,6 +61,25 @@ function Products({ filters,
             }),
             categoryId ? getOptionsByCategory(categoryId) : Promise.resolve([])
         ])
+
+        if (filters) {
+            const dataList: DataList[] = (productsResponse as CategoryWiseFilterResponse).variantDetails?.map(data => ({
+                categoryId: data.categoryId,
+                id: data.id,
+                imageList: data.imageList,
+                isSoldOut: data.isSoldOut,
+                itemCode: data.itemCode,
+                itemDesc: data.itemDesc,
+                itemId: data.itemId,
+                itemName: data.itemName,
+                memberPrice: data.batchInfos?.[0]?.memberPrice,
+                mrp: data.batchInfos?.[0]?.mrp,
+                savePrice: data.batchInfos?.[0]?.savePrice,
+                savePricePctg: data.batchInfos?.[0]?.savePricePctg,
+                subCategoryId: data.subCategoryId,
+            })) ?? []
+            productsResponse.dataList = dataList
+        }
 
         const size = productsResponse.pagination.pageSize
         const lastIndex = productsResponse.pagination.pageNumber * productsResponse.pagination.pageSize

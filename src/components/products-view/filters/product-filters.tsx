@@ -23,7 +23,7 @@ interface Props {
 }
 
 export default function ProductFilters({ categoryOptions }: Props) {
-  const [selectedFilters, setSelectedFilters] = useState<Record<number, number[]>>({})
+  const [selectedFilters, setSelectedFilters] = useState<Record<number, Record<string, number[]>>>({})
 
   const router = useRouter()
   const pathname = usePathname()
@@ -32,7 +32,10 @@ export default function ProductFilters({ categoryOptions }: Props) {
   useEffect(() => {
     if (searchParams.get("filter")) {
       const filter = getCurrentFilters()
+      console.warn(filter)
       setSelectedFilters({ ...filter })
+    } else {
+      setSelectedFilters({})
     }
   }, [router, searchParams])
 
@@ -42,25 +45,27 @@ export default function ProductFilters({ categoryOptions }: Props) {
     return filters
   }
 
-  const handleChangeSearchParams = (categoryId: number, value: number) => {
+  const handleChangeSearchParams = (categoryId: number, value: number, keyName: string) => {
     const params = new URLSearchParams(searchParams.toString())
     try {
       const filters = getCurrentFilters()
       if (!filters[categoryId]) {
-        filters[categoryId] = []
+        filters[categoryId] = {}
       }
-      const values: number[] = selectedFilters[categoryId] ?? []
+      const options = selectedFilters[categoryId] ?? {}
+      const values = options[keyName] ?? []
       const existingValueIndex = values.findIndex((id) => id === value)
       if (existingValueIndex !== -1) {
         values.splice(existingValueIndex, 1)
       } else {
         values.push(value)
       }
-      filters[categoryId] = values
+
+      filters[categoryId][keyName] = values
       setSelectedFilters({ ...filters })
       params.set("filter", btoa(JSON.stringify(filters)))
       router.push(`${pathname}?${params.toString()}`)
-    } catch {}
+    } catch { }
   }
 
   return (
@@ -110,8 +115,8 @@ export default function ProductFilters({ categoryOptions }: Props) {
                     control={
                       <Checkbox
                         size="small"
-                        checked={!!selectedFilters[cat.categoryId]?.includes(opt.optionValueId)}
-                        onChange={() => handleChangeSearchParams(cat.categoryId, opt.optionValueId)}
+                        checked={!!selectedFilters[cat.categoryId]?.[cat.optionName]?.includes(opt.optionValueId)}
+                        onChange={() => handleChangeSearchParams(cat.categoryId, opt.optionValueId, cat.optionName)}
                       />
                     }
                     label={opt.optionValueName}

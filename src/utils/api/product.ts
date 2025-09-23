@@ -31,14 +31,10 @@ export const getProduct = async ({
     OptionValues: optionValues ?? ""
   }
 
-  // console.log("Payload:", payload)
-
   const { data } = await axios.post<{ data: SingleProductResponse }>(
     API_URL.ITEMS.GET_VARIANT_BY_OPTIONS,
     payload
   )
-
-  // console.log("Response:", data)
 
   return data.data
 }
@@ -52,7 +48,7 @@ export const getOptionsByCategory = async (CategoryId: number) => {
 }
 
 export const getFilterCategorySection = async (payload: CategoryWiseFilter) => {
-  const { data } = await axios.post<{ data: CategoryWiseFilterResponse[] }>(
+  const { data } = await axios.post<{ data: CategoryWiseFilterResponse }>(
     API_URL.ITEMS.GET_FILTER_CATEGORY_SECTION,
     payload
   )

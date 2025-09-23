@@ -1,3 +1,5 @@
+import { DataList } from "./AllProduct.model"
+
 interface Item {
   label: string
   value: string
@@ -23,10 +25,12 @@ export interface CategoryWiseFilter {
 
 export interface CategoryWiseFilterResponse {
   variantDetails: VariantDetail[]
+  dataList: DataList[]
+  pagination: Paginantion
 }
 
 export interface VariantDetail {
-  id: string
+  id: number
   itemId: number
   itemName: string
   itemDesc: string
@@ -61,4 +65,10 @@ export interface ImageList {
   name: string
   alt: string
   fullImagepath: string
+}
+
+export interface Paginantion {
+  pageNumber: number
+  pageSize: number
+  totalRecords: number
 }

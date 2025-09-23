@@ -18,6 +18,7 @@ interface Props {
   variantMap: Map<string, VariantOption[]>
   relatedProducts: Product[];
   frequentlyBought: Product[];
+  selectedVariant: string
 }
 // ==============================================================
 
@@ -32,7 +33,7 @@ export default function ProductDetailsPageView(props: Props) {
   return (
     <Container className="mt-2 mb-2">
       {/* PRODUCT DETAILS INFO AREA */}
-      <ProductIntro product={props.product} variantMap={props.variantMap} />
+      <ProductIntro product={props.product} variantMap={props.variantMap} selectedVariant={props.selectedVariant} />
 
       {/* PRODUCT DESCRIPTION AND REVIEW */}
       <ProductTabs description={<ProductDescription product={props.product} />} reviews={<ProductReviews />} />

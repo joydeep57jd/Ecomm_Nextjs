@@ -32,11 +32,15 @@ export default async function ProductSearch({ searchParams }: Props) {
   const getFilterValues = () => {
     try {
       const filters = JSON.parse(atob(filter))
-      const varints = Object.keys(filters).reduce((acc: number[], key: string) => {
-        return [...acc, ...filters[key]]
-      }, []).join("#")
-      console.warn(varints)
-      return varints
+      const variants: string[] = []
+      Object.keys(filters).forEach(category => {
+        const options = filters[category] ?? {}
+        Object.keys(options).forEach(key => {
+          const value = options[key].join()
+          value && variants.push(value)
+        })
+      })
+      return variants.join("#")
     } catch {
       return null
     }

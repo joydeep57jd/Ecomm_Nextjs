@@ -19,10 +19,11 @@ import ProductAction from "../../../components/product-action"
 type Props = {
   product: SingleProductResponse
   variantMap: Map<string, VariantOption[]>
+  selectedVariant: string
 }
 // ================================================================
 
-export default function ProductIntro({ product, variantMap }: Props) {
+export default function ProductIntro({ product, variantMap, selectedVariant }: Props) {
   return (
     <StyledRoot>
       <Grid container spacing={3} justifyContent="space-around">
@@ -76,7 +77,7 @@ export default function ProductIntro({ product, variantMap }: Props) {
           </div>
 
           {/* PRODUCT VARIANTS */}
-          <ProductVariantSelector variantMap={variantMap} />
+          <ProductVariantSelector product={product} variantMap={variantMap} selectedVariant={selectedVariant} />
 
           {/* PRICE & STOCK */}
           <div className="price">

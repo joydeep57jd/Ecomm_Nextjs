@@ -41,13 +41,15 @@ export default async function ProductDetails({ params, searchParams }: SlugParam
     }
   })
 
-const variantId = resolvedSearchParams?.variantId 
-const selectedVariant = defaultVariant.slice(0, -1)
+  const variantId = resolvedSearchParams?.variantId
+  const variant = resolvedSearchParams?.variant
+  const selectedVariant = variant || defaultVariant.slice(0, -1)
 
-const product = await getProduct({
-  itemVariantId: variantId ? Number(variantId) : undefined,
-  optionValues: variantId ? "" : selectedVariant
-})
+
+  const product = await getProduct({
+    itemVariantId: variantId ? Number(variantId) : undefined,
+    optionValues: variantId ? "" : selectedVariant
+  })
 
   return (
     <ProductDetailsPageView
@@ -55,6 +57,7 @@ const product = await getProduct({
       product={product}
       relatedProducts={relatedProducts}
       frequentlyBought={frequentlyBought}
+      selectedVariant={selectedVariant}
     />
   )
 }
