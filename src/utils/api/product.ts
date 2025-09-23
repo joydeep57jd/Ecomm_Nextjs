@@ -5,6 +5,7 @@ import { AddInfoPayload, SingleProductResponse, VariantOption } from "@/models/S
 import { Cart } from "@/models/CartProductItem.models"
 import { GetCategoryResponse } from "@/models/Category.modal"
 import axiosInstance from "../axiosInstance"
+import { CategoryWiseFilter, CategoryWiseFilterResponse } from "@/models/Filters"
 
 export const getAllProducts = async (body: ProductRequestPayload) => {
   const { data } = await axios.post<{ data: AllProductResponse }>(API_URL.ITEMS.GET_SEARCH, body)
@@ -32,6 +33,14 @@ export const getOptionsByCategory = async (CategoryId: number) => {
   const { data } = await axios.post<{ data: GetCategoryResponse[] }>(
     API_URL.ITEMS.GET_CATEGORY_OPTIONS,
     { CategoryId }
+  )
+  return data.data
+}
+
+export const getFilterCategorySection = async (payload: CategoryWiseFilter) => {
+  const { data } = await axios.post<{ data: CategoryWiseFilterResponse[] }>(
+    API_URL.ITEMS.GET_FILTER_CATEGORY_SECTION,
+    payload
   )
   return data.data
 }

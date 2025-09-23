@@ -72,7 +72,9 @@ export const API_URL = {
     GET_VARIANT_BY_OPTIONS: "/frontend/GetVariantByOptions",
     GET_ADDITIONAL_INFO: "/frontend/GetAdditionalInfoByItem",
     P_ALLPRODUCT: "/frontend/GetCompanyDefaultTemplateUI",
-    GET_CATEGORY_OPTIONS: "/frontend/GetVariantOptionsByCategory"
+    GET_CATEGORY_OPTIONS: "/frontend/GetVariantOptionsByCategory",
+    GET_FILTER_CATEGORY_SECTION:"/Frontend/GetCategoryWiseFilter"
+
   },
 
   RATING: {
