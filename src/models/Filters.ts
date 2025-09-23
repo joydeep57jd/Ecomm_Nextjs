@@ -45,7 +45,7 @@ export interface VariantDetail {
 
 export interface BatchInfos {
   itemVariantId: number
-  memberPrice: any
+  memberPrice: number
   mrp: number
   salePrice: number
   savePrice: number

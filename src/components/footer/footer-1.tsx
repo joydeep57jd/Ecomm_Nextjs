@@ -13,7 +13,6 @@ export function Footer1({
   children,
   color = "white",
   bgcolor = "grey.900",
-  mb = { lg: 0, xs: 8 },
   pt = { sm: 8, xs: 4 },
   ...props
 }: Footer1Props) {
@@ -23,7 +22,6 @@ export function Footer1({
       overflow="hidden"
       bgcolor={bgcolor}
       color={color}
-      mb={mb}
       pt={pt}
       {...props}
     >

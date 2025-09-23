@@ -25,30 +25,39 @@ const ACCORDION_SUMMARY_STYLES = {
 
 export const renderLevels = (data: any[], handleClose: () => void) => {
   return data.map((item: any, index: number) => {
-    if (item.child) {
+    let children = []
+    let keyName = ''
+
+    if (!!item.sub_category) {
+      keyName = 'category'
+      children = item.sub_category
+    } else if (!!item.sub_sub_category) {
+      keyName = 'subCategory'
+      children = item.sub_sub_category
+    } else {
+      keyName = 'subSubCategory'
+    }
+
+    const href = `/products/search?${keyName}=${item.id}`
+    if (children?.length) {
       return (
         <Accordion square key={index} elevation={0} disableGutters sx={ACCORDION_STYLES}>
           <AccordionSummary expandIcon={<ExpandMore />} sx={ACCORDION_SUMMARY_STYLES}>
-            <Typography variant="h6">{item.title}</Typography>
+            <NavLink href={href ?? ''} onClick={handleClose}>
+              <Typography variant="h6">{item.name}</Typography>
+            </NavLink>
           </AccordionSummary>
 
-          <Box mx={2}>{renderLevels(item.child, handleClose)}</Box>
+          <Box mx={2}>{renderLevels(children, handleClose)}</Box>
         </Accordion>
       )
     }
 
-    if (item.extLink) {
-      return (
-        <Typography variant="h6" sx={{ py: 1 }} key={index}>
-          <NavLink href={item.url}>{item.title}</NavLink>
-        </Typography>
-      )
-    }
 
     return (
       <Box key={index} py={1}>
-        <NavLink href={item.url} onClick={handleClose}>
-          {item.title}
+        <NavLink href={href ?? ''} onClick={handleClose}>
+          {item.name}
         </NavLink>
       </Box>
     )

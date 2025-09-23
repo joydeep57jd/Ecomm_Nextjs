@@ -1,8 +1,7 @@
 import { Metadata } from "next"
 // PAGE VIEW COMPONENT
-import { ProductSearchPageView } from "pages-sections/product-details/page-view"
 // API FUNCTIONS
-import { getAllProducts, getOptionsByCategory } from "utils/api/product"
+import Products from "./products"
 
 export const metadata: Metadata = {
   title: "Product Search - Bazaar Next.js E-commerce Template",
@@ -33,40 +32,18 @@ export default async function ProductSearch({ searchParams }: Props) {
   const getFilterValues = () => {
     try {
       const filters = JSON.parse(atob(filter))
-      return Object.keys(filters).reduce((acc: number[], key: string) => {
+      const varints = Object.keys(filters).reduce((acc: number[], key: string) => {
         return [...acc, ...filters[key]]
-      }, []).join()
+      }, []).join("#")
+      console.warn(varints)
+      return varints
     } catch {
       return null
     }
   }
 
-  const [productsResponse, categoryOptions] = await Promise.all([
-    getAllProducts({
-      ...(search ? { searchCriteria: search } : {}),
-      ...(categoryId ? { categoryId } : {}),
-      ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
-      ...(subSubCategory && { subSubCategoryId: parseInt(subSubCategory) }),
-      ...(filter && { optionValueIds: getFilterValues() }),
-      pageNo: +(page ?? "1"),
-      pageSize: 20
-    }),
-    categoryId ? getOptionsByCategory(categoryId) : Promise.resolve([])
-  ])
+  const filters = getFilterValues()
 
-  const size = productsResponse.pagination.pageSize
-  const lastIndex = productsResponse.pagination.pageNumber * productsResponse.pagination.pageSize
-  const firstIndex = (productsResponse.pagination.pageNumber - 1) * productsResponse.pagination.pageSize + 1
-  const pageCount = Math.ceil(productsResponse.pagination.totalRecords / size)
+  return <Products filters={filters} search={search} page={page} subCategory={subCategory} subSubCategory={subSubCategory} categoryId={categoryId} />
 
-  return (
-    <ProductSearchPageView
-      categoryOptions={categoryOptions}
-      products={productsResponse.dataList}
-      pageCount={pageCount}
-      totalProducts={productsResponse.pagination.totalRecords}
-      lastIndex={productsResponse.dataList.length < size ? firstIndex + productsResponse.dataList.length - 1 : lastIndex}
-      firstIndex={firstIndex}
-    />
-  )
 }

@@ -133,12 +133,15 @@ export default function ProductSearchPageView({
 
         <Grid container spacing={4}>
           {/* PRODUCT FILTER SIDEBAR AREA */}
-          <Grid size={{ md: 3, xl: 2 }} sx={{ display: { md: "block", xs: "none" } }}>
-            <ProductFilters categoryOptions={categoryOptions} />
-          </Grid>
+          {
+            categoryOptions?.length > 0 &&
+            <Grid size={{ md: 3, xl: 2 }} sx={{ display: { md: "block", xs: "none" } }}>
+              <ProductFilters categoryOptions={categoryOptions} />
+            </Grid>
+          }
 
           {/* PRODUCT VIEW AREA */}
-          <Grid size={{ xs: 12, md: 9, xl: 10 }}>
+          <Grid size={{ xs: 12, md: categoryOptions?.length ? 9 : 12, xl: categoryOptions?.length ? 10 : 12 }}>
             {/* {view === "grid" ? (
               <ProductsGridView products={products} />
             ) : (

@@ -12,7 +12,6 @@ import OverlayScrollbar from "components/overlay-scrollbar"
 // RENDER MENU LEVEL FUNCTION
 import { renderLevels } from "./render-levels"
 // NAVIGATION DATA LIST
-import { updateNavigation } from "./modified-navigation"
 import { Category } from "@/models/Category.modal"
 // CUSTOM DATA MODEL
 
@@ -56,7 +55,7 @@ export function MobileMenu({ navigation }: Props) {
                 <Clear fontSize="small" />
               </IconButton>
 
-              {renderLevels(updateNavigation(navigation), handleClose)}
+              {renderLevels(navigation, handleClose)}
             </Box>
           </OverlayScrollbar>
         </Box>
