@@ -39,7 +39,9 @@ export default function HoverActions({ product }: Props) {
         qty: 1,
         stockQty: product.stockQty,
         variantName:product.title,
-        mrp:product.price
+        mrp:product.price,
+        variantOptionDetails: product.variantOptionDetails ?? []
+        
         
 
       }} />
