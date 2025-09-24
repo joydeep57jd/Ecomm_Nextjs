@@ -6,7 +6,6 @@ import Grid from "@mui/material/Grid"
 import MenuItem from "@mui/material/MenuItem"
 import TextField from "@mui/material/TextField"
 import Container from "@mui/material/Container"
-import Pagination from "@mui/material/Pagination"
 import Typography from "@mui/material/Typography"
 // MUI ICON COMPONENTS
 // GLOBAL CUSTOM COMPONENTS
@@ -27,20 +26,12 @@ const SORT_OPTIONS = [
 // ==============================================================
 interface Props {
   products: DataList[];
-  pageCount: number;
-  lastIndex: number;
-  firstIndex: number;
-  totalProducts: number;
   categoryOptions: GetCategoryResponse[]
 }
 // ==============================================================
 
 export default function ProductSearchPageView({
   products,
-  pageCount,
-  lastIndex,
-  firstIndex,
-  totalProducts,
   categoryOptions
 }: Props) {
   const router = useRouter()
@@ -48,7 +39,6 @@ export default function ProductSearchPageView({
   const searchParams = useSearchParams()
 
   const query = searchParams.get("q")
-  const page = searchParams.get("page") || "1"
   const sort = searchParams.get("sort") || "relevance"
 
   const handleChangeSearchParams = (key: string, value: string) => {
@@ -149,24 +139,6 @@ export default function ProductSearchPageView({
             )} */}
 
             <ProductsGridView products={products} />
-
-            {
-              !!pageCount &&
-              <FlexBetween flexWrap="wrap" mt={6}>
-                <Typography variant="body1" sx={{ color: "grey.600" }}>
-                  Showing {firstIndex}-{lastIndex} of {totalProducts} Products
-                </Typography>
-
-                <Pagination
-                  color="primary"
-                  variant="outlined"
-                  page={+page}
-                  count={pageCount}
-                  onChange={(_, page) => handleChangeSearchParams("page", page.toString())}
-                />
-              </FlexBetween>
-            }
-
           </Grid>
         </Grid>
       </Container>

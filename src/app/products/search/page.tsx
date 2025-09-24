@@ -26,7 +26,7 @@ interface Props {
 // ==============================================================
 
 export default async function ProductSearch({ searchParams }: Props) {
-  const { search, page, category, subCategory, subSubCategory, filter } = await searchParams
+  const { search, category, subCategory, subSubCategory, filter } = await searchParams
   const categoryId = category ? parseInt(category) : undefined
 
   const getFilterValues = () => {
@@ -48,6 +48,6 @@ export default async function ProductSearch({ searchParams }: Props) {
 
   const filters = getFilterValues()
 
-  return <Products filters={filters} search={search} page={page} subCategory={subCategory} subSubCategory={subSubCategory} categoryId={categoryId} />
+  return <Products filters={filters} search={search} subCategory={subCategory} subSubCategory={subSubCategory} categoryId={categoryId} />
 
 }

@@ -14,18 +14,38 @@ import { StyledRoot } from "./styles"
 import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
 
 import ProductAction from "../../../components/product-action"
+import Loading from "@/app/loading"
 
 // ================================================================
 type Props = {
   product: SingleProductResponse
   variantMap: Map<string, VariantOption[]>
   selectedVariant: string
+  isLoading: boolean
 }
 // ================================================================
 
-export default function ProductIntro({ product, variantMap, selectedVariant }: Props) {
+export default function ProductIntro({ product, variantMap, selectedVariant, isLoading }: Props) {
   return (
-    <StyledRoot>
+    <StyledRoot style={{ position: 'relative' }}>
+      {
+        isLoading && <div
+          style={{
+            position: "absolute",
+            zIndex: 9,
+            width: "100%",
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            top: 0,
+            left: 0,
+            background: '#0000001f'
+          }}
+        >
+          <Loading isSmallLoader={true} />
+        </div>
+      }
       <Grid container spacing={3} justifyContent="space-around">
         {/* IMAGE GALLERY AREA */}
         <Grid size={{ lg: 6, md: 7, xs: 12 }}>

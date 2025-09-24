@@ -26,7 +26,7 @@ export default function ProductCard16({ product }: Props) {
 
   return (
     <StyledRoot>
-      <Link href={`/products/${product.itemId}`}>
+      <Link href={`/products/${product.itemId}?variantId=${product.itemVariantId || ''}`}>
         <div className="img-wrapper">
           <LazyImage unoptimized alt={imageAltTag} width={380} height={379} src={thumbnail} />
           {discount ? <DiscountChip discount={discount} sx={{ left: 20, top: 20 }} /> : null}

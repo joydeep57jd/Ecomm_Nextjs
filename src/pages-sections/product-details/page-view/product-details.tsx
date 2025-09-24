@@ -19,6 +19,7 @@ interface Props {
   relatedProducts: Product[];
   frequentlyBought: Product[];
   selectedVariant: string
+  isLoading: boolean
 }
 // ==============================================================
 
@@ -33,7 +34,7 @@ export default function ProductDetailsPageView(props: Props) {
   return (
     <Container className="mt-2 mb-2">
       {/* PRODUCT DETAILS INFO AREA */}
-      <ProductIntro product={props.product} variantMap={props.variantMap} selectedVariant={props.selectedVariant} />
+      <ProductIntro product={props.product} variantMap={props.variantMap} selectedVariant={props.selectedVariant} isLoading={props.isLoading} />
 
       {/* PRODUCT DESCRIPTION AND REVIEW */}
       <ProductTabs description={<ProductDescription product={props.product} />} reviews={<ProductReviews />} />

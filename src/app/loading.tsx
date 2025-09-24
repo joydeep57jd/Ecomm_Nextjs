@@ -3,11 +3,15 @@ import FlexRowCenter from "components/flex-box/flex-row-center"
 
 type Props = {
   isSmallLoader?: boolean
+  isTiny?: boolean
 }
 
-export default function Loading({ isSmallLoader }: Props) {
+export default function Loading({ isSmallLoader, isTiny }: Props) {
+
   return (
-    <FlexRowCenter height={420} className={isSmallLoader ? 'h-[calc(100vh-3rem)]' : 'h-screen'}>
+    <FlexRowCenter sx={{
+      height: (isSmallLoader || isTiny) ? (isSmallLoader ? 'calc(100vh - 523px)' : '60px') : 'h-screen'
+    }}>
       <CircularProgress color="primary" />
     </FlexRowCenter>
   )

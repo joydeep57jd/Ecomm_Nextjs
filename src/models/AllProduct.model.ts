@@ -17,6 +17,7 @@ export interface DataList {
   isSoldOut: boolean
   itemCode: string
   imageList: ImageList[]
+  itemVariantId?: number
 }
 
 export interface HomePageProduct {

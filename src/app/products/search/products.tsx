@@ -5,48 +5,80 @@ import { GetCategoryResponse } from "@/models/Category.modal"
 import { CategoryWiseFilterResponse } from "@/models/Filters"
 import { ProductSearchPageView } from "@/pages-sections/product-details/page-view"
 import { getAllProducts, getFilterCategorySection, getOptionsByCategory } from "@/utils/api/product"
-import React, { useEffect, useState } from "react"
+import { Box } from "@mui/material"
+import React, { useEffect, useRef, useState } from "react"
 
 type Props = {
   filters: string | null
   search: string
-  page: string
   subCategory: string
   subSubCategory: string
   categoryId: number | undefined
 }
 
-function Products({ filters, search, page, subCategory, subSubCategory, categoryId }: Props) {
+function Products({ filters, search, subCategory, subSubCategory, categoryId }: Props) {
   const [isLoading, setIsLoading] = useState(false)
+  const [page, setPage] = useState(1)
   const [allProductResponse, setAllProductResponse] = useState<AllProductResponse>()
   const [categoryOptions, setCategoryOptions] = useState<GetCategoryResponse[]>()
-  const [size, setSize] = useState(0)
-  const [firstIndex, setFirstIndex] = useState(0)
-  const [lastIndex, setLastIndex] = useState(0)
   const [pageCount, setPageCount] = useState(0)
+  const loader = useRef<Element | null>(null)
+  const [isLastDataLoaded, setIsLastDataLoaded] = useState(false)
 
   useEffect(() => {
     fetchData()
-  }, [filters, search, page, subCategory, subSubCategory, categoryId])
+  }, [search, page, subCategory, subSubCategory, categoryId])
+
+  useEffect(() => {
+    if (page === 1) {
+      fetchData()
+    } else {
+      setPage(1)
+    }
+  }, [filters])
+
+
+  useEffect(() => {
+    if (!loader?.current) return
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && page < pageCount && !isLoading) {
+        setIsLoading(true)
+        setPage((prev) => prev + 1)
+      }
+    }, {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.1
+    })
+
+    observer.observe(loader.current)
+
+    return () => {
+      if (loader.current) {
+        observer.unobserve(loader.current)
+      }
+    }
+  }, [loader, page, pageCount, isLoading])
+
 
   const fetchData = async () => {
     setIsLoading(true)
     const [productsResponse, categoryOptions] = await Promise.all([
       filters
         ? getFilterCategorySection({
-            OptionValueIds: filters,
-            PageNo: +(page ?? "1"),
-            PageSize: 20
-          })
+          OptionValueIds: filters,
+          PageNo: page,
+          PageSize: 20
+        })
         : getAllProducts({
-            ...(search ? { searchCriteria: search } : {}),
-            ...(categoryId ? { categoryId } : {}),
-            ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
-            ...(subSubCategory && { subSubCategoryId: parseInt(subSubCategory) }),
-            ...(filters && { optionValueIds: filters }),
-            pageNo: +(page ?? "1"),
-            pageSize: 20
-          }),
+          ...(search ? { searchCriteria: search } : {}),
+          ...(categoryId ? { categoryId } : {}),
+          ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
+          ...(subSubCategory && { subSubCategoryId: parseInt(subSubCategory) }),
+          ...(filters && { optionValueIds: filters }),
+          pageNo: page,
+          pageSize: 20
+        }),
       categoryId ? getOptionsByCategory(categoryId) : Promise.resolve([])
     ])
 
@@ -60,27 +92,23 @@ function Products({ filters, search, page, subCategory, subSubCategory, category
           itemCode: data.itemCode,
           itemDesc: data.itemDesc,
           itemId: data.itemId,
-          itemName: data.itemName,
+          itemName: data.variantName,
           memberPrice: data.batchInfos?.[0]?.memberPrice,
           mrp: data.batchInfos?.[0]?.mrp,
           savePrice: data.batchInfos?.[0]?.savePrice,
           savePricePctg: data.batchInfos?.[0]?.savePricePctg,
-          subCategoryId: data.subCategoryId
+          subCategoryId: data.subCategoryId,
+          itemVariantId: data.itemVariantId
         })) ?? []
       productsResponse.dataList = dataList
     }
 
     const size = productsResponse.pagination.pageSize
-    const lastIndex = productsResponse.pagination.pageNumber * productsResponse.pagination.pageSize
-    const firstIndex =
-      (productsResponse.pagination.pageNumber - 1) * productsResponse.pagination.pageSize + 1
     const pageCount = Math.ceil(productsResponse.pagination.totalRecords / size)
-    setSize(size)
-    setAllProductResponse(productsResponse)
+    setAllProductResponse(prevValue => page === 1 ? productsResponse : { ...prevValue!, dataList: [...(prevValue!.dataList ?? []), ...productsResponse.dataList] })
     setCategoryOptions(categoryOptions)
     setPageCount(pageCount)
-    setLastIndex(lastIndex)
-    setFirstIndex(firstIndex)
+    setIsLastDataLoaded(pageCount === page)
     setIsLoading(false)
   }
 
@@ -100,18 +128,18 @@ function Products({ filters, search, page, subCategory, subSubCategory, category
         </div>
       )}
       {allProductResponse && (
-        <ProductSearchPageView
-          categoryOptions={categoryOptions ?? []}
-          products={allProductResponse.dataList}
-          pageCount={pageCount}
-          totalProducts={allProductResponse.pagination.totalRecords}
-          lastIndex={
-            allProductResponse.dataList.length < size
-              ? firstIndex + allProductResponse.dataList.length - 1
-              : lastIndex
+        <>
+          <ProductSearchPageView
+            categoryOptions={categoryOptions ?? []}
+            products={allProductResponse.dataList}
+          />
+          {
+            (pageCount && !isLastDataLoaded) &&
+            <Box ref={loader} sx={{ mb: 6 }}>
+              <Loading isTiny={true} />
+            </Box>
           }
-          firstIndex={firstIndex}
-        />
+        </>
       )}
     </>
   )
