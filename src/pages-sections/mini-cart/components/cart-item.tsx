@@ -63,7 +63,7 @@ interface Props {
 export default function MiniCartItem({ item, onCart }: Props) {
   return (
     <StyledRoot>
-      <Link href={`/products/${item.productId}`}>
+      <Link href={`/products/${item.productId}?variantId=${item.itemVariantId}`}>
         <StyledAvatar variant="rounded">
           <Image alt={item.productName} src={item.productImage} fill sizes="(100px, 100px)" />
         </StyledAvatar>
