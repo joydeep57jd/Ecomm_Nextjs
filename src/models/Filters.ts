@@ -27,6 +27,15 @@ export interface CategoryWiseFilterResponse {
   variantDetails: VariantDetail[]
   dataList: DataList[]
   pagination: Paginantion
+  variantOptionDetails: VariantOptionDetails[]
+}
+
+export interface VariantOptionDetails {
+  itemVariantId: number
+  variantOptionId: number
+  optionName: string
+  variantOptionValueId: number
+  optionValue: string
 }
 
 export interface VariantDetail {

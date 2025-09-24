@@ -2,7 +2,7 @@
 import Loading from "@/app/loading"
 import { AllProductResponse, DataList } from "@/models/AllProduct.model"
 import { GetCategoryResponse } from "@/models/Category.modal"
-import { CategoryWiseFilterResponse } from "@/models/Filters"
+import { CategoryWiseFilterResponse, VariantOptionDetails } from "@/models/Filters"
 import { ProductSearchPageView } from "@/pages-sections/product-details/page-view"
 import { getAllProducts, getFilterCategorySection, getOptionsByCategory } from "@/utils/api/product"
 import { Box } from "@mui/material"
@@ -22,8 +22,9 @@ function Products({ filters, search, subCategory, subSubCategory, categoryId }: 
   const [allProductResponse, setAllProductResponse] = useState<AllProductResponse>()
   const [categoryOptions, setCategoryOptions] = useState<GetCategoryResponse[]>()
   const [pageCount, setPageCount] = useState(0)
-  const loader = useRef<Element | null>(null)
   const [isLastDataLoaded, setIsLastDataLoaded] = useState(false)
+  const [variantOptions, setVariantOptions] = useState<VariantOptionDetails[]>([])
+  const loader = useRef<Element | null>(null)
 
   useEffect(() => {
     fetchData()
@@ -101,6 +102,7 @@ function Products({ filters, search, subCategory, subSubCategory, categoryId }: 
           itemVariantId: data.itemVariantId
         })) ?? []
       productsResponse.dataList = dataList
+      setVariantOptions((productsResponse as CategoryWiseFilterResponse).variantOptionDetails)
     }
 
     const size = productsResponse.pagination.pageSize
@@ -132,6 +134,7 @@ function Products({ filters, search, subCategory, subSubCategory, categoryId }: 
           <ProductSearchPageView
             categoryOptions={categoryOptions ?? []}
             products={allProductResponse.dataList}
+            variantOptions={variantOptions}
           />
           {
             (pageCount && !isLastDataLoaded) &&

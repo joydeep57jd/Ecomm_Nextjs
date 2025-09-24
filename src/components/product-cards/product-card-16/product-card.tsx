@@ -11,12 +11,14 @@ import { calculateDiscount, currency } from "lib"
 import { PriceText, StyledRoot } from "./styles"
 // CUSTOM DATA MODEL
 import { DataList } from "@/models/AllProduct.model"
+import { VariantOptionDetails } from "@/models/Filters"
+import { Box, Chip } from "@mui/material"
 
 // ==============================================================
-type Props = { product: DataList };
+type Props = { product: DataList, variantOptions: VariantOptionDetails[] };
 // ==============================================================
 
-export default function ProductCard16({ product }: Props) {
+export default function ProductCard16({ product, variantOptions }: Props) {
 
   const imageAltTag = product.imageList?.[0]?.alt || "Product Image"
   const thumbnail = product.imageList?.[0]?.fullImagepath || "/assets/images/products/no-photo.png"
@@ -39,6 +41,23 @@ export default function ProductCard16({ product }: Props) {
             <Typography variant="h6" sx={{ mb: 1 }}>
               {product.itemName}
             </Typography>
+            <Box sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 1,
+              mb: 2
+            }}>
+              {
+                variantOptions.map(option => <Box key={`${option.itemVariantId}-${option.optionName}`}>
+                  <Chip
+                    label={`${option.optionName} - ${option.optionValue}`}
+                    size="small"
+                    color="primary"
+                    variant="filled"
+                  />
+                </Box>)
+              }
+            </Box>
           </Link>
 
           <Rating readOnly value={0} size="small" precision={0.5} />

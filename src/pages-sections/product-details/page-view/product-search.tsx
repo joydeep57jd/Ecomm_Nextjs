@@ -15,6 +15,7 @@ import ProductsGridView from "components/products-view/products-grid-view"
 import { DataList } from "@/models/AllProduct.model"
 import ProductFilters from "@/components/products-view/filters"
 import { GetCategoryResponse } from "@/models/Category.modal"
+import { VariantOptionDetails } from "@/models/Filters"
 
 const SORT_OPTIONS = [
   { label: "Relevance", value: "relevance" },
@@ -27,12 +28,14 @@ const SORT_OPTIONS = [
 interface Props {
   products: DataList[];
   categoryOptions: GetCategoryResponse[]
+  variantOptions: VariantOptionDetails[]
 }
 // ==============================================================
 
 export default function ProductSearchPageView({
   products,
-  categoryOptions
+  categoryOptions,
+  variantOptions
 }: Props) {
   const router = useRouter()
   const pathname = usePathname()
@@ -138,7 +141,7 @@ export default function ProductSearchPageView({
               <ProductsListView products={products} />
             )} */}
 
-            <ProductsGridView products={products} />
+            <ProductsGridView products={products} variantOptions={variantOptions} />
           </Grid>
         </Grid>
       </Container>

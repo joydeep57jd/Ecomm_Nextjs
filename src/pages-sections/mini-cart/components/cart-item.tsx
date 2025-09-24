@@ -73,9 +73,9 @@ export default function MiniCartItem({ item, onCart }: Props) {
         <Typography noWrap variant="body1">
           {item.productName}
         </Typography>
-         {/* <Typography noWrap variant="body2" fontSize={12}> 
-              {item.variantName}
-            </Typography> */}
+        <Typography noWrap variant="body2" fontSize={12}>
+          {item.variantOptionDetails.map(variant => `${variant.optionName} - ${variant.optionValue}`).join(" / ")}
+        </Typography>
 
         <Typography variant="body1" fontWeight={500} sx={{ mt: 0.25, mb: 1.5 }}>
           {currency(item.productPrice * item.qty)}

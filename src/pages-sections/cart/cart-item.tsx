@@ -10,12 +10,12 @@ import Trash from "icons/Trash"
 import useCart from "hooks/useCart"
 import { currency } from "lib"
 import { ContentWrapper, ImageWrapper, QuantityButton, Wrapper } from "./styles"
-import { Cart,  } from "@/models/CartProductItem.models"
+import { Cart, } from "@/models/CartProductItem.models"
 import { useUser } from "@/contexts/UserContenxt"
 
 
 // =========================================================
-type Props = { item: Cart,  };
+type Props = { item: Cart, };
 // =========================================================
 
 export default function CartItem({ item }: Props) {
@@ -32,7 +32,7 @@ export default function CartItem({ item }: Props) {
       },
       isLoggedIn: !!user,
       isSyncRequired: !!user,
-      user: user??undefined
+      user: user ?? undefined
     })
   }
 
@@ -49,7 +49,7 @@ export default function CartItem({ item }: Props) {
               {item.productName}
             </Typography>
             <Typography noWrap variant="body2" fontSize={12}>
-              {item.variantName}
+              {item.variantOptionDetails.map(variant => `${variant.optionName} - ${variant.optionValue}`).join(" / ")}
             </Typography>
           </Link>
 

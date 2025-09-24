@@ -120,7 +120,14 @@ export default function ProductIntro({ product, variantMap, selectedVariant, isL
               qty: 1,
               stockQty: product.priceAndStock?.stockQty,
               variantName: product.variantDetails.variantName,
-              mrp: product.priceAndStock.mrp
+              mrp: product.priceAndStock.mrp,
+              variantOptionDetails: product.variantOptionList.map(variant => ({
+                itemVariantId: 0,
+                optionName: variant.optionName,
+                optionValue: variant.optionValue,
+                variantOptionId: 0,
+                variantOptionValueId: variant.variantOptionValueId
+              }))
 
             }} />
           }
