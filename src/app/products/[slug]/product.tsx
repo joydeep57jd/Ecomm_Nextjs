@@ -71,9 +71,7 @@ function SingleProduct({ slug, variantId, variant }: Props) {
         setIsLoading(false)
     }
 
-
     if (!product) return <Loading isSmallLoader={true} />
-
 
     return <ProductDetailsPageView
         variantMap={variantMap!}

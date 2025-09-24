@@ -1,6 +1,3 @@
-// PAGE VIEW COMPONENT
-// API FUNCTIONS
-// CUSTOM DATA MODEL
 import { SlugParams } from "models/Common"
 import SingleProduct from "./product"
 
