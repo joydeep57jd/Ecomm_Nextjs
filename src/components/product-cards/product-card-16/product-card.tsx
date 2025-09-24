@@ -19,7 +19,7 @@ type Props = { product: DataList };
 export default function ProductCard16({ product }: Props) {
 
   const imageAltTag = product.imageList?.[0]?.alt || "Product Image"
-  const thumbnail = product.imageList?.[0]?.fullImagepath || "/assets/images/products/iphone-x.png"
+  const thumbnail = product.imageList?.[0]?.fullImagepath || "/assets/images/products/no-photo.png"
   const discount = product.savePricePctg || 0
   const price = +(product.mrp).toFixed(2)
   const formattedFinalPrice = calculateDiscount(price, discount)

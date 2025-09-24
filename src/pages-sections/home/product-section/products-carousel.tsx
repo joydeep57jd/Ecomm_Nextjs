@@ -28,8 +28,8 @@ const Heading = styled("div")(() => ({
 }))
 
 const StyledButtonBase = styled(ButtonBase, {
-  shouldForwardProp: (prop) => prop !== "active"
-})<{ active?: boolean }>(({ theme, active }) => ({
+  shouldForwardProp: (prop) => prop !== "active" && prop !== "disabled"
+})<{ active?: boolean; disabled?: boolean }>(({ theme, active, disabled }) => ({
   width: 32,
   height: 32,
   borderRadius: 8,
@@ -41,9 +41,16 @@ const StyledButtonBase = styled(ButtonBase, {
     backgroundColor: theme.palette.primary.main
   }),
   ...(!active && {
+      color: theme.palette.grey[600],
     ":hover": {
       backgroundColor: theme.palette.grey[100]
     }
+  }),
+  ...(disabled && {
+    pointerEvents: "none",
+    opacity: 0.5,
+    backgroundColor: theme.palette.grey[200],
+    color: theme.palette.grey[400]
   })
 }))
 
@@ -54,6 +61,10 @@ export default function ProductsCarousel({ children, title }: ProductsCarouselPr
     slidesToShow: { xs: 1, sm: 2, md: 3, lg: 4 }
   })
 
+  const hasSlides = !!children && Array.isArray(children) && children.length > 0
+  const isStart = api?.canScrollPrev ? !api.canScrollPrev() : true
+  const isEnd = api?.canScrollNext ? !api.canScrollNext() : true
+
   return (
     <Box position="relative">
       <Heading>
@@ -61,25 +72,38 @@ export default function ProductsCarousel({ children, title }: ProductsCarouselPr
           {title}
         </Typography>
 
-        <div className="buttons-container">
-          <StyledButtonBase onClick={arrows.onClickPrev}>
-            <SvgIcon>
-              <path
-                fill="currentColor"
-                d="M14 17.308L8.692 12L14 6.692l.708.708l-4.6 4.6l4.6 4.6z"
-              />
-            </SvgIcon>
-          </StyledButtonBase>
+      
+        {hasSlides && (
+          <div className="buttons-container">
+            {/* Prev button */}
+            <StyledButtonBase
+              onClick={arrows.onClickPrev}
+              active={!isStart}
+              disabled={isStart}
+            >
+              <SvgIcon>
+                <path
+                  fill="currentColor"
+                  d="M14 17.308L8.692 12L14 6.692l.708.708l-4.6 4.6l4.6 4.6z"
+                />
+              </SvgIcon>
+            </StyledButtonBase>
 
-          <StyledButtonBase active onClick={arrows.onClickNext}>
-            <SvgIcon>
-              <path
-                fill="currentColor"
-                d="m13.292 12l-4.6-4.6l.708-.708L14.708 12L9.4 17.308l-.708-.708z"
-              />
-            </SvgIcon>
-          </StyledButtonBase>
-        </div>
+            {/* Next button */}
+            <StyledButtonBase
+              onClick={arrows.onClickNext}
+              active={!isEnd}
+              disabled={isEnd}
+            >
+              <SvgIcon>
+                <path
+                  fill="currentColor"
+                  d="m13.292 12l-4.6-4.6l.708-.708L14.708 12L9.4 17.308l-.708-.708z"
+                />
+              </SvgIcon>
+            </StyledButtonBase>
+          </div>
+        )}
       </Heading>
 
       <Carousel ref={ref} api={api} options={options}>

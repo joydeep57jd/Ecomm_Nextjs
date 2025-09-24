@@ -49,7 +49,7 @@ export default function CartItem({ item }: Props) {
               {item.productName}
             </Typography>
             <Typography noWrap variant="body2" fontSize={12}>
-              {item.variantName?.split("/").slice(1).join("/")}
+              {item.variantName}
             </Typography>
           </Link>
 

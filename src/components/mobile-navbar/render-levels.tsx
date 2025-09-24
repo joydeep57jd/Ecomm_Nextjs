@@ -23,7 +23,8 @@ const ACCORDION_SUMMARY_STYLES = {
   }
 }
 
-export const renderLevels = (data: any[], handleClose: () => void) => {
+export const renderLevels = (data: any[], handleClose: () => void,expanded: string | false,
+  setExpanded: (val: string | false) => void, parentKey = "") => {
   return data.map((item: any, index: number) => {
     let children = []
     let keyName = ''
@@ -39,16 +40,18 @@ export const renderLevels = (data: any[], handleClose: () => void) => {
     }
 
     const href = `/products/search?${keyName}=${item.id}`
+    const panelKey = `${parentKey}-${index}`
     if (children?.length) {
       return (
-        <Accordion square key={index} elevation={0} disableGutters sx={ACCORDION_STYLES}>
+        <Accordion square key={panelKey} elevation={0} disableGutters sx={ACCORDION_STYLES}  expanded={expanded === panelKey}
+          onChange={() => setExpanded(expanded === panelKey ? false : panelKey)}>
           <AccordionSummary expandIcon={<ExpandMore />} sx={ACCORDION_SUMMARY_STYLES}>
             <NavLink href={href ?? ''} onClick={handleClose}>
               <Typography variant="h6">{item.name}</Typography>
             </NavLink>
           </AccordionSummary>
 
-          <Box mx={2}>{renderLevels(children, handleClose)}</Box>
+          <Box mx={2}>{renderLevels(children, handleClose,expanded, setExpanded, panelKey)}</Box>
         </Accordion>
       )
     }

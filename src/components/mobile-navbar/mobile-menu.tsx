@@ -21,6 +21,7 @@ type Props = { navigation: Category[] };
 
 export function MobileMenu({ navigation }: Props) {
   const [openDrawer, setOpenDrawer] = useState(false)
+    const [expanded, setExpanded] = useState<string | false>(false)
   const handleClose = useCallback(() => setOpenDrawer(false), [])
   const handleOpen = useCallback(() => setOpenDrawer(true), [])
 
@@ -55,7 +56,7 @@ export function MobileMenu({ navigation }: Props) {
                 <Clear fontSize="small" />
               </IconButton>
 
-              {renderLevels(navigation, handleClose)}
+              {renderLevels(navigation, handleClose,expanded, setExpanded)}
             </Box>
           </OverlayScrollbar>
         </Box>
