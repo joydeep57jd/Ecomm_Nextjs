@@ -1,3 +1,5 @@
+import { VariantOptionDetails } from "./Filters"
+
 export interface CartProductItem {
   quantity: number
   batchId: number
@@ -76,9 +78,9 @@ export interface Cart {
   productImage: string
   itemVariantId: number
   stockQty?: number
-  mrp:number
-   variantName:string
-  
+  mrp: number
+  variantName: string
+  variantOptionDetails: VariantOptionDetails[]
 }
 
 export interface RemoteCart {
@@ -115,6 +117,7 @@ export interface RemoteCart {
   itemRating: number
   isWishListAdded: boolean
   customerWishItemId: number
+  variantOptionDetails: VariantOptionDetails[]
 }
 
 export interface Image {

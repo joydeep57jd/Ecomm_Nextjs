@@ -1,5 +1,6 @@
 import Shop from "./Shop.model"
 import Review from "./Review.model"
+import { VariantOptionDetails } from "./Filters"
 
 export default interface Product {
   unit?: string
@@ -22,4 +23,5 @@ export default interface Product {
   published?: boolean
   variantId?: number
   stockQty?: number
+  variantOptionDetails?: VariantOptionDetails[]
 }

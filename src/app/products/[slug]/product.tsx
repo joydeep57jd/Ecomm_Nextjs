@@ -14,7 +14,7 @@ type Props = {
 }
 
 function SingleProduct({ slug, variantId, variant }: Props) {
-
+    let loadingSlug = "", loadinVariant = "", loadinVariantId = ""
     const [variantMap, setVariantMap] = useState<Map<string, VariantOption[]>>()
     const [selectedVariant, setSelectedVariant] = useState('')
     const [isLoading, setIsLoading] = useState(true)
@@ -22,17 +22,26 @@ function SingleProduct({ slug, variantId, variant }: Props) {
     const [relatedProducts, setRelatedProducts] = useState<Product[]>()
     const [frequentlyBought, setFrequentlyBought] = useState<Product[]>()
 
+
     useEffect(() => {
-        if (slug) {
+        if (slug && loadingSlug !== slug) {
             getInitialData()
         }
     }, [slug])
 
     useEffect(() => {
-        if (variantId || selectedVariant) {
+        if (variantId && loadinVariantId !== variantId) {
             getProductDetails()
         }
-    }, [selectedVariant, variantId])
+    }, [variantId])
+
+    useEffect(() => {
+        if (!variantId && selectedVariant && selectedVariant !== loadinVariant) {
+            getProductDetails()
+        }
+    }, [selectedVariant])
+
+
 
     useEffect(() => {
         setSelectedVariant(variant)
@@ -40,6 +49,7 @@ function SingleProduct({ slug, variantId, variant }: Props) {
 
 
     const getInitialData = async () => {
+        loadingSlug = slug
         const [variantOptions, relatedProducts, frequentlyBought] = await Promise.all([
             getVariantOption(slug),
             getRelatedProducts(),
@@ -63,11 +73,13 @@ function SingleProduct({ slug, variantId, variant }: Props) {
 
     const getProductDetails = async () => {
         setIsLoading(true)
-        const product = await getProduct({
+        loadinVariantId = variantId
+        loadinVariant = selectedVariant
+        const productDetails = await getProduct({
             itemVariantId: variantId ? Number(variantId) : undefined,
             optionValues: variantId ? "" : selectedVariant
         })
-        setProduct(product)
+        setProduct(productDetails)
         setIsLoading(false)
     }
 
