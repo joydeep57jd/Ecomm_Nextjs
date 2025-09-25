@@ -48,4 +48,7 @@ export interface Product {
   rating?: number
   offer?: string
   itemVariantId?: number
+  variantId?:number
+  stockQty?:number
+  
 }

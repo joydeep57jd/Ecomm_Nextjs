@@ -48,7 +48,7 @@ export default function ProductSection() {
                 <ProductCard17
                   product={{
                     id: String(product.itemId),
-                    slug: product.itemId,
+                    slug: product.itemId.toString(),
                     title: product.name,
                     price: product.salePrice || product.price,
                     thumbnail:
