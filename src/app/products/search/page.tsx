@@ -21,17 +21,18 @@ interface Props {
     subCategory: string;
     subSubCategory: string;
     filter: string
+    variantFilter:string
   }>;
 }
 // ==============================================================
 
 export default async function ProductSearch({ searchParams }: Props) {
-  const { search, category, subCategory, subSubCategory, filter } = await searchParams
+  const { search, category, subCategory, subSubCategory, filter,variantFilter } = await searchParams
   const categoryId = category ? parseInt(category) : undefined
 
-  const getFilterValues = () => {
+  const getFilterValues = (encodedFilters:string) => {
     try {
-      const filters = JSON.parse(atob(filter))
+      const filters = JSON.parse(atob(encodedFilters))
       const variants: string[] = []
       Object.keys(filters).forEach(category => {
         const options = filters[category] ?? {}
@@ -46,8 +47,9 @@ export default async function ProductSearch({ searchParams }: Props) {
     }
   }
 
-  const filters = getFilterValues()
+  const filters = getFilterValues(filter)
+  const variantFilters = getFilterValues(variantFilter)
 
-  return <Products filters={filters} search={search} subCategory={subCategory} subSubCategory={subSubCategory} categoryId={categoryId} />
+  return <Products filters={filters} search={search} subCategory={subCategory} subSubCategory={subSubCategory} categoryId={categoryId} variantFilters = {variantFilters} />
 
 }

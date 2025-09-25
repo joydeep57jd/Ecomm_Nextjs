@@ -1,26 +1,53 @@
 import { Fragment } from "react"
 import Grid from "@mui/material/Grid"
 import Favorite from "@mui/icons-material/Favorite"
-// CUSTOM COMPONENTS
 import DashboardHeader from "../dashboard-header"
 import ProductCard17 from "components/product-cards/product-card-17"
-// CUSTOM DATA MODEL
-import Product from "models/Product.model"
+import { CustomerWishItemElement, WishListCategory } from "@/models/WishList.modal"
 
-// ==================================================================
 interface Props {
-  products: Product[];
+  categories: WishListCategory[]
+  activeCategory: WishListCategory | null
+  onCategoryClick: (cat: WishListCategory) => void
+  items: CustomerWishItemElement[]
 }
-// ==================================================================
 
-export default function WishListPageView({ products }: Props) {
+export default function WishListPageView({
+  categories,
+  activeCategory,
+  onCategoryClick,
+  items
+}: Props) {
   return (
     <Fragment>
       <DashboardHeader title="My Wish List" Icon={Favorite} />
 
+   
+      <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+        {categories.map((c) => (
+          <button
+            key={c.wishListCategoryId}
+            onClick={() => onCategoryClick(c)}
+            style={{
+              padding: "6px 12px",
+              borderRadius: "6px",
+              border:
+                activeCategory?.wishListCategoryId === c.wishListCategoryId
+                  ? "2px solid #1976d2"
+                  : "1px solid #ccc",
+              background:
+                activeCategory?.wishListCategoryId === c.wishListCategoryId ? "#e3f2fd" : "white",
+              cursor: "pointer"
+            }}
+          >
+            {c.wishListCategoryName}
+          </button>
+        ))}
+      </div>
+
       <Grid container spacing={3}>
-        {products.map((product) => (
-          <Grid size={{ lg: 4, sm: 6, xs: 12 }} key={product.id}>
+        {items?.map((product) => (
+          <Grid key={`${product.customerWishItemId}-${product.itemId}-${product.variantid}`} item>
             <ProductCard17 bgWhite product={product} />
           </Grid>
         ))}

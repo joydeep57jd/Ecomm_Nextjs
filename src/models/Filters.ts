@@ -19,6 +19,7 @@ export default interface Filters {
 
 export interface CategoryWiseFilter {
   OptionValueIds: string
+  ItemOptionValueIds:string
   PageNo: number
   PageSize: number
 }
@@ -27,6 +28,19 @@ export interface CategoryWiseFilterResponse {
   variantDetails: VariantDetail[]
   dataList: DataList[]
   pagination: Paginantion
+<<<<<<< Updated upstream
+=======
+  variantOptionDetails: VariantOptionDetails[]
+}
+
+export interface VariantOptionDetails {
+  itemVariantId: number
+  variantOptionId: number
+  optionName: string
+  variantOptionValueId: number
+  optionValue: string
+  
+>>>>>>> Stashed changes
 }
 
 export interface VariantDetail {

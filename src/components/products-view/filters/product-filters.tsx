@@ -23,7 +23,12 @@ interface Props {
 }
 
 export default function ProductFilters({ categoryOptions }: Props) {
-  const [selectedFilters, setSelectedFilters] = useState<Record<number, Record<string, number[]>>>({})
+  const [selectedFilters, setSelectedFilters] = useState<Record<number, Record<string, number[]>>>(
+    {}
+  )
+  const [selectedVariant, setSelectedVariant] = useState<Record<number, Record<string, number[]>>>(
+    {}
+  )
 
   const router = useRouter()
   const pathname = usePathname()
@@ -31,28 +36,42 @@ export default function ProductFilters({ categoryOptions }: Props) {
 
   useEffect(() => {
     if (searchParams.get("filter")) {
-      const filter = getCurrentFilters()
+      const filter = getCurrentFilters("filter")
       console.warn(filter)
       setSelectedFilters({ ...filter })
     } else {
       setSelectedFilters({})
     }
+    if (searchParams.get("variantFilter")) {
+      const filter = getCurrentFilters("variantFilter")
+      console.warn(filter)
+      setSelectedVariant({ ...filter })
+    } else {
+      setSelectedVariant({})
+    }
   }, [router, searchParams])
 
-  const getCurrentFilters = () => {
-    const encodedFilters = searchParams.get("filter") ?? btoa(JSON.stringify({}))
+  const getCurrentFilters = (keyName: string) => {
+    const encodedFilters = searchParams.get(keyName) ?? btoa(JSON.stringify({}))
     const filters = JSON.parse(atob(encodedFilters))
     return filters
   }
 
-  const handleChangeSearchParams = (categoryId: number, value: number, keyName: string) => {
+  const handleChangeSearchParams = (
+    categoryId: number,
+    value: number,
+    keyName: string,
+    appliedOnVariant: boolean
+  ) => {
     const params = new URLSearchParams(searchParams.toString())
     try {
-      const filters = getCurrentFilters()
+      const paramsKeyName = appliedOnVariant ? "filter" : "variantFilter"
+      const filters = getCurrentFilters(paramsKeyName)
+      console.warn("wefgwe",filters)
       if (!filters[categoryId]) {
         filters[categoryId] = {}
       }
-      const options = selectedFilters[categoryId] ?? {}
+      const options = (appliedOnVariant?selectedFilters:selectedVariant)[categoryId] ?? {}
       const values = options[keyName] ?? []
       const existingValueIndex = values.findIndex((id) => id === value)
       if (existingValueIndex !== -1) {
@@ -62,10 +81,11 @@ export default function ProductFilters({ categoryOptions }: Props) {
       }
 
       filters[categoryId][keyName] = values
-      setSelectedFilters({ ...filters })
-      params.set("filter", btoa(JSON.stringify(filters)))
+      appliedOnVariant? setSelectedFilters({ ...filters }):setSelectedVariant({...filters})
+     
+      params.set(paramsKeyName, btoa(JSON.stringify(filters)))
       router.push(`${pathname}?${params.toString()}`)
-    } catch { }
+    } catch {}
   }
 
   return (
@@ -115,8 +135,23 @@ export default function ProductFilters({ categoryOptions }: Props) {
                     control={
                       <Checkbox
                         size="small"
-                        checked={!!selectedFilters[cat.categoryId]?.[cat.optionName]?.includes(opt.optionValueId)}
-                        onChange={() => handleChangeSearchParams(cat.categoryId, opt.optionValueId, cat.optionName)}
+                        checked={
+                          cat.appliedOnVariant
+                            ? !!selectedFilters[cat.categoryId]?.[cat.optionName]?.includes(
+                                opt.optionValueId
+                              )
+                            : !!selectedVariant[cat.categoryId]?.[cat.optionName]?.includes(
+                                opt.optionValueId
+                              )
+                        }
+                        onChange={() =>
+                          handleChangeSearchParams(
+                            cat.categoryId,
+                            opt.optionValueId,
+                            cat.optionName,
+                            cat.appliedOnVariant
+                          )
+                        }
                       />
                     }
                     label={opt.optionValueName}

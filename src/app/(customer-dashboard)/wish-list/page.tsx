@@ -1,28 +1,63 @@
-import { Metadata } from "next"
+"use client"
+
+import { useUser } from "@/contexts/UserContenxt"
+import { WishListCategory, CustomerWishItemElement } from "@/models/WishList.modal"
+import { getCustomerWishItem, GetWishListCategory } from "@/utils/api/wishList"
+
 import { WishListPageView } from "pages-sections/customer-dashboard/wish-list"
-// API FUNCTIONS
-import { getWishListProducts } from "utils/__api__/wish-list"
+import { useEffect, useState } from "react"
 
-export const metadata: Metadata = {
-  title: "Wish List - Bazaar Next.js E-commerce Template",
-  description: `Bazaar is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store`,
-  authors: [{ name: "UI-LIB", url: "https://ui-lib.com" }],
-  keywords: ["e-commerce", "e-commerce template", "next.js", "react"]
-}
+export default function WishList() {
+  const { user } = useUser()
+  const [categories, setCategories] = useState<WishListCategory[]>([])
+  const [activeCategory, setActiveCategory] = useState<WishListCategory | null>(null)
+  const [omerWishItems, setOmerWishItems] = useState<CustomerWishItemElement[]>([])
 
-// ==============================================================
-interface Props {
-  searchParams: Promise<{ page: string }>;
-}
-// ==============================================================
+  // Fetch categories
+  useEffect(() => {
+    if (!user) return
 
-export default async function WishList({ searchParams }: Props) {
-  const { page } = await searchParams
-  const data = await getWishListProducts(+page || 1)
+    const fetchCategories = async () => {
+      try {
+        const collections = await GetWishListCategory(+user.customerId)
+        const cats = collections.getWishListCategory ?? []
+        setCategories(cats)
+        if (cats.length > 0) setActiveCategory(cats[0])
+      } catch (err) {
+        console.error("Error loading categories:", err)
+      }
+    }
 
-  if (!data || data.products.length === 0) {
-    return <div>Data not found</div>
-  }
+    fetchCategories()
+  }, [user])
 
-  return <WishListPageView products={data.products}  />
+  // Fetch items when active category changes
+  useEffect(() => {
+    if (!user || !activeCategory) return
+
+    const fetchItems = async () => {
+      try {
+        const items = await getCustomerWishItem({
+          wishListCategoryId: activeCategory.wishListCategoryId,
+          customerId: +user.customerId,
+        })
+        setOmerWishItems(items)
+      } catch (err) {
+        console.error("Error fetching wishlist items:", err)
+      }
+    }
+
+    fetchItems()
+  }, [user, activeCategory])
+
+  if (!user) return <div>Please log in to see your wishlist.</div>
+
+  return (
+    <WishListPageView
+      categories={categories}
+      activeCategory={activeCategory}
+      onCategoryClick={setActiveCategory}
+      items={omerWishItems}
+    />
+  )
 }

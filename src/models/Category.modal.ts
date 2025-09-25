@@ -37,6 +37,7 @@ export interface GetCategoryResponse {
   optionName:      string;
   categoryId:      number;
   optionValues:    OptionValue[];
+  appliedOnVariant:boolean
 }
 
 export interface OptionValue {

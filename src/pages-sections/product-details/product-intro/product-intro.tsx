@@ -53,11 +53,11 @@ export default function ProductIntro({ product, variantMap, selectedVariant, isL
         </Grid>
 
         <Grid size={{ lg: 5, md: 5, xs: 12 }}>
-          <Typography variant="h1">{product.variantDetails?.itemName}</Typography>
+          <Typography variant="h1">{product.variantDetails?.variantName}</Typography>
 
-          <Typography variant="body1">
+          {/* <Typography variant="body1">
             Category: <strong>{product.variantDetails?.variantName}</strong>
-          </Typography>
+          </Typography> */}
 
           <Typography variant="body1">
             Product Code: <strong>{product.variantDetails?.itemCode}</strong>

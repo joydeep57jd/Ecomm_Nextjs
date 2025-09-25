@@ -3,29 +3,40 @@ import Image from "next/image"
 import Typography from "@mui/material/Typography"
 // LOCAL CUSTOM COMPONENTS
 import Discount from "./discount"
-// import HoverActions from "./hover-actions"
 // STYLED COMPONENTS
 import { ImageWrapper, ContentWrapper, StyledCard } from "./styles"
-// CUSTOM DATA MODEL
-import Product from "models/Product.model"
 // CUSTOM UTILS FUNCTION
 import { currency } from "lib"
 
 // ========================================================
-interface Props {
-  product: Product;
-  bgWhite?: boolean;
+interface ProductCard17Props {
+  // Accept either standard Product or wishlist item shape
+  product: any
+  bgWhite?: boolean
+  isWishList?: boolean 
 }
 // ========================================================
 
-export default function ProductCard17({ product, bgWhite = false }: Props) {
-  const { slug, title, price, thumbnail, images, discount, categories } = product
+export default function ProductCard17({
+  product,
+  bgWhite = false,
+  isWishList = false,
+}: ProductCard17Props) {
+
+  console.log(product)
+  const title = isWishList ? product.name : product.title
+  const slug = isWishList ? product.itemId : product.slug
+  const price = isWishList ? product.price_member || product.price_regular : product.price
+  const thumbnail = isWishList
+    ? product.images?.[0]?.fullImagepath || "/placeholder.png"
+    : product.thumbnail
+  const discount = isWishList ? product.offer?.offerSavePrice || 0 : product.discount
+  const categories = isWishList ? [product.category] : product.categories
 
   return (
     <StyledCard elevation={0} bgWhite={bgWhite}>
       <ImageWrapper>
         <Discount discount={discount} />
-        {/* <HoverActions product={product} /> */}
 
         <Link href={`/products/${slug}`} aria-label={`View ${title}`}>
           <Image
@@ -35,27 +46,14 @@ export default function ProductCard17({ product, bgWhite = false }: Props) {
             alt={`Thumbnail for ${title}`}
             className="thumbnail"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            loading={images.length > 1 ? "lazy" : "eager"}
+            loading={isWishList ? "lazy" : "eager"}
           />
-
-
-          {/* {images.length > 1 && (
-            <Image
-              width={750}
-              height={750}
-              src={images[1]}
-              loading="lazy"
-              className="hover-thumbnail"
-              alt={`Hover thumbnail for ${title}`}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          )} */}
         </Link>
       </ImageWrapper>
 
       <ContentWrapper>
         <Typography noWrap variant="body2" className="category">
-          {categories.length > 0 ? categories[0] : "N/A"}
+          {categories?.length > 0 ? categories[0] : "N/A"}
         </Typography>
 
         <Link href={`/products/${slug}`} aria-label={`View ${title}`}>

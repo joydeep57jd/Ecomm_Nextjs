@@ -14,9 +14,22 @@ type Props = {
   subCategory: string
   subSubCategory: string
   categoryId: number | undefined
+  variantFilters: string | null
 }
 
-function Products({ filters, search, subCategory, subSubCategory, categoryId }: Props) {
+function Products({
+  filters,
+  search,
+  subCategory,
+  subSubCategory,
+  categoryId,
+  variantFilters
+}: Props) {
+  let loadingSearch = "",
+    loadinPage = "",
+    loadinSubCategory = "",
+    loadingCategoryId = "",
+    loadinsubSubCategory = ""
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState(1)
   const [allProductResponse, setAllProductResponse] = useState<AllProductResponse>()
@@ -26,30 +39,49 @@ function Products({ filters, search, subCategory, subSubCategory, categoryId }: 
   const [isLastDataLoaded, setIsLastDataLoaded] = useState(false)
 
   useEffect(() => {
-    fetchData()
+    if (
+      search !== loadingSearch ||
+      page.toString() !== loadinPage ||
+      subCategory !== loadinSubCategory ||
+      (categoryId?.toString() ?? "") !== loadingCategoryId ||
+      subSubCategory !== loadinsubSubCategory
+    )
+      fetchData()
   }, [search, page, subCategory, subSubCategory, categoryId])
 
   useEffect(() => {
+    if (!allProductResponse) return
     if (page === 1) {
       fetchData()
     } else {
       setPage(1)
     }
-  }, [filters])
+  }, [filters, variantFilters])
 
+  useEffect(() => {
+    if (categoryId) {
+      fatchFilterOption()
+    } else {
+      setCategoryOptions([])
+    }
+    console.warn(categoryId)
+  }, [categoryId])
 
   useEffect(() => {
     if (!loader?.current) return
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && page < pageCount && !isLoading) {
-        setIsLoading(true)
-        setPage((prev) => prev + 1)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && page < pageCount && !isLoading) {
+          setIsLoading(true)
+          setPage((prev) => prev + 1)
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1
       }
-    }, {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.1
-    })
+    )
 
     observer.observe(loader.current)
 
@@ -60,29 +92,34 @@ function Products({ filters, search, subCategory, subSubCategory, categoryId }: 
     }
   }, [loader, page, pageCount, isLoading])
 
+  const fatchFilterOption = async () => {
+    const data = await getOptionsByCategory(categoryId!)
+    setCategoryOptions(data)
+  }
 
   const fetchData = async () => {
     setIsLoading(true)
-    const [productsResponse, categoryOptions] = await Promise.all([
-      filters
+
+    const [productsResponse] = await Promise.all([
+      filters || variantFilters
         ? getFilterCategorySection({
-          OptionValueIds: filters,
-          PageNo: page,
-          PageSize: 20
-        })
+            OptionValueIds: filters || "",
+            PageNo: page,
+            PageSize: 18,
+            ItemOptionValueIds: variantFilters || ""
+          })
         : getAllProducts({
-          ...(search ? { searchCriteria: search } : {}),
-          ...(categoryId ? { categoryId } : {}),
-          ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
-          ...(subSubCategory && { subSubCategoryId: parseInt(subSubCategory) }),
-          ...(filters && { optionValueIds: filters }),
-          pageNo: page,
-          pageSize: 20
-        }),
-      categoryId ? getOptionsByCategory(categoryId) : Promise.resolve([])
+            ...(search ? { searchCriteria: search } : {}),
+            ...(categoryId ? { categoryId } : {}),
+            ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
+            ...(subSubCategory && { subSubCategoryId: parseInt(subSubCategory) }),
+            ...(filters && { optionValueIds: filters }),
+            pageNo: page,
+            pageSize: 18
+          })
     ])
 
-    if (filters) {
+    if (filters || variantFilters) {
       const dataList: DataList[] =
         (productsResponse as CategoryWiseFilterResponse).variantDetails?.map((data) => ({
           categoryId: data.categoryId,
@@ -105,8 +142,15 @@ function Products({ filters, search, subCategory, subSubCategory, categoryId }: 
 
     const size = productsResponse.pagination.pageSize
     const pageCount = Math.ceil(productsResponse.pagination.totalRecords / size)
-    setAllProductResponse(prevValue => page === 1 ? productsResponse : { ...prevValue!, dataList: [...(prevValue!.dataList ?? []), ...productsResponse.dataList] })
-    setCategoryOptions(categoryOptions)
+    setAllProductResponse((prevValue) =>
+      page === 1
+        ? productsResponse
+        : {
+            ...prevValue!,
+            dataList: [...(prevValue!.dataList ?? []), ...productsResponse.dataList]
+          }
+    )
+
     setPageCount(pageCount)
     setIsLastDataLoaded(pageCount === page)
     setIsLoading(false)
@@ -133,12 +177,11 @@ function Products({ filters, search, subCategory, subSubCategory, categoryId }: 
             categoryOptions={categoryOptions ?? []}
             products={allProductResponse.dataList}
           />
-          {
-            (pageCount && !isLastDataLoaded) &&
+          {pageCount && !isLastDataLoaded && (
             <Box ref={loader} sx={{ mb: 6 }}>
               <Loading isTiny={true} />
             </Box>
-          }
+          )}
         </>
       )}
     </>

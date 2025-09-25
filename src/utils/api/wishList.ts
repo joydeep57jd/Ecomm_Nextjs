@@ -1,4 +1,6 @@
 import {
+  CustomerWishItem,
+  CustomerWishItemPayload,
   DeleteCustomerWishItem,
   DeleteWishListCategory,
   DeleteWishListCategoryWithItems,
@@ -17,6 +19,11 @@ export const GetWishListCategory = async (customerId: number) => {
     { customerId }
   )
   return data.data
+}
+
+export const getCustomerWishItem = async(payload:CustomerWishItemPayload)=>{
+  const {data} = await axiosInstance.post<{data:CustomerWishItem}>(API_URL.WISHLIST.GET_ITEMS,payload)
+  return data.data.customerWishItems
 }
 
 export const saveWishlistCollection = async (payload: SaveCollectionRequest) => {

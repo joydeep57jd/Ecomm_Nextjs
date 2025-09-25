@@ -71,7 +71,7 @@ export default function MiniCartItem({ item, onCart }: Props) {
 
       <ContentWrapper>
         <Typography noWrap variant="body1">
-          {item.productName}
+          {item.variantName}
         </Typography>
          {/* <Typography noWrap variant="body2" fontSize={12}> 
               {item.variantName}
