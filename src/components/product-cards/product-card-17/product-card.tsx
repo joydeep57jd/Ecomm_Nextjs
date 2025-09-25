@@ -15,7 +15,7 @@ interface ProductCard17Props {
   // Accept either standard Product or wishlist item shape
   product: Product
   bgWhite?: boolean
-  isWishList?: boolean 
+  isWishList?: boolean
 }
 // ========================================================
 
@@ -25,22 +25,19 @@ export default function ProductCard17({
   isWishList = false,
 }: ProductCard17Props) {
 
-  console.warn(product)
-  const title = isWishList ? product.name : product.title
-  const slug = isWishList ? product.itemId : product.slug
-  const price = isWishList ? product.price_member || product.price_regular : product.price
-  const thumbnail = isWishList
-    ? product.images?.[0]?.fullImagepath || "/placeholder.png"
-    : product.thumbnail
-  const discount = isWishList ? product.offer?.offerSavePrice || 0 : product.discount
-  const categories = isWishList ? [product.category] : product.categories
+  const title = product.title
+  const slug = product.slug
+  const price = product.price
+  const thumbnail = product.thumbnail
+  const discount = product.discount
+  const categories = product.categories
 
   return (
     <StyledCard elevation={0} bgWhite={bgWhite}>
       <ImageWrapper>
         <Discount discount={discount} />
 
-        <Link href={`/products/${slug}`} aria-label={`View ${title}`}>
+        <Link href={`/products/${slug}${product.itemVariantId ? `?variantId=${product.itemVariantId}` : ''}`} aria-label={`View ${title}`}>
           <Image
             width={750}
             height={750}

@@ -9,12 +9,12 @@ import { Box } from "@mui/material"
 import React, { useEffect, useRef, useState } from "react"
 
 type Props = {
-  filters: string | null
+  filters: string
   search: string
   subCategory: string
   subSubCategory: string
-  categoryId: number | undefined
-  variantFilters: string | null
+  categoryId: string
+  variantFilters: string
 }
 
 function Products({
@@ -25,11 +25,8 @@ function Products({
   categoryId,
   variantFilters
 }: Props) {
-  // const loadingSearch = "",
-  //   loadinPage = "",
-  //   loadinSubCategory = "",
-  //   loadingCategoryId = "",
-  //   loadinsubSubCategory = ""
+  let loadingCriteria = ""
+  let loadingCategory = ""
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState(1)
   const [allProductResponse, setAllProductResponse] = useState<AllProductResponse>()
@@ -40,14 +37,8 @@ function Products({
   const loader = useRef<Element | null>(null)
 
   useEffect(() => {
-    // if (
-    //   search !== loadingSearch ||
-    //   page.toString() !== loadinPage ||
-    //   subCategory !== loadinSubCategory ||
-    //   (categoryId?.toString() ?? "") !== loadingCategoryId ||
-    //   subSubCategory !== loadinsubSubCategory
-    // )
-      fetchData()
+    if (loadingCriteria === getLoadingCriteria()) return
+    fetchData()
   }, [search, page, subCategory, subSubCategory, categoryId])
 
   useEffect(() => {
@@ -60,12 +51,12 @@ function Products({
   }, [filters, variantFilters])
 
   useEffect(() => {
+    if (loadingCategory === categoryId) return
     if (categoryId) {
       fatchFilterOption()
     } else {
       setCategoryOptions([])
     }
-    console.warn(categoryId)
   }, [categoryId])
 
   useEffect(() => {
@@ -94,30 +85,33 @@ function Products({
   }, [loader, page, pageCount, isLoading])
 
   const fatchFilterOption = async () => {
-    const data = await getOptionsByCategory(categoryId!)
+    loadingCategory = categoryId
+    const data = await getOptionsByCategory(+categoryId!)
     setCategoryOptions(data)
   }
 
+  const getLoadingCriteria = () => `${search}-${categoryId}-${subCategory}-${subSubCategory}-${filters}-`
+
   const fetchData = async () => {
     setIsLoading(true)
-
+    loadingCriteria = getLoadingCriteria()
     const [productsResponse] = await Promise.all([
-      filters || variantFilters
+      (filters || variantFilters)
         ? getFilterCategorySection({
-            OptionValueIds: filters || "",
-            PageNo: page,
-            PageSize: 18,
-            ItemOptionValueIds: variantFilters || ""
-          })
+          OptionValueIds: filters || "",
+          PageNo: page,
+          PageSize: 18,
+          ItemOptionValueIds: variantFilters || ""
+        })
         : getAllProducts({
-            ...(search ? { searchCriteria: search } : {}),
-            ...(categoryId ? { categoryId } : {}),
-            ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
-            ...(subSubCategory && { subSubCategoryId: parseInt(subSubCategory) }),
-            ...(filters && { optionValueIds: filters }),
-            pageNo: page,
-            pageSize: 18
-          })
+          ...(search ? { searchCriteria: search } : {}),
+          ...(categoryId ? { categoryId: +categoryId } : {}),
+          ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
+          ...(subSubCategory && { subSubCategoryId: parseInt(subSubCategory) }),
+          ...(filters && { optionValueIds: filters }),
+          pageNo: page,
+          pageSize: 18
+        })
     ])
 
     if (filters || variantFilters) {
@@ -148,9 +142,9 @@ function Products({
       page === 1
         ? productsResponse
         : {
-            ...prevValue!,
-            dataList: [...(prevValue!.dataList ?? []), ...productsResponse.dataList]
-          }
+          ...prevValue!,
+          dataList: [...(prevValue!.dataList ?? []), ...productsResponse.dataList]
+        }
     )
 
     setPageCount(pageCount)

@@ -47,4 +47,5 @@ export interface Product {
   categories: string[]
   rating?: number
   offer?: string
+  itemVariantId?: number
 }
