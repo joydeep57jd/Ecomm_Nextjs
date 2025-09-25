@@ -90,7 +90,7 @@ export interface CustomerWishItemElement {
   virtualTryOnType: string
   selectedVariant: boolean
   offer: Offer
-  metaTagList: any[]
+  metaTagList: string[]
   stockQty: number
   itemRating: number
   customerWishItemId: number

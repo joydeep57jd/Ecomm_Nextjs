@@ -28,11 +28,7 @@ export interface CategoryWiseFilterResponse {
   variantDetails: VariantDetail[]
   dataList: DataList[]
   pagination: Paginantion
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> 527dcf6f6e32b8d3026e2eece2bac0137d7a4f91
+
   variantOptionDetails: VariantOptionDetails[]
 }
 
@@ -42,11 +38,7 @@ export interface VariantOptionDetails {
   optionName: string
   variantOptionValueId: number
   optionValue: string
-<<<<<<< HEAD
-  
->>>>>>> Stashed changes
-=======
->>>>>>> 527dcf6f6e32b8d3026e2eece2bac0137d7a4f91
+
 }
 
 export interface VariantDetail {

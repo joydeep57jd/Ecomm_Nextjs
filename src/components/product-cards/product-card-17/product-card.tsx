@@ -7,11 +7,13 @@ import Discount from "./discount"
 import { ImageWrapper, ContentWrapper, StyledCard } from "./styles"
 // CUSTOM UTILS FUNCTION
 import { currency } from "lib"
+import { Product } from "@/models/Home.model"
+
 
 // ========================================================
 interface ProductCard17Props {
   // Accept either standard Product or wishlist item shape
-  product: any
+  product: Product
   bgWhite?: boolean
   isWishList?: boolean 
 }
@@ -23,7 +25,7 @@ export default function ProductCard17({
   isWishList = false,
 }: ProductCard17Props) {
 
-  console.log(product)
+  console.warn(product)
   const title = isWishList ? product.name : product.title
   const slug = isWishList ? product.itemId : product.slug
   const price = isWishList ? product.price_member || product.price_regular : product.price

@@ -25,11 +25,11 @@ function Products({
   categoryId,
   variantFilters
 }: Props) {
-  let loadingSearch = "",
-    loadinPage = "",
-    loadinSubCategory = "",
-    loadingCategoryId = "",
-    loadinsubSubCategory = ""
+  // const loadingSearch = "",
+  //   loadinPage = "",
+  //   loadinSubCategory = "",
+  //   loadingCategoryId = "",
+  //   loadinsubSubCategory = ""
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState(1)
   const [allProductResponse, setAllProductResponse] = useState<AllProductResponse>()
@@ -40,13 +40,13 @@ function Products({
   const loader = useRef<Element | null>(null)
 
   useEffect(() => {
-    if (
-      search !== loadingSearch ||
-      page.toString() !== loadinPage ||
-      subCategory !== loadinSubCategory ||
-      (categoryId?.toString() ?? "") !== loadingCategoryId ||
-      subSubCategory !== loadinsubSubCategory
-    )
+    // if (
+    //   search !== loadingSearch ||
+    //   page.toString() !== loadinPage ||
+    //   subCategory !== loadinSubCategory ||
+    //   (categoryId?.toString() ?? "") !== loadingCategoryId ||
+    //   subSubCategory !== loadinsubSubCategory
+    // )
       fetchData()
   }, [search, page, subCategory, subSubCategory, categoryId])
 
