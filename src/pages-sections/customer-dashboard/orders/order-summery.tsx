@@ -40,7 +40,7 @@ export default function OrderSummery({ order }: Props) {
 
           <FlexBetween mb={2}>
             <Typography variant="h6">Total</Typography>
-            <Typography variant="h6">{currency(+order.totalInvoiceAmount)}</Typography>
+            <Typography variant="h6">{currency(+order.total)}</Typography>
           </FlexBetween>
 
           {/* <p>Paid by Credit/Debit Card</p> */}

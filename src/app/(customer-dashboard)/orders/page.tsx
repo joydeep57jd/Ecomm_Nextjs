@@ -32,7 +32,8 @@ export default function Orders() {
     const data = await getOrderHistory({
       RecordFrom: (currentPage - 1) * pageSize + 1,
       RecordTo: pageSize * currentPage,
-      UserId: user!.id
+      UserId: user!.id,
+      CustOrdNo:""
     })
     setOrderResponse(data)
   }

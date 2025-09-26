@@ -48,4 +48,5 @@ export interface OrderPayload {
   UserId: string
   RecordFrom: number
   RecordTo: number
+  CustOrdNo:string
 }

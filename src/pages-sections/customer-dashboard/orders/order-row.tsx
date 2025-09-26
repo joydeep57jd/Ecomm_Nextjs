@@ -28,7 +28,7 @@ const getColor = (status: string) => {
 
 export default function OrderRow({ order }: Props) {
   return (
-    <Link href={`/orders/${order.orderId}`}>
+    <Link href={`/orders/${btoa(order.custOrdNo)}`}>
       <TableRow elevation={0} sx={{ gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr" }}>
         <Box sx={{
           display: 'flex', alignItems: 'center',
@@ -69,7 +69,7 @@ export default function OrderRow({ order }: Props) {
           fontWeight={500}
           sx={{ textAlign: { sm: "center", xs: "right" } }}
         >
-          {currency(+order.totalInvoiceAmount)}
+          {currency(+order.total)}
         </Typography>
 
         <Box justifyContent="end" display={{ sm: "inline-flex", xs: "none" }}>

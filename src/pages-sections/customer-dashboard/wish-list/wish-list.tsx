@@ -1,11 +1,11 @@
-import { Fragment } from "react"
+import { Fragment, useState } from "react"
 import Favorite from "@mui/icons-material/Favorite"
 import DashboardHeader from "../dashboard-header"
 import { CustomerWishItemElement, WishListCategory } from "@/models/WishList.modal"
-import { Box, Divider, Typography } from "@mui/material"
+import { Box, Divider, Grid, Typography } from "@mui/material"
 import LazyImage from "@/components/LazyImage"
 import { Delete, Edit } from "@mui/icons-material"
-
+import ProductCard17 from "@/components/product-cards/product-card-17"
 interface Props {
   categories: WishListCategory[]
   activeCategory: WishListCategory | null
@@ -15,9 +15,10 @@ interface Props {
 
 export default function WishListPageView({
   categories,
-  onCategoryClick,
+
   items
 }: Props) {
+ const [selectedCategoryId,setSelectedCategoryId] = useState("")
   return (
     <Fragment>
       <DashboardHeader title="My Wish List" Icon={Favorite} />
@@ -26,7 +27,7 @@ export default function WishListPageView({
         {categories.map((c) => (
           <button
             key={c.wishListCategoryId}
-            onClick={() => onCategoryClick(c)}
+            onClick={() =>setSelectedCategoryId(c.wishListCategoryId.toString())}
             style={{
               padding: "6px 0",
               borderRadius: "6px",
@@ -78,11 +79,8 @@ export default function WishListPageView({
         ))}
       </div>
 
-
-
-      {/* 
       <Grid container spacing={3}>
-        {items?.map((product) => (
+        {items[selectedCategoryId]?.map((product) => (
           <Grid size={{ lg: 4, sm: 6, xs: 12 }} key={`${product.customerWishItemId}-${product.itemId}-${product.variantid}`}>
             <ProductCard17 bgWhite product={{
               categories: [product.category],
@@ -99,7 +97,7 @@ export default function WishListPageView({
             }} />
           </Grid>
         ))}
-      </Grid> */}
+      </Grid>
     </Fragment>
   )
 }
