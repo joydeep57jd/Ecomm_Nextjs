@@ -50,11 +50,11 @@ export default function WishList() {
   //   } catch (err) {
   //     console.error("Error fetching wishlist items:", err)
   //   }
-  // }, [])
+  // }, []
 
-  if (!categories) {
-    return <Loading isSmallLoader={true} />
-  }
+ if (Object.keys(categories).length === 0) {
+  return <Loading isSmallLoader={true} />
+}
 
   return (
     <WishListPageView

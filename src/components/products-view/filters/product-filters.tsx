@@ -37,14 +37,14 @@ export default function ProductFilters({ categoryOptions }: Props) {
   useEffect(() => {
     if (searchParams.get("filter")) {
       const filter = getCurrentFilters("filter")
-      console.warn(filter)
+      // console.warn(filter)
       setSelectedFilters({ ...filter })
     } else {
       setSelectedFilters({})
     }
     if (searchParams.get("variantFilter")) {
       const filter = getCurrentFilters("variantFilter")
-      console.warn(filter)
+      // console.warn(filter)
       setSelectedVariant({ ...filter })
     } else {
       setSelectedVariant({})
@@ -67,7 +67,7 @@ export default function ProductFilters({ categoryOptions }: Props) {
     try {
       const paramsKeyName = appliedOnVariant ? "filter" : "variantFilter"
       const filters = getCurrentFilters(paramsKeyName)
-      console.warn("wefgwe",filters)
+ 
       if (!filters[categoryId]) {
         filters[categoryId] = {}
       }

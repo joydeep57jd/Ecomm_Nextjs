@@ -11,6 +11,7 @@ import ProductDescription from "../product-description"
 import Product from "models/Product.model"
 import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
 import { useRouter } from "next/navigation"
+import { GetReviewResponse } from "@/models/Rating.model"
 
 // ==============================================================
 interface Props {
@@ -19,11 +20,13 @@ interface Props {
   relatedProducts: Product[];
   frequentlyBought: Product[];
   selectedVariant: string
-  isLoading: boolean
+  isLoading: boolean,
+  reviews: GetReviewResponse[] 
 }
 // ==============================================================
 
 export default function ProductDetailsPageView(props: Props) {
+  
 
   const router = useRouter()
 
@@ -37,7 +40,7 @@ export default function ProductDetailsPageView(props: Props) {
       <ProductIntro product={props.product} variantMap={props.variantMap} selectedVariant={props.selectedVariant} isLoading={props.isLoading} />
 
       {/* PRODUCT DESCRIPTION AND REVIEW */}
-      <ProductTabs description={<ProductDescription product={props.product} />} reviews={<ProductReviews />} />
+      <ProductTabs description={<ProductDescription product={props.product} />}   reviews={<ProductReviews reviews={props.reviews} />} />
 
       {/* FREQUENTLY BOUGHT PRODUCTS AREA */}
       {/* <FrequentlyBought products={props.frequentlyBought} /> */}

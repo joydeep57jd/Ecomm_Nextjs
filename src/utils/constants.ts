@@ -79,7 +79,8 @@ export const API_URL = {
 
   RATING: {
     SAVE: "/frontend/SaveRating",
-    GET: "/frontend/GetRating"
+    // GET: "/frontend/GetRating"
+    GET: "/ProductManagement/GetCustomerRatings"
   },
 
   PAYMENT: {

@@ -18,7 +18,7 @@ export default function WishListPageView({
 
   items
 }: Props) {
- const [selectedCategoryId,setSelectedCategoryId] = useState("")
+  const [selectedCategoryId, setSelectedCategoryId] = useState("")
   return (
     <Fragment>
       <DashboardHeader title="My Wish List" Icon={Favorite} />
@@ -27,7 +27,7 @@ export default function WishListPageView({
         {categories.map((c) => (
           <button
             key={c.wishListCategoryId}
-            onClick={() =>setSelectedCategoryId(c.wishListCategoryId.toString())}
+            onClick={() => setSelectedCategoryId(c.wishListCategoryId.toString())}
             style={{
               padding: "6px 0",
               borderRadius: "6px",
@@ -36,43 +36,50 @@ export default function WishListPageView({
               cursor: "pointer"
             }}
           >
-            <Box sx={{
-              px: '48px',
-              pt: 2
-            }}>
-              {
-                items[c.wishListCategoryId]?.length ? <Box sx={{
-                  display: 'flex',
-                  gap: 2,
-                  alignItems: 'center',
-                  justifyItems: 'center',
-                }}>
-                  <LazyImage alt={items[c.wishListCategoryId][0].variantName} src={items[c.wishListCategoryId][0].images[0].fullImagepath} sx={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: '100%'
-                  }} width={30} height={30} />
-                  {
-                    items[c.wishListCategoryId]?.length > 1 &&
+            <Box
+              sx={{
+                px: "48px",
+                pt: 2
+              }}
+            >
+              {items[c.wishListCategoryId]?.length ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    alignItems: "center",
+                    justifyItems: "center"
+                  }}
+                >
+                  <LazyImage
+                    alt={items[c.wishListCategoryId][0].variantName}
+                    src={items[c.wishListCategoryId][0].images[0].fullImagepath}
+                    sx={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: "100%"
+                    }}
+                    width={30}
+                    height={30}
+                  />
+                  {items[c.wishListCategoryId]?.length > 1 && (
                     <Typography variant="subtitle2">
                       +{items[c.wishListCategoryId]?.length - 1} Items
                     </Typography>
-                  }
-                </Box> : <Box sx={{ height: '50px', display: 'flex', alignItems: 'center' }}>
-                  <Typography variant="h6">
-                    No items added yet
-                  </Typography>
+                  )}
                 </Box>
-              }
+              ) : (
+                <Box sx={{ height: "50px", display: "flex", alignItems: "center" }}>
+                  <Typography variant="h6">No items added yet</Typography>
+                </Box>
+              )}
             </Box>
             <Divider sx={{ my: 2 }} />
-            <Box sx={{ my: 1, display: 'flex', justifyContent: 'space-between', px: 2 }}>
-              <Typography variant="h6">
-                {c.wishListCategoryName}
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <Edit fontSize='small' />
-                <Delete fontSize='small' color="error" />
+            <Box sx={{ my: 1, display: "flex", justifyContent: "space-between", px: 2 }}>
+              <Typography variant="h6">{c.wishListCategoryName}</Typography>
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <Edit fontSize="small" />
+                <Delete fontSize="small" color="error" />
               </Box>
             </Box>
           </button>
@@ -80,21 +87,27 @@ export default function WishListPageView({
       </div>
 
       <Grid container spacing={3}>
-        {items[selectedCategoryId]?.map((product) => (
-          <Grid size={{ lg: 4, sm: 6, xs: 12 }} key={`${product.customerWishItemId}-${product.itemId}-${product.variantid}`}>
-            <ProductCard17 bgWhite product={{
-              categories: [product.category],
-              discount: product.savePricePctg,
-              id: product.id.toString(),
-              images: product.images.map(i => i.fullImagepath),
-              price: product.price_regular,
-              slug: product.id.toString(),
-              thumbnail: product.images[0].fullImagepath,
-              title: product.variantName,
-              offer: product.offer.offerDescription,
-              rating: product.itemRating,
-              itemVariantId: product.variantid
-            }} />
+        {items[selectedCategoryId]?.map((product, index) => (
+          <Grid
+            size={{ lg: 4, sm: 6, xs: 12 }}
+            key={`${product.customerWishItemId}-${product.itemId}-${product.variantid}-${index}`}
+          >
+            <ProductCard17
+              bgWhite
+              product={{
+                categories: [product.category],
+                discount: product.savePricePctg,
+                id: product.id.toString(),
+                images: product.images.map((i) => i.fullImagepath),
+                price: product.price_regular,
+                slug: product.id.toString(),
+                thumbnail: product.images[0].fullImagepath,
+                title: product.variantName,
+                offer: product.offer.offerDescription,
+                rating: product.itemRating,
+                itemVariantId: product.variantid
+              }}
+            />
           </Grid>
         ))}
       </Grid>

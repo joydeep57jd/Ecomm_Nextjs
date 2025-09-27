@@ -5,3 +5,24 @@ export interface SaveRatingRequest {
   rating: number
   note: string
 }
+
+export interface GetReviewPayload {
+  CategoryId: null
+  ReviewStatus: number
+  ItemVariantId: number
+}
+
+export interface GetReviewResponse {
+  ratingId:     number;
+  itemCode:     string;
+  name:         string;
+  review:       string;
+  reviewStatus: number;
+  rating:       number;
+  customerName: string;
+  createdDate:  Date;
+}
+
+
+
+
