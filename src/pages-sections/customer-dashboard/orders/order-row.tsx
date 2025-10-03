@@ -21,7 +21,8 @@ type Props = { order: OrderListCustomer };
 const getColor = (status: string) => {
   if (status === "Pending") return "secondary"
   else if (status === "Order Processed") return "info"
-  else if (status === "Received") return "success"
+  else if (status === "Order Delivered") return "success"
+  else if (status === "Order PartiallyDelivered") return "warning"
   else if (status === "Cancelled") return "error"
   else return "default"
 }
@@ -41,7 +42,7 @@ export default function OrderRow({ order }: Props) {
               alt="Logo"
               width={40}
               height={40}
-              src={order.items[0].imageName}
+              src={order?.items[0].imageName}
               style={{ marginLeft: 8, borderRadius: '100%' }}
             />
             {

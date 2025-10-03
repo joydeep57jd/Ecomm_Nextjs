@@ -12,7 +12,9 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 
 export default function Address() {
-  const [addressListResponse, setAddressListResponse] = useState<UserAddressListResponse | null>(null)
+  const [addressListResponse, setAddressListResponse] = useState<UserAddressListResponse | null>(
+    null
+  )
   const { user } = useUser()
 
   useEffect(() => {
@@ -31,10 +33,16 @@ export default function Address() {
     resolver: yupResolver(yup.object()) as Resolver<{}>
   })
 
-  return <FormProvider methods={methods} onSubmit={() => { }}>
-    {
-      !addressListResponse ? <Loading isSmallLoader={true} /> : <DeliveryAddresses deliveryAddresses={addressListResponse!.data} getAddresses={getAddresses} />
-    }
-  </FormProvider>
-
+  return (
+    <FormProvider methods={methods} onSubmit={() => {}}>
+      {!addressListResponse ? (
+        <Loading isSmallLoader={true} />
+      ) : (
+        <DeliveryAddresses
+          deliveryAddresses={addressListResponse!.data}
+          getAddresses={getAddresses}
+        />
+      )}
+    </FormProvider>
+  )
 }

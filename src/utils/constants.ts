@@ -39,7 +39,9 @@ export const API_URL = {
     PLACE_ORDER: "/frontend/PlaceOrder",
     SAVE_PAYMENT: "/frontend/SavePayment",
     CREATE_CANCEL_REQUEST: "/frontend/CreateCancelRequest",
-    GET_CANCEL_REASON: "/frontend/GetCancellationMasterFront"
+    GET_CANCEL_MASTER_REASON: "/frontend/GetCancellationMasterFront",
+    GET_CANCEL_REASON: "/frontend/GetCancellationMasterFront",
+    CUST_CANCEL_REQUEST:"/ProductManagement/CreateCancelRequest"
   },
 
   CART: {

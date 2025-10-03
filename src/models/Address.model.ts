@@ -7,7 +7,6 @@ export interface Customer {
   userid: string
   addrid: number
 
-  // required fields
   fname: string
   lname: string
   phone: string
@@ -15,7 +14,6 @@ export interface Customer {
   pin: string
   country: string
 
-  // optional fields
   mname?: string
   email?: string
   address2?: string

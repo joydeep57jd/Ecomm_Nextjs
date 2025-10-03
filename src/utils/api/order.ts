@@ -3,7 +3,8 @@ import {
   CheckoutOrderResponse,
   DeliveryChargeRequest,
   PlaceOrderResponse,
-  PlaceOrderRequest
+  PlaceOrderRequest,
+  CustCancelRequest
 } from "@/models/Order.model"
 import axiosInstance from "../axiosInstance"
 import API_URL from "../constants"
@@ -108,3 +109,10 @@ export const placeOrder = async (payload: PlaceOrderRequest) => {
   )
   return data.data
 }
+
+
+export const customerCancelRequest = async(payload:CustCancelRequest)=>{
+ await axiosInstance.post(API_URL.ORDER.CUST_CANCEL_REQUEST,payload)
+
+}
+

@@ -134,3 +134,15 @@ export interface PlaceOrderResponse {
   status: string
   loginInfo: Object
 }
+
+export interface CustCancelRequest {
+  OrderId: number
+  InvoiceId?: number
+  OrderDetailId: number
+  InvoiceDetailId: number
+  Timestamp: Date
+  CancelReasonId: number
+  Explanation: string
+  UserId: string
+  UserName: string
+}

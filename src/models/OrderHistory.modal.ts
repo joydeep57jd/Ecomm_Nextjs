@@ -21,6 +21,9 @@ export interface OrderListCustomer {
   paidAmount: string
   isCancel: boolean
   cancelDate: string
+  invoiceDetailId: number
+  orderDetailId: number
+  invoiceId: number
   isInvoiced: boolean
 }
 
@@ -48,5 +51,5 @@ export interface OrderPayload {
   UserId: string
   RecordFrom: number
   RecordTo: number
-  CustOrdNo:string
+  CustOrdNo: string
 }
