@@ -15,8 +15,9 @@ import { OrderListCustomer, Item as Product } from "@/models/OrderHistory.modal"
 import OrderItemRating from "./page-view/order-item-rating"
 import { useState } from "react"
 import { useUser } from "@/contexts/UserContenxt"
-import { customerCancelRequest } from "@/utils/api/order"
+import { customerCancelRequest, GetStatementInvoice } from "@/utils/api/order"
 import { CustCancelRequest } from "@/models/Order.model"
+import { CircularProgress } from "@mui/material"
 
 // ==============================================================
 // PROPS
@@ -30,6 +31,7 @@ export default function OrderedProducts({ order }: Props) {
   const { user } = useUser()
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [loadingInvoice, setLoadingInvoice] = useState(false)
 
   const handleCloseModal = (isReloadRequired: boolean) => {
     setSelectedProduct(null)
@@ -52,6 +54,34 @@ export default function OrderedProducts({ order }: Props) {
     await customerCancelRequest(payload)
   }
 
+
+
+  const handleOpenInvoice = async () => {
+  try {
+    setLoadingInvoice(true)
+
+    const encryptedOrderId = (order.orderId)
+
+
+    const res = await GetStatementInvoice(order.orderId.toString())
+
+ 
+    const decodedHtml = res.html ? atob(res.html) : res.html
+
+    const newWindow = window.open("", "_blank")
+    if (newWindow) {
+      newWindow.document.write(decodedHtml)
+      newWindow.document.title = `Invoice - ${order.custOrdNo}`
+      newWindow.document.close()
+    }
+  } catch (error) {
+    console.error("Error fetching invoice:", error)
+  } finally {
+    setLoadingInvoice(false)
+  }
+}
+
+
   return (
     <>
       <Card
@@ -68,16 +98,27 @@ export default function OrderedProducts({ order }: Props) {
           <Item title="Placed on:" value={format(new Date(order.orderDate), "dd MMM, yyyy")} />
 
           {order.orderStatus === "Order Delivered" ? (
-            <Button variant="outlined" color="primary" size="small">
-              Return Order
-            </Button>
+            <>
+              <Button variant="outlined" color="primary" size="small">
+                Return Order
+              </Button>
+              <Button
+                variant="contained"
+                color="success"
+                size="small"
+                onClick={handleOpenInvoice}
+                disabled={loadingInvoice}
+              >
+                {loadingInvoice ? <CircularProgress size={16} color="inherit" /> : "View Invoice"}
+              </Button>
+            </>
           ) : (
             <Button
               variant="outlined"
               color="error"
               size="small"
               onClick={handleCancelOrder}
-              disabled={order.isCancel} 
+              disabled={order.isCancel}
             >
               Cancel Order
             </Button>

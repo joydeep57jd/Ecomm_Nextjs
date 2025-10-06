@@ -146,3 +146,11 @@ export interface CustCancelRequest {
   UserId: string
   UserName: string
 }
+
+
+
+export interface StatmentInvoiceResponse {
+  html: string;
+  id:   null;
+}
+
