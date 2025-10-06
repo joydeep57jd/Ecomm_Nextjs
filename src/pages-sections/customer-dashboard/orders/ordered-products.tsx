@@ -60,7 +60,7 @@ export default function OrderedProducts({ order }: Props) {
   try {
     setLoadingInvoice(true)
 
-    const encryptedOrderId = (order.orderId)
+    
 
 
     const res = await GetStatementInvoice(order.orderId.toString())
