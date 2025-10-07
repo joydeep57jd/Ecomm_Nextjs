@@ -191,7 +191,9 @@ export default function OrderedProducts({ order,refreshOrder }: Props) {
                     )}
                   </Button>
                 )
-              ) : null}
+              ) : <Typography color="varient">
+                {item.status}
+                </Typography>}
             </FlexBox>
           </FlexBetween>
         ))}
