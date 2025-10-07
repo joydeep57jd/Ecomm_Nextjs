@@ -23,18 +23,16 @@ import { OrderStatus } from "@/enums/order-status.enum"
 // ==============================================================
 // PROPS
 // ==============================================================
-type Props = { order: OrderListCustomer
-   refreshOrder: () => void 
- }
+type Props = { order: OrderListCustomer; refreshOrder: () => void }
 
 // ==============================================================
 // MAIN COMPONENT
 // ==============================================================
-export default function OrderedProducts({ order,refreshOrder }: Props) {
+export default function OrderedProducts({ order, refreshOrder }: Props) {
   const { user } = useUser()
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [loadingInvoice, setLoadingInvoice] = useState(false)
-  const [loadingCancelId, setLoadingCancelId] = useState<number | null>(null) 
+  const [loadingCancelId, setLoadingCancelId] = useState<number | null>(null)
 
   const handleCloseModal = (isReloadRequired: boolean) => {
     setSelectedProduct(null)
@@ -43,13 +41,13 @@ export default function OrderedProducts({ order,refreshOrder }: Props) {
 
   const handleCancelOrder = async (item: Product) => {
     try {
-      setLoadingCancelId(item.orderDetailId) 
+      setLoadingCancelId(item.orderDetailId)
 
       const payload: CustCancelRequest = {
         OrderId: order.orderId,
-        InvoiceId: null, 
+        InvoiceId: null,
         OrderDetailId: item.orderDetailId,
-        InvoiceDetailId: null, 
+        InvoiceDetailId: null,
         Timestamp: new Date(),
         CancelReasonId: 1,
         Explanation: "Customer requested cancellation",
@@ -59,8 +57,7 @@ export default function OrderedProducts({ order,refreshOrder }: Props) {
 
       await customerCancelRequest(payload)
 
-     
-       refreshOrder() 
+      refreshOrder()
     } catch (error) {
       console.error("Cancel order failed:", error)
     } finally {
@@ -90,7 +87,6 @@ export default function OrderedProducts({ order,refreshOrder }: Props) {
       setLoadingInvoice(false)
     }
   }
-  
 
   const isDelivered = order.orderStatus === OrderStatus.DELIVERED
   const hasInvoice = !!order.isInvoiced
@@ -171,7 +167,6 @@ export default function OrderedProducts({ order,refreshOrder }: Props) {
                   </Button>
                 </>
               ) : !hasInvoice ? (
-                
                 item.status.toLowerCase().includes("cancel") ? (
                   <Typography variant="body2" color="error" fontWeight={500}>
                     {item.status}
@@ -185,15 +180,21 @@ export default function OrderedProducts({ order,refreshOrder }: Props) {
                     onClick={() => handleCancelOrder(item)}
                   >
                     {loadingCancelId === item.orderDetailId ? (
-                      <CircularProgress size={16} color="inherit" />
+                      <FlexBox gap={1} alignItems="center">
+                        <CircularProgress size={16} color="inherit" />
+                        <Typography variant="caption">Cancelling...</Typography>
+                      </FlexBox>
                     ) : (
                       "Cancel Invoice"
                     )}
                   </Button>
                 )
-              ) : <Typography color="varient">
-                {item.status}
-                </Typography>}
+              ) : (
+                <FlexBox gap={1} alignItems="center">
+                  <Typography color="text.secondary">{item.status}</Typography>
+                  {loadingCancelId === item.orderDetailId && <CircularProgress size={16} />}
+                </FlexBox>
+              )}
             </FlexBox>
           </FlexBetween>
         ))}
