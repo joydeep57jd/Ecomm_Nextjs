@@ -137,9 +137,9 @@ export interface PlaceOrderResponse {
 
 export interface CustCancelRequest {
   OrderId: number
-  InvoiceId?: number
+  InvoiceId?: number|null
   OrderDetailId: number
-  InvoiceDetailId: number
+  InvoiceDetailId?: number|null
   Timestamp: Date
   CancelReasonId: number
   Explanation: string

@@ -13,17 +13,18 @@ import { currency } from "lib"
 // CUSTOM DATA MODEL
 import { OrderListCustomer } from "@/models/OrderHistory.modal"
 import Image from "next/image"
+import { OrderStatus } from "@/enums/order-status.enum"
 
 // =================================================
 type Props = { order: OrderListCustomer };
 // =================================================
 
 const getColor = (status: string) => {
-  if (status === "Pending") return "secondary"
-  else if (status === "Order Processed") return "info"
-  else if (status === "Order Delivered") return "success"
-  else if (status === "Order PartiallyDelivered") return "warning"
-  else if (status === "Cancelled") return "error"
+  if (status === OrderStatus.PENDING) return "secondary"
+  else if (status === OrderStatus.PROCESSED) return "info"
+  else if (status === OrderStatus.DELIVERED) return "success"
+  else if (status === OrderStatus.PARTIALLY_DELIVERED) return "warning"
+  else if (status === OrderStatus.CANCELLED) return "error"
   else return "default"
 }
 

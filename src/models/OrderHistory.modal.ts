@@ -45,6 +45,7 @@ export interface Item {
   invQty: number
   invDate: string
   status: string
+  orderDetailId: number
 }
 
 export interface OrderPayload {

@@ -51,5 +51,5 @@ export default  function OrderDetails() {
     return <Loading isSmallLoader={true}/>
   }
 
-  return <OrderDetailsPageView order={singleOrderResponse!} />
+  return <OrderDetailsPageView order={singleOrderResponse!}   refreshOrder={getOrderList}/>
 }

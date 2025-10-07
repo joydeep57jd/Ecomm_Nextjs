@@ -10,10 +10,11 @@ import { OrderListCustomer } from "@/models/OrderHistory.modal"
 // import OrderProgress from "../order-progress"
 
 // =============================================================
-type Props = { order: OrderListCustomer };
+type Props = { order: OrderListCustomer
+   refreshOrder: () => void };
 // =============================================================
 
-export function OrderDetailsPageView({ order }: Props) {
+export function OrderDetailsPageView({ order, refreshOrder }: Props) {
   return (
     <Fragment>
       <DashboardHeader href="/orders" title="Order Details" />
@@ -24,7 +25,7 @@ export function OrderDetailsPageView({ order }: Props) {
         // isDelivered={order.isDelivered}
       /> */}
 
-      <OrderedProducts order={order} />
+      <OrderedProducts order={order} refreshOrder={refreshOrder} />
 
       <OrderSummery order={order} />
     </Fragment>
