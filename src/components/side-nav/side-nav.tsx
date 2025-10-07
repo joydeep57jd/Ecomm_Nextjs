@@ -2,6 +2,8 @@ import { useEffect, useState, ReactNode, useCallback } from "react"
 import Drawer from "@mui/material/Drawer"
 // GLOBAL CUSTOM COMPONENT
 import OverlayScrollbar from "components/overlay-scrollbar"
+import Cross from "@/icons/Cross"
+import { Box } from "@mui/material"
 
 // ================================================================
 interface Props {
@@ -11,6 +13,7 @@ interface Props {
   toggle?: () => void;
   position?: "left" | "right";
   handler: (event: () => void) => ReactNode;
+  showCloseButton?: boolean;
 }
 // ================================================================
 
@@ -20,7 +23,8 @@ export default function SideNav({
   width = 280,
   children,
   handler,
-  toggle
+  toggle,
+  showCloseButton
 }: Props) {
   const [sideNavOpen, setSideNavOpen] = useState(open)
 
@@ -53,7 +57,15 @@ export default function SideNav({
           }
         }}
       >
-        <OverlayScrollbar>{children}</OverlayScrollbar>
+        <OverlayScrollbar>
+          {
+            showCloseButton &&
+            <Box sx={{ position: 'relative', height: 40 }}>
+              <Cross onClick={handleClose} sx={{ position: 'absolute', top: 12, right: 12 }} />
+            </Box>
+          }
+          {children}
+        </OverlayScrollbar>
       </Drawer>
 
       {handler(handleClose)}

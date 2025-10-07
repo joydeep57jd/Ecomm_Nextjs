@@ -45,7 +45,6 @@ export default function WishList() {
       )
       setOmerWishItems(customerWishItems)
       setCategories(cats)
-      console.warn(customerWishItems, cats)
       if (cats.length > 0) setActiveCategory(cats[0])
     } catch (err) {
       console.error("Error loading categories:", err)
@@ -108,6 +107,7 @@ export default function WishList() {
       activeCategory={activeCategory}
       onCategoryClick={setActiveCategory}
       items={omerWishItems}
+      setOmerWishItems={setOmerWishItems}
       onDeleteCategory={handleDeleteCategory}
       deletingCategoryId={deletingCategoryId}
     />

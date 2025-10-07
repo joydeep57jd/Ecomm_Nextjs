@@ -1,6 +1,6 @@
 "use client"
 
-import { Dispatch, Fragment, SetStateAction,  useState } from "react"
+import { Dispatch, Fragment, SetStateAction, useState } from "react"
 import Favorite from "@mui/icons-material/Favorite"
 import DashboardHeader from "../dashboard-header"
 import { CustomerWishItemElement, WishListCategory } from "@/models/WishList.modal"
@@ -10,6 +10,9 @@ import { Delete, Edit } from "@mui/icons-material"
 import ProductCard17 from "@/components/product-cards/product-card-17"
 import WishListModal from "./wish-list_modal"
 import DeleteWishListCategoryModal from "./delete-wishlist-category"
+import Trash from "@/icons/Trash"
+import { useUser } from "@/contexts/UserContenxt"
+import { deleteCustomerWishItem } from "@/utils/api/wishList"
 
 interface Props {
   categories: WishListCategory[]
@@ -18,7 +21,8 @@ interface Props {
   onDeleteCategory: (cat: WishListCategory) => void
   deletingCategoryId: number | null
   items: Record<string, CustomerWishItemElement[]>
-  setCategories:Dispatch<SetStateAction<WishListCategory[] | null>>
+  setCategories: Dispatch<SetStateAction<WishListCategory[] | null>>
+  setOmerWishItems: Dispatch<SetStateAction<Record<string, CustomerWishItemElement[]>>>
 }
 
 export default function WishListPageView({
@@ -26,9 +30,11 @@ export default function WishListPageView({
   onDeleteCategory,
   deletingCategoryId,
   items,
-  setCategories
+  setCategories,
+  setOmerWishItems,
 }: Props) {
-  
+  const { user } = useUser()
+  const [deletingItems, setDeletingItems] = useState<Record<number, Set<number>>>({})
   const [selectedCategoryId, setSelectedCategoryId] = useState("")
   const [editingCategory, setEditingCategory] = useState<WishListCategory | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -38,7 +44,28 @@ export default function WishListPageView({
     setDeleteCategoryId(categoryId)
   }
 
+  const deleteItem = async (customerWishItemId: number) => {
+    setDeletingItems(prev => {
+      if (!prev[+selectedCategoryId]) prev[+selectedCategoryId] = new Set()
+      prev[+selectedCategoryId].add(customerWishItemId)
+      return { ...prev }
+    })
 
+    await deleteCustomerWishItem({
+      customerId: +user!.customerId,
+      CustomerWishItemId: customerWishItemId,
+      Date: new Date().toISOString()
+    })
+
+    setDeletingItems(prev => {
+      prev[+selectedCategoryId].delete(customerWishItemId)
+      return { ...prev }
+    })
+    setOmerWishItems(prev => {
+      prev[selectedCategoryId] = prev[selectedCategoryId].filter(i => i.customerWishItemId !== customerWishItemId)
+      return { ...prev }
+    })
+  }
 
   const handleCloseDeleteModal = (isReloadRequired: boolean) => {
     if (isReloadRequired && deleteCategoryId !== null) {
@@ -116,7 +143,7 @@ export default function WishListPageView({
                 />
 
                 {deletingCategoryId === c.wishListCategoryId ? (
-                  <CircularProgress size={16} />
+                  <CircularProgress size={16} color="primary" />
                 ) : (
                   <Delete
                     fontSize="small"
@@ -140,22 +167,49 @@ export default function WishListPageView({
             size={{ lg: 4, sm: 6, xs: 12 }}
             key={`${product.customerWishItemId}-${product.itemId}-${product.variantid}-${index}`}
           >
-            <ProductCard17
-              bgWhite
-              product={{
-                categories: [product.category],
-                discount: product.savePricePctg,
-                id: product.id.toString(),
-                images: product.images.map((i) => i.fullImagepath),
-                price: product.price_regular,
-                slug: product.id.toString(),
-                thumbnail: product.images[0].fullImagepath,
-                title: product.variantName,
-                offer: product.offer.offerDescription,
-                rating: product.itemRating,
-                itemVariantId: product.variantid
+            <Box sx={{
+              position: "relative",
+            }}>
+              <Box sx={{
+                position: "absolute",
+                top: 16,
+                right: 16,
+                cursor: "pointer",
+                zIndex: 10,
+                background: "#fff",
+                borderRadius: "100%",
+                height: 32,
+                width: 32,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.2)"
               }}
-            />
+                onClick={() => deleteItem(product.customerWishItemId)}
+              >
+
+                {
+                  deletingItems[+selectedCategoryId]?.has(product.customerWishItemId) ?
+                    <CircularProgress size={16} /> : <Trash />
+                }
+              </Box>
+              <ProductCard17
+                bgWhite
+                product={{
+                  categories: [product.category],
+                  discount: product.savePricePctg,
+                  id: product.id.toString(),
+                  images: product.images.map((i) => i.fullImagepath),
+                  price: product.price_regular,
+                  slug: product.id.toString(),
+                  thumbnail: product.images[0].fullImagepath,
+                  title: product.variantName,
+                  offer: product.offer.offerDescription,
+                  rating: product.itemRating,
+                  itemVariantId: product.variantid
+                }}
+              />
+            </Box>
           </Grid>
         ))}
       </Grid>

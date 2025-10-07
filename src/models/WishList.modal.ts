@@ -34,8 +34,7 @@ export interface SaveWishlistItemRequest {
 export interface DeleteCustomerWishItem {
   CustomerWishItemId: number
   customerId: number
-
-  Date: Date
+  Date: string
 }
 
 export interface DeleteWishListCategory {
@@ -44,8 +43,9 @@ export interface DeleteWishListCategory {
 }
 
 export interface CustomerWishItemPayload {
-  wishListCategoryId: number
+  wishListCategoryId?: number
   customerId: number
+  variantid?: number
 }
 
 export interface DeleteWishListCategoryWithItems {

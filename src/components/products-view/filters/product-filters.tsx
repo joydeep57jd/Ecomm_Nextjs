@@ -67,11 +67,11 @@ export default function ProductFilters({ categoryOptions }: Props) {
     try {
       const paramsKeyName = appliedOnVariant ? "filter" : "variantFilter"
       const filters = getCurrentFilters(paramsKeyName)
- 
+
       if (!filters[categoryId]) {
         filters[categoryId] = {}
       }
-      const options = (appliedOnVariant?selectedFilters:selectedVariant)[categoryId] ?? {}
+      const options = (appliedOnVariant ? selectedFilters : selectedVariant)[categoryId] ?? {}
       const values = options[keyName] ?? []
       const existingValueIndex = values.findIndex((id) => id === value)
       if (existingValueIndex !== -1) {
@@ -81,11 +81,11 @@ export default function ProductFilters({ categoryOptions }: Props) {
       }
 
       filters[categoryId][keyName] = values
-      appliedOnVariant? setSelectedFilters({ ...filters }):setSelectedVariant({...filters})
-     
+      appliedOnVariant ? setSelectedFilters({ ...filters }) : setSelectedVariant({ ...filters })
+
       params.set(paramsKeyName, btoa(JSON.stringify(filters)))
       router.push(`${pathname}?${params.toString()}`)
-    } catch {}
+    } catch { }
   }
 
   return (
@@ -93,7 +93,7 @@ export default function ProductFilters({ categoryOptions }: Props) {
       {/* CATEGORY OPTIONS */}
 
       {categoryOptions.map((cat) => (
-        <Accordion key={cat.variantOptionId} sx={{ mb: 1 }}>
+        <Accordion key={cat.variantOptionId} sx={{ boxShadow: "none" }}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{ padding: ".5rem 1rem", color: "grey.700" }}
@@ -103,7 +103,7 @@ export default function ProductFilters({ categoryOptions }: Props) {
 
           <AccordionDetails
             sx={{
-              maxHeight: 250,
+              maxHeight: 350,
               overflowY: "auto",
               px: 0
             }}
@@ -138,11 +138,11 @@ export default function ProductFilters({ categoryOptions }: Props) {
                         checked={
                           cat.appliedOnVariant
                             ? !!selectedFilters[cat.categoryId]?.[cat.optionName]?.includes(
-                                opt.optionValueId
-                              )
+                              opt.optionValueId
+                            )
                             : !!selectedVariant[cat.categoryId]?.[cat.optionName]?.includes(
-                                opt.optionValueId
-                              )
+                              opt.optionValueId
+                            )
                         }
                         onChange={() =>
                           handleChangeSearchParams(

@@ -101,8 +101,12 @@ export default function ShopLayout1({ children, data }: Props) {
 
         </SecondaryHeader.Right>
       </SecondaryHeader>
+      <div style={{
+        minHeight: 'calc(100vh - 539px)'
+      }}>
+        {children}
+      </div>
 
-      {children}
 
       {/* {
         mobileNavigation &&
@@ -113,7 +117,7 @@ export default function ShopLayout1({ children, data }: Props) {
       {
         footer &&
         <Footer1>
-            <Footer1.Brand>
+          <Footer1.Brand>
             <Link href="/">
               <Image src={footer.logo} alt="logo" width={200} height={65} />
             </Link>
@@ -129,7 +133,7 @@ export default function ShopLayout1({ children, data }: Props) {
           </Footer1.Brand>
           <Footer1.Widget1>
             <FooterLinksWidget title="About Us" links={footer.about} />
-        
+
           </Footer1.Widget1>
 
           <Footer1.Widget2>

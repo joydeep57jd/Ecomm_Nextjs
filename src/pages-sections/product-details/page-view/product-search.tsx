@@ -16,6 +16,9 @@ import { DataList } from "@/models/AllProduct.model"
 import ProductFilters from "@/components/products-view/filters"
 import { GetCategoryResponse } from "@/models/Category.modal"
 import { VariantOptionDetails } from "@/models/Filters"
+import SideNav from "@/components/side-nav"
+import { Box, IconButton } from "@mui/material"
+import { Tune } from "@mui/icons-material"
 
 const SORT_OPTIONS = [
   { label: "Relevance", value: "relevance" },
@@ -40,8 +43,6 @@ export default function ProductSearchPageView({
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-
-  const query = searchParams.get("q")
   const sort = searchParams.get("sort") || "relevance"
 
   const handleChangeSearchParams = (key: string, value: string) => {
@@ -56,7 +57,7 @@ export default function ProductSearchPageView({
       <Container>
         {/* FILTER ACTION AREA */}
         <FlexBetween flexWrap="wrap" gap={2} mb={2}>
-          {query ? (
+          {/* {query && (
             <div>
               <Typography variant="h5" sx={{ mb: 0.5 }}>
                 Searching for “{query}”
@@ -65,10 +66,22 @@ export default function ProductSearchPageView({
                 {products.length} results found
               </Typography>
             </div>
-          ) : (
-            <div />
-          )}
-
+          )} */}
+          <Box sx={{ display: { md: "block", xs: "none" } }}></Box>
+          <Box sx={{ display: { md: "none", xs: "block" } }}>
+            <SideNav
+              position="left"
+              width={360}
+              showCloseButton={true}
+              handler={(close) => (
+                <IconButton onClick={close}>
+                  <Tune fontSize="small" />
+                </IconButton>
+              )}
+            >
+              <ProductFilters categoryOptions={categoryOptions} />
+            </SideNav>
+          </Box>
           <FlexBox alignItems="center" columnGap={4} flexWrap="wrap">
             <FlexBox alignItems="center" gap={1} flex="1 1 0">
               <Typography variant="body1" sx={{ color: "grey.600", whiteSpace: "pre" }}>
