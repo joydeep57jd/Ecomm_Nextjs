@@ -1,11 +1,11 @@
 "use client"
 
-import { Fragment, ReactNode, SyntheticEvent, useState } from "react"
+import { Fragment, ReactNode, SyntheticEvent,  } from "react"
 // MUI
 import Tab from "@mui/material/Tab"
 import Tabs from "@mui/material/Tabs"
 import { styled } from "@mui/material/styles"
-import { on } from "events"
+
 
 // STYLED COMPONENT
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -30,7 +30,7 @@ interface Props {
 // ==============================================================
 
 export default function ProductTabs({ reviews, description,activeTab, onTabChange }: Props) {
-  const [selectedOption, setSelectedOption] = useState(0)
+  // const [selectedOption, setSelectedOption] = useState(0)
   const handleChangeTab = (_: SyntheticEvent, value: number) => onTabChange(value)
   // const handleChangeTab = (_: SyntheticEvent, value: number) => setSelectedOption(value)
 
