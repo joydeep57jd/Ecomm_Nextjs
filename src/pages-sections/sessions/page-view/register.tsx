@@ -25,10 +25,13 @@ import {
 } from "@/schema/auth/register.schema"
 
 export default function RegisterPageView() {
-  const { visiblePassword, togglePasswordVisible } = usePasswordVisible()
+  const passwordVisibility = usePasswordVisible()
+  const confirmPasswordVisibility = usePasswordVisible()
+
 
   const inputProps = {
-    endAdornment: <EyeToggleButton show={visiblePassword} click={togglePasswordVisible} />
+    passwordEndAdornment: <EyeToggleButton show={passwordVisibility.visiblePassword} click={passwordVisibility.togglePasswordVisible} />,
+    confirmPasswordEndAdornment: <EyeToggleButton show={confirmPasswordVisibility.visiblePassword} click={confirmPasswordVisibility.togglePasswordVisible} />
   }
 
   const methods = useForm({
@@ -116,8 +119,12 @@ export default function RegisterPageView() {
           size="medium"
           name="password"
           placeholder="*********"
-          type={visiblePassword ? "text" : "password"}
-          slotProps={{ input: inputProps }}
+          type={passwordVisibility.visiblePassword ? "text" : "password"}
+          slotProps={{
+            input: {
+              endAdornment: inputProps.passwordEndAdornment
+            }
+          }}
         />
       </div>
 
@@ -128,8 +135,12 @@ export default function RegisterPageView() {
           size="medium"
           name="re_password"
           placeholder="*********"
-          type={visiblePassword ? "text" : "password"}
-          slotProps={{ input: inputProps }}
+          type={confirmPasswordVisibility.visiblePassword ? "text" : "password"}
+          slotProps={{
+            input: {
+              endAdornment: inputProps.confirmPasswordEndAdornment
+            }
+          }}
         />
       </div>
 

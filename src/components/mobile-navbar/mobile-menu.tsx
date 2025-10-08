@@ -21,7 +21,7 @@ type Props = { navigation: Category[] };
 
 export function MobileMenu({ navigation }: Props) {
   const [openDrawer, setOpenDrawer] = useState(false)
-    const [expanded, setExpanded] = useState<string | false>(false)
+  const [expanded, setExpanded] = useState<string | false>(false)
   const handleClose = useCallback(() => setOpenDrawer(false), [])
   const handleOpen = useCallback(() => setOpenDrawer(true), [])
 
@@ -40,14 +40,15 @@ export function MobileMenu({ navigation }: Props) {
       <Drawer
         anchor="left"
         open={openDrawer}
+
         onClose={handleClose}
-        sx={{ zIndex: 15001 }}
+        sx={{ zIndex: 15001, width: "80vw" }}
         id="mobile-menu-drawer"
         aria-label="Mobile navigation menu"
       >
-        <Box width="100vw" height="100%" position="relative">
+        <Box position="relative">
           <OverlayScrollbar sx={{ height: "100vh" }}>
-            <Box px={5} py={8} maxWidth={500} margin="auto" position="relative" height="100%">
+            <Box px={5} py={8} margin="auto" position="relative" height="100%" sx={{ width: "80vw", maxWidth: 500 }}>
               <IconButton
                 onClick={handleClose}
                 sx={{ position: "absolute", right: 30, top: 15 }}
@@ -56,7 +57,7 @@ export function MobileMenu({ navigation }: Props) {
                 <Clear fontSize="small" />
               </IconButton>
 
-              {renderLevels(navigation, handleClose,expanded, setExpanded)}
+              {renderLevels(navigation, handleClose, expanded, setExpanded)}
             </Box>
           </OverlayScrollbar>
         </Box>

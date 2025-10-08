@@ -26,6 +26,7 @@ import { Topbar, TopbarSocialLinks } from "components/topbar"
 import { Header, HeaderCart, HeaderLogin, MobileHeader, HeaderSearch } from "components/header"
 // CUSTOM DATA MODEL
 import LayoutModel from "models/Layout.model"
+import { Box } from "@mui/material"
 
 // ==============================================================
 interface Props extends PropsWithChildren {
@@ -50,7 +51,6 @@ export default function ShopLayout1({ children, data }: Props) {
 
       <MobileHeader.Right>
         <HeaderSearch />
-
         <HeaderLogin />
         <HeaderCart />
       </MobileHeader.Right>
@@ -82,8 +82,10 @@ export default function ShopLayout1({ children, data }: Props) {
             </Header.Mid>
 
             <Header.Right>
-              <HeaderLogin />
-              <HeaderCart />
+              <Box display="flex" alignItems="center">
+                <HeaderLogin />
+                <HeaderCart />
+              </Box>
             </Header.Right>
           </Header>
         }

@@ -71,7 +71,6 @@ export default function ProductSearchPageView({
           <Box sx={{ display: { md: "none", xs: "block" } }}>
             <SideNav
               position="left"
-              width={360}
               showCloseButton={true}
               handler={(close) => (
                 <IconButton onClick={close}>

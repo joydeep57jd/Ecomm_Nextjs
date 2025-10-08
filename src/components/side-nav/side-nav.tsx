@@ -2,13 +2,12 @@ import { useEffect, useState, ReactNode, useCallback } from "react"
 import Drawer from "@mui/material/Drawer"
 // GLOBAL CUSTOM COMPONENT
 import OverlayScrollbar from "components/overlay-scrollbar"
-import Cross from "@/icons/Cross"
-import { Box } from "@mui/material"
-
+import { Box, IconButton } from "@mui/material"
+import Clear from "@mui/icons-material/Clear"
 // ================================================================
 interface Props {
   open?: boolean;
-  width?: number;
+  width?: number | string;
   children: ReactNode;
   toggle?: () => void;
   position?: "left" | "right";
@@ -48,23 +47,24 @@ export default function SideNav({
         anchor={position}
         open={sideNavOpen}
         onClose={handleClose}
-        sx={{ zIndex: 15001 }}
+        sx={{ zIndex: 15001, ...(showCloseButton && { width: "80vw", maxWidth: 500 }) }}
         slotProps={{
           transition: {
-            style: {
+            style: showCloseButton ? {} : {
               width
             }
           }
         }}
       >
         <OverlayScrollbar>
-          {
-            showCloseButton &&
-            <Box sx={{ position: 'relative', height: 40 }}>
-              <Cross onClick={handleClose} sx={{ position: 'absolute', top: 12, right: 12 }} />
-            </Box>
-          }
-          {children}
+          <Box sx={showCloseButton ? { width: "80vw", maxWidth: 500, px: 5, py: 8 } : {}}>
+            {
+              showCloseButton && <IconButton onClick={handleClose} sx={{ position: 'absolute', right: 30, top: 15, color: '#3741518a ' }}>
+                <Clear fontSize="small" />
+              </IconButton>
+            }
+            {children}
+          </Box>
         </OverlayScrollbar>
       </Drawer>
 

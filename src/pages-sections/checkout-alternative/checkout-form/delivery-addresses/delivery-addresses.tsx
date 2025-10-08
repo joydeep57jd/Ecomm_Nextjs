@@ -42,10 +42,11 @@ const AddressCard = styled("div", {
   }),
   ...(active && {
     borderColor: theme.palette.grey[100],
-    backgroundColor: theme.palette.grey[50]
+    backgroundColor: theme.palette.grey[100]
   }),
   h6: { marginBottom: theme.spacing(0.5) },
-  p: { color: theme.palette.grey[700] }
+  p: { color: theme.palette.grey[700] },
+  height: '-webkit-fill-available'
 }))
 
 type Props = { deliveryAddresses: Address[], getAddresses(): Promise<void>, setSelectedPinCode?(value: string): void, setSelectedDelivaryAddressData?(data: DelivaryAddressData): void };
@@ -134,11 +135,12 @@ export default function DeliveryAddresses({ deliveryAddresses, getAddresses, set
 
       <Grid container spacing={2}>
         {addresses.map((address) => (
-          <Grid size={{ md: 4, sm: 6, xs: 12 }} key={address.customer.addrid}>
-            <Controller
-              name="address"
-              control={control}
-              render={({ field, fieldState: { error } }) => (
+
+          <Controller
+            name="address"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <Grid size={{ md: 4, sm: 6, xs: 12 }} sx={{ borderRadius: '12px', border: '1px solid #fff', ...(address.customer.addrid === field.value && { borderColor: 'primary.main' }) }} key={address.customer.addrid}>
                 <AddressItem
                   address={address}
                   isSelected={address.customer.addrid === field.value}
@@ -154,9 +156,9 @@ export default function DeliveryAddresses({ deliveryAddresses, getAddresses, set
                   onEdit={handleEditDeliveryAddress}
                   onDelete={handleDeleteDeliveryAddress}
                 />
-              )}
-            />
-          </Grid>
+              </Grid>
+            )}
+          />
         ))}
       </Grid>
 

@@ -55,7 +55,7 @@ interface MobileHeaderRightProps extends ComponentProps<typeof Box> {
 
 MobileHeader.Right = function ({ children, ...props }: MobileHeaderRightProps) {
   return (
-    <Box display="flex" justifyContent="end" flex={1} {...props}>
+    <Box display="flex" alignItems={'center'} justifyContent="end" flex={1} {...props}>
       {children}
     </Box>
   )

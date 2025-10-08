@@ -93,10 +93,23 @@ export default function ProductFilters({ categoryOptions }: Props) {
       {/* CATEGORY OPTIONS */}
 
       {categoryOptions.map((cat) => (
-        <Accordion key={cat.variantOptionId} sx={{ boxShadow: "none" }}>
+        <Accordion key={cat.variantOptionId} sx={{
+          boxShadow: "none",
+          "&:not(:last-child)": { borderBottom: 0 },
+          "&:before": { display: "none" }
+        }}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
-            sx={{ padding: ".5rem 1rem", color: "grey.700" }}
+            sx={{
+              padding: 0,
+              minHeight: 48,
+              boxShadow: "none",
+              "& .Mui-expanded": { color: "primary.main", margin: 0 },
+              "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+                margin: 0,
+                "& .MuiSvgIcon-root": { color: "primary.main" }
+              }
+            }}
           >
             <Typography fontWeight={600}>{cat.optionName}</Typography>
           </AccordionSummary>
