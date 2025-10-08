@@ -12,6 +12,7 @@ import Product from "models/Product.model"
 import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
 import { useRouter } from "next/navigation"
 import { GetReviewResponse } from "@/models/Rating.model"
+import { useState } from "react"
 
 // ==============================================================
 interface Props {
@@ -26,6 +27,7 @@ interface Props {
 // ==============================================================
 
 export default function ProductDetailsPageView(props: Props) {
+  const [activeTab, setActiveTab] = useState(0)
   
 
   const router = useRouter()
@@ -37,10 +39,11 @@ export default function ProductDetailsPageView(props: Props) {
   return (
     <Container className="mt-2 mb-2">
       {/* PRODUCT DETAILS INFO AREA */}
-      <ProductIntro product={props.product} variantMap={props.variantMap} selectedVariant={props.selectedVariant} isLoading={props.isLoading} />
+      <ProductIntro product={props.product} variantMap={props.variantMap} selectedVariant={props.selectedVariant} isLoading={props.isLoading}  onShowReviews={() => setActiveTab(1)} />
 
       {/* PRODUCT DESCRIPTION AND REVIEW */}
-      <ProductTabs description={<ProductDescription product={props.product} />}   reviews={<ProductReviews reviews={props.reviews} />} />
+      <ProductTabs description={<ProductDescription product={props.product} />}   reviews={<ProductReviews reviews={props.reviews} />}  activeTab={activeTab}
+        onTabChange={setActiveTab}/>
 
       {/* FREQUENTLY BOUGHT PRODUCTS AREA */}
       {/* <FrequentlyBought products={props.frequentlyBought} /> */}

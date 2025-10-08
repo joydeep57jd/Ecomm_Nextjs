@@ -13,9 +13,11 @@ type Props = {
   product: SingleProductResponse
 }
 
-let isWishitemFetched = false
 function Wishlist({ product }: Props) {
-  const [customerWishItemElements, setCustomerWishItemElements] = useState<CustomerWishItemElement[]>([])
+  let isWishitemFetched = false
+  const [customerWishItemElements, setCustomerWishItemElements] = useState<
+    CustomerWishItemElement[]
+  >([])
   const [isWishItemLoading, setIsWishItemLoading] = useState(false)
   const [isAdded, setIsAdded] = useState(false)
   const [open, setOpen] = useState(false)
@@ -28,10 +30,8 @@ function Wishlist({ product }: Props) {
   }, [])
 
   useEffect(() => {
-    if (product?.variantDetails?.itemVariantId)
-      checkIsAddedToWishList(customerWishItemElements)
+    if (product?.variantDetails?.itemVariantId) checkIsAddedToWishList(customerWishItemElements)
   }, [product])
-
 
   const getWishListItems = async () => {
     setIsWishItemLoading(true)
@@ -42,24 +42,28 @@ function Wishlist({ product }: Props) {
   }
 
   const checkIsAddedToWishList = (items: CustomerWishItemElement[]) => {
-    const isAdded = items.findIndex(item => item.variantid === product?.variantDetails?.itemVariantId) > -1
+    const isAdded =
+      items.findIndex((item) => item.variantid === product?.variantDetails?.itemVariantId) > -1
     setIsAdded(isAdded)
   }
 
   const toggleItem = async () => {
     if (isWishItemLoading) return
-    if (!isAdded)
-      setOpen(true)
+    if (!isAdded) setOpen(true)
     else {
       await removeItem()
-      setCustomerWishItemElements(prev => prev.filter(item => item.variantid !== product?.variantDetails?.itemVariantId))
+      setCustomerWishItemElements((prev) =>
+        prev.filter((item) => item.variantid !== product?.variantDetails?.itemVariantId)
+      )
     }
   }
 
   const removeItem = async () => {
     await deleteCustomerWishItem({
       customerId: +user!.customerId,
-      CustomerWishItemId: customerWishItemElements.find(item => item.variantid === product?.variantDetails?.itemVariantId)!.customerWishItemId,
+      CustomerWishItemId: customerWishItemElements.find(
+        (item) => item.variantid === product?.variantDetails?.itemVariantId
+      )!.customerWishItemId,
       Date: new Date().toISOString()
     })
     setIsAdded(false)
@@ -85,7 +89,13 @@ function Wishlist({ product }: Props) {
         variant="rounded"
         className="avatar"
       >
-        {isWishItemLoading ? <CircularProgress size={20} color="error" /> : (isAdded ? <Heart color="error" /> : <HeartLine color="primary" />)}
+        {isWishItemLoading ? (
+          <CircularProgress size={20} color="error" />
+        ) : isAdded ? (
+          <Heart color="error" />
+        ) : (
+          <HeartLine color="primary" />
+        )}
       </Avatar>
       {open && <WishlistSelector product={product} handleCloseModal={handleCloseModal} />}
     </div>

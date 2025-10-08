@@ -65,28 +65,28 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
     }
   }
 
-  const handleOpenInvoice = async () => {
-    try {
-      setLoadingInvoice(true)
+const handleOpenInvoice = async () => {
+  try {
+    setLoadingInvoice(true)
+    const res = await GetStatementInvoice(order.orderId.toString())
 
-      const res = await GetStatementInvoice(order.orderId.toString())
+    const html = res.html
 
-      const decodedHtml = atob(res.html)
-
-      const newWindow = window.open("", "_blank")
-      if (newWindow) {
-        newWindow.document.write(decodedHtml)
-        newWindow.document.title = `Invoice - ${order.custOrdNo}`
-        newWindow.document.close()
-      } else {
-        console.error("Unable to open new tab")
-      }
-    } catch (error) {
-      console.error("Error fetching invoice:", error)
-    } finally {
-      setLoadingInvoice(false)
+    const newWindow = window.open("", "_blank")
+    if (newWindow) {
+      newWindow.document.write(html)
+      newWindow.document.title = `Invoice - ${order.custOrdNo}`
+      newWindow.document.close()
+    } else {
+      console.error("Unable to open new tab")
     }
+  } catch (error) {
+    console.error("Error fetching invoice:", error)
+  } finally {
+    setLoadingInvoice(false)
   }
+}
+
 
   const isDelivered = order.orderStatus === OrderStatus.DELIVERED
   const hasInvoice = !!order.isInvoiced

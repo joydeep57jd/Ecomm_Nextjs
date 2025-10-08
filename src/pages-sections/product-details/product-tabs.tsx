@@ -5,6 +5,7 @@ import { Fragment, ReactNode, SyntheticEvent, useState } from "react"
 import Tab from "@mui/material/Tab"
 import Tabs from "@mui/material/Tabs"
 import { styled } from "@mui/material/styles"
+import { on } from "events"
 
 // STYLED COMPONENT
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -23,18 +24,21 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 interface Props {
   reviews: ReactNode;
   description: ReactNode;
+    activeTab: number
+  onTabChange: (value: number) => void
 }
 // ==============================================================
 
-export default function ProductTabs({ reviews, description }: Props) {
+export default function ProductTabs({ reviews, description,activeTab, onTabChange }: Props) {
   const [selectedOption, setSelectedOption] = useState(0)
-  const handleChangeTab = (_: SyntheticEvent, value: number) => setSelectedOption(value)
+  const handleChangeTab = (_: SyntheticEvent, value: number) => onTabChange(value)
+  // const handleChangeTab = (_: SyntheticEvent, value: number) => setSelectedOption(value)
 
   return (
     <Fragment>
       <StyledTabs
         textColor="primary"
-        value={selectedOption}
+        value={activeTab}
         indicatorColor="primary"
         onChange={handleChangeTab}
       >
@@ -43,8 +47,10 @@ export default function ProductTabs({ reviews, description }: Props) {
       </StyledTabs>
 
       <div className="mb-3">
-        {selectedOption === 0 && description}
-        {selectedOption === 1 && reviews}
+        {/* {selectedOption === 0 && description}
+        {selectedOption === 1 && reviews} */}
+        {activeTab === 0 && description}
+        {activeTab === 1 && reviews}
       </div>
     </Fragment>
   )
