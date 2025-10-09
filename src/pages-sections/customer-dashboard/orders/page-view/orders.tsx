@@ -20,7 +20,7 @@ export function OrdersPageView({ orders, totalPages, setCurrentPage }: Props) {
     <Fragment>
       <DashboardHeader Icon={Packages} title="My Orders" />
 
-      {orders.map((order, index) => (
+      {orders?.map((order, index) => (
         <OrderRow order={order} key={index} />
       ))}
 

@@ -19,12 +19,12 @@ export const getItem = (key: string): any | null => {
   return JSON.parse(decrypt(value!))
 }
 
-const encrypt = (data: string): string => {
+export const encrypt = (data: string): string => {
   const ciphertext = CryptoJS.AES.encrypt(data, secretKey).toString()
   return ciphertext
 }
 
-const decrypt = (ciphertext: string): string => {
+export const decrypt = (ciphertext: string): string => {
   const bytes = CryptoJS.AES.decrypt(ciphertext, secretKey)
   const originalText = bytes.toString(CryptoJS.enc.Utf8)
   return originalText
