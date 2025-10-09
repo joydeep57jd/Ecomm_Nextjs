@@ -15,6 +15,7 @@ import { OrderListCustomer } from "@/models/OrderHistory.modal"
 import Image from "next/image"
 import { OrderStatus } from "@/enums/order-status.enum"
 
+
 // =================================================
 type Props = { order: OrderListCustomer };
 // =================================================
@@ -29,8 +30,9 @@ const getColor = (status: string) => {
 }
 
 export default function OrderRow({ order }: Props) {
+  
   return (
-    <Link href={`/orders/${btoa(order.custOrdNo)}`}>
+    <Link href={`/orders/details?id=${btoa(order.custOrdNo)}`}>
       <TableRow elevation={0} sx={{ gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr" }}>
         <Box sx={{
           display: 'flex', alignItems: 'center',
