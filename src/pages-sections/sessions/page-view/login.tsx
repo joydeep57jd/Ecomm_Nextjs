@@ -134,7 +134,7 @@ export default function LoginPageView() {
         </div>
       )}
 
-      <Box display={"flex"} gap={1}>
+      {/* <Box display={"flex"} gap={1}>
         <Button
         fullWidth
         size="large"
@@ -156,7 +156,21 @@ export default function LoginPageView() {
         {alreadyCustomer ? "Login" : "Login with OTP"}
       </Button>
 
-      </Box>
+      </Box> */}
+    
+      
+        <Button
+        fullWidth
+        size="large"
+        type="submit"
+        color="primary"
+        variant="outlined"
+        loading={isApiCallInprogress}
+      >
+        {alreadyCustomer ? "Login" : "Verify"}
+      </Button>
+
+      
 
       
     </FormProvider>
