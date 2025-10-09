@@ -18,7 +18,7 @@ export default function ProductGallery({ images, product }: Props) {
   return (
     <Fragment>
       <ProductImageWrapper>
-        <img src={images[currentImage].fullImagepath} className="w-full h-auto" alt="product" />
+        <img src={images[currentImage]?.fullImagepath || "/assets/images/products/no-photo.png"} className="w-full h-auto" alt="product" />
         {/* <Image fill alt="product" src={images[currentImage].fullImagepath} sizes="(400px 400px)" /> */}
         {!!product?.variantDetails?.itemVariantId &&
           <Wishlist product={product} />
@@ -26,13 +26,13 @@ export default function ProductGallery({ images, product }: Props) {
       </ProductImageWrapper>
 
       <div className="preview-images">
-        {images.map((image, ind) => (
+        {images?.map((image, ind) => (
           <PreviewImage
             key={ind}
             onClick={() => setCurrentImage(ind)}
             selected={currentImage === ind}
           >
-            <Image fill alt="product" src={image.fullImagepath} sizes="(48px 48px)" />
+            <Image fill alt="product" src={image?.fullImagepath} sizes="(48px 48px)" />
           </PreviewImage>
         ))}
       </div>
