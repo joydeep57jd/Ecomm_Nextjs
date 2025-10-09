@@ -42,7 +42,7 @@ export function NavigationList({ navigation,layoutModel }: Props) {
   }, [router, searchParams])
 
   const renderSubSubCategory = (children: SubSubCategory[]) => {
-    return children.map((nav) => (
+    return children?.map((nav) => (
       <NavLink onClick={(e) => navigateTo(e, "subSubCategory", nav.id)} href={`/products/search?subSubCategory=${nav.id}`} key={nav.name}>
         <MenuItem>{nav.name}</MenuItem>
       </NavLink>
@@ -50,7 +50,7 @@ export function NavigationList({ navigation,layoutModel }: Props) {
   }
 
   const renderSubCategory = (children: SubCategory[]) => {
-    return children.map((nav) => {
+    return children?.map((nav) => {
       if (nav.sub_sub_category.length) {
         return (
           <NavItemChild nav={{
@@ -78,7 +78,7 @@ export function NavigationList({ navigation,layoutModel }: Props) {
   }
 
   const renderRootLevel = (list: Category[]) => {
-    return list.map((nav) => (
+    return list?.map((nav) => (
       <FlexBox
         key={nav.name}
         alignItems="center"
