@@ -20,6 +20,7 @@ import { setItem } from "@/utils/services/local-storage.service"
 import { useUser } from "@/contexts/UserContenxt"
 import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
 import useCart from "@/hooks/useCart"
+import { Box } from "@mui/material"
 
 // LOGIN FORM FIELD VALIDATION SCHEMA
 
@@ -133,7 +134,8 @@ export default function LoginPageView() {
         </div>
       )}
 
-      <Button
+      <Box display={"flex"} gap={1}>
+        <Button
         fullWidth
         size="large"
         type="submit"
@@ -141,8 +143,22 @@ export default function LoginPageView() {
         variant="contained"
         loading={isApiCallInprogress}
       >
-        {alreadyCustomer ? "Login" : "Verify"}
+        {alreadyCustomer ? "Login" : "Login with password"}
       </Button>
+        <Button
+        fullWidth
+        size="large"
+        type="submit"
+        color="primary"
+        variant="outlined"
+        loading={isApiCallInprogress}
+      >
+        {alreadyCustomer ? "Login" : "Login with OTP"}
+      </Button>
+
+      </Box>
+
+      
     </FormProvider>
   )
 }

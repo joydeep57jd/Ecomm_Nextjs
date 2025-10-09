@@ -4,7 +4,17 @@ import { MockEndPoints } from "__server__"
 
 // Axios instance
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL
+  adapter: "fetch",
+  fetchOptions: {
+    cache: "no-store",
+    next: { revalidate: 10 }
+  },
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  headers: {
+    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+    Pragma: "no-cache",
+    Expires: "0"
+  }
 })
 
 // Remove following 2 lines if you don't want to use MockAdapter
@@ -17,18 +27,17 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
+
+    // Prevent caching
+    config.params = {
+      ...(config.params || {}),
+      _t: Date.now()
+    }
+
     if (config.method?.toLowerCase() === "post") {
       const companyId = Number(process.env.NEXT_PUBLIC_COMPANY_ID)
-      if (config.data && typeof config.data === "object") {
-        config.data = { ...config.data, companyId }
-      } else {
-        config.data = { companyId }
-      }
-      if (config.params && typeof config.params === "object") {
-        config.params = { ...config.params, companyId }
-      } else {
-        config.params = { companyId }
-      }
+      config.data = { ...(config.data || {}), companyId }
+      config.params = { ...(config.params || {}), companyId }
     }
 
     return config

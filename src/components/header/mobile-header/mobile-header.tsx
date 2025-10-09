@@ -40,9 +40,9 @@ MobileHeader.Logo = function ({ logoUrl }: { logoUrl: string }) {
         alt="logo"
         width={200}
         height={80}
-        className="h-12 w-auto"
-        sizes="(max-width: 768px) 100px, 125px"
-        sx={{ objectFit: "contain" }} />
+        
+       
+        sx={{ objectFit: "contain",  width:"180px",height:"auto"}} />
     </Link>
   )
 }

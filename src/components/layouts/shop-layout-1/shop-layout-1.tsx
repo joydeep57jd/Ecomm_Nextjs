@@ -121,7 +121,7 @@ export default function ShopLayout1({ children, data }: Props) {
         <Footer1>
           <Footer1.Brand>
             <Link href="/">
-              <Image src={footer.logo} alt="logo" width={200} height={65} />
+              <Image src={footer.logo} alt="logo" width={200} height={10} style={{ objectFit: "contain" , height:"auto", width:"auto"}} />
             </Link>
 
             <Typography

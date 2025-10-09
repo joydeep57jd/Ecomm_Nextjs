@@ -42,6 +42,8 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
   const { watch, setValue, getValues, formState } = methods
 
   const save = async () => {
+   methods.trigger()
+    
     if (!formState.isValid) return
     setIsSaving(true)
     try {
