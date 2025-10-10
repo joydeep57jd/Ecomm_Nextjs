@@ -18,17 +18,20 @@ interface Props {
   reviews: GetReviewResponse[]
 }
 
-export default  function ProductReviews({ reviews }: Props) {
+export default function ProductReviews({ reviews }: Props) {
 
- 
+
   if (!reviews?.length) {
-    return <Typography variant="body1">No reviews yet.</Typography>
+    return <div id="reviews-container">
+      <Typography variant="body1">No reviews yet.</Typography>
+    </div>
+
   }
 
   return (
-    <div>
+    <div id="reviews-container">
       {/* REVIEW LIST */}
-      {reviews?.map(({ review, createdDate, customerName,  rating }, ind) => (
+      {reviews?.map(({ review, createdDate, customerName, rating }, ind) => (
         <ReviewRoot key={ind}>
           <div className="user-info">
             <Avatar variant="rounded" className="user-avatar">
