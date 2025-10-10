@@ -1,7 +1,8 @@
 
 
 export interface OTPCredentials {
-  phoneNumber: string
+  PhoneCode: string
+  PhoneNo: string
   otp: string
 }
 
