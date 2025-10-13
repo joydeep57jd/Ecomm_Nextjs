@@ -22,28 +22,36 @@ interface Props {
   frequentlyBought: Product[];
   selectedVariant: string
   isLoading: boolean,
-  reviews: GetReviewResponse[] 
+  reviews: GetReviewResponse[]
 }
 // ==============================================================
 
 export default function ProductDetailsPageView(props: Props) {
   const [activeTab, setActiveTab] = useState(0)
-  
-
   const router = useRouter()
 
   if (!props.product?.variantDetails) {
     router.push("/")
   }
 
+  const onShowReviews = () => {
+    setActiveTab(1)
+    setTimeout(() => {
+      const reviewSection = document.getElementById("reviews-container")
+      if (reviewSection) {
+        reviewSection.scrollIntoView({ behavior: "smooth" })
+      }
+    }, 100)
+  }
+
   return (
     <Container className="mt-2 mb-2">
       {/* PRODUCT DETAILS INFO AREA */}
-      <ProductIntro product={props.product} variantMap={props.variantMap} selectedVariant={props.selectedVariant} isLoading={props.isLoading}  onShowReviews={() => setActiveTab(1)} />
+      <ProductIntro product={props.product} variantMap={props.variantMap} selectedVariant={props.selectedVariant} isLoading={props.isLoading} onShowReviews={onShowReviews}  />
 
       {/* PRODUCT DESCRIPTION AND REVIEW */}
-      <ProductTabs description={<ProductDescription product={props.product} />}   reviews={<ProductReviews reviews={props.reviews} />}  activeTab={activeTab}
-        onTabChange={setActiveTab}/>
+      <ProductTabs description={<ProductDescription product={props.product} />} reviews={<ProductReviews reviews={props.reviews} />} activeTab={activeTab}
+        onTabChange={setActiveTab} />
 
       {/* FREQUENTLY BOUGHT PRODUCTS AREA */}
       {/* <FrequentlyBought products={props.frequentlyBought} /> */}

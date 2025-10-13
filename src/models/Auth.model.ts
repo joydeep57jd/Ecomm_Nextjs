@@ -1,7 +1,6 @@
-
-
-export interface OTPCredentials {
-  phoneNumber: string
+export interface LoginWithOTPRequest {
+  PhoneCode: string
+  PhoneNo: string
   otp: string
 }
 
@@ -34,17 +33,14 @@ export interface CustomerResponse {
 }
 
 export interface Customer {
- 
   phoneCode: string
   phone: string
 }
 
-export interface LoginRequest {
-  UserName: string   
-  Password: string   
+export interface LoginWithCredentialsRequest {
+  UserName: string
+  Password: string
 }
-
-
 
 export interface LoginResponse {
   status: boolean
@@ -70,5 +66,5 @@ export interface UserData {
   currencySymbol: string
   userPhoneCode: string
   userPhoneCountryCode: string
-  userType: "b2c" | "b2b" | string 
+  userType: "b2c" | "b2b" | string
 }

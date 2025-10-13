@@ -1,12 +1,12 @@
 import axios from "../axiosInstance"
 import { API_URL } from "../constants"
 import {
-  OTPCredentials,
+  LoginWithOTPRequest,
   SignupData,
   ForgotPasswordData,
   CustomerPayload,
   CustomerResponse,
-  LoginRequest,
+  LoginWithCredentialsRequest,
   UserData
 } from "../../models/Auth.model"
 
@@ -18,14 +18,19 @@ export const varifyCustomer = async (payload: CustomerPayload): Promise<Customer
   return response.data.data
 }
 
-export const login = async (credentials: LoginRequest): Promise<UserData> => {
+export const loginWithCredentials = async (
+  credentials: LoginWithCredentialsRequest
+): Promise<UserData> => {
   const response = await axios.post<{ data: UserData }>(API_URL.AUTH.LOGIN, credentials)
   return response.data.data
-}  
+}
 
-export const loginWithOTP = async (credentials: OTPCredentials) => {
-  const response = await axios.post(API_URL.AUTH.SEND_OTP_FOR_LOGIN, credentials)
-  return response.data
+export const loginWithOTP = async (credentials: LoginWithOTPRequest): Promise<UserData> => {
+  const response = await axios.post<{ data: UserData }>(
+    API_URL.AUTH.SEND_OTP_FOR_LOGIN,
+    credentials
+  )
+  return response.data.data
 }
 
 export const signup = async (data: SignupData) => {
@@ -59,7 +64,7 @@ export const changePassword = async (data: ForgotPasswordData) => {
 }
 
 export default {
-  login,
+  login: loginWithCredentials,
   loginWithOTP,
   signup,
   loginWithSocial,

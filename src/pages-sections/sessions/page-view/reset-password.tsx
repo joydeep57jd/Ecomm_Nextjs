@@ -3,7 +3,7 @@
 import { Fragment } from "react"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
+
 // MUI
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
@@ -13,16 +13,14 @@ import { TextField, FormProvider } from "components/form-hook"
 import FlexRowCenter from "components/flex-box/flex-row-center"
 // LOCAL CUSTOM COMPONENT
 import BoxLink from "../components/box-link"
-
-// FORM FIELD VALIDATION SCHEMA
-const validationSchema = yup.object().shape({
-  email: yup.string().email("invalid email").required("Email is required")
-})
+import { forgotPasswordSchema, ForgotPasswordSchemaType } from "@/schema/auth/forgotPassward.schema"
+import { forgotPassword } from "@/utils/api/auth"
+import { enqueueSnackbar } from "notistack"
 
 export default function ResetPassword() {
-  const methods = useForm({
+  const methods = useForm<ForgotPasswordSchemaType>({
     defaultValues: { email: "" },
-    resolver: yupResolver(validationSchema)
+    resolver: yupResolver(forgotPasswordSchema)
   })
 
   const {
@@ -30,8 +28,21 @@ export default function ResetPassword() {
     formState: { isSubmitting }
   } = methods
 
-  const handleSubmitForm = handleSubmit((values) => {
-    alert(JSON.stringify(values, null, 2))
+  const handleSubmitForm = handleSubmit(async (values) => {
+    try {
+      const res = await forgotPassword(values.email)
+      if (res?.success) {
+        enqueueSnackbar("Password reset link sent to your email.", { variant: "success" })
+      } else {
+        enqueueSnackbar(res?.message || "Something went wrong. Try again.", { variant: "error" })
+      }
+    } catch (err) {
+      enqueueSnackbar( "Request failed. Please try again.", {
+        variant: "error"
+      })
+
+      console.error("Forgot password error:",err )
+    }
   })
 
   return (
@@ -59,7 +70,7 @@ export default function ResetPassword() {
             variant="contained"
             loading={isSubmitting}
           >
-            Reset
+            {isSubmitting ? "Sending..." : "Reset"}
           </Button>
         </Stack>
       </FormProvider>

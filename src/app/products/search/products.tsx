@@ -15,6 +15,7 @@ type Props = {
   subSubCategory: string
   categoryId: string
   variantFilters: string
+  badges: string[]
 }
 
 function Products({
@@ -23,7 +24,8 @@ function Products({
   subCategory,
   subSubCategory,
   categoryId,
-  variantFilters
+  variantFilters,
+  badges
 }: Props) {
   let loadingCriteria = ""
   let loadingCategory = ""
@@ -35,6 +37,7 @@ function Products({
   const [isLastDataLoaded, setIsLastDataLoaded] = useState(false)
   const [variantOptions, setVariantOptions] = useState<VariantOptionDetails[]>([])
   const loader = useRef<Element | null>(null)
+  const [currentBadges, setCurrentBadges] = useState<string[]>([])
 
   useEffect(() => {
     if (loadingCriteria === getLoadingCriteria()) return
@@ -149,6 +152,7 @@ function Products({
 
     setPageCount(pageCount)
     setIsLastDataLoaded(pageCount === page)
+    setCurrentBadges([...badges])
     setIsLoading(false)
   }
 
@@ -161,10 +165,9 @@ function Products({
             position: "absolute",
             zIndex: 9,
             width: "100%",
-            top: 0
           }}
         >
-          <Loading isSmallLoader={true} />
+          <Loading isTiny={true} />
         </div>
       )}
       {allProductResponse && (
@@ -173,6 +176,7 @@ function Products({
             categoryOptions={categoryOptions ?? []}
             products={allProductResponse.dataList}
             variantOptions={variantOptions}
+            badges={currentBadges}
           />
           {pageCount && !isLastDataLoaded && (
             <Box ref={loader} sx={{ mb: 6 }}>

@@ -24,7 +24,7 @@ import SyncCart from "../components/sync-cart"
 import { CartDrawerProvider } from "@/contexts/CartDrawerContext"
 import MiniCartDrawer from "./@modal/(.)mini-cart/page"
 import { FlexRowCenter } from "@/components/flex-box"
-import { CircularProgress, } from "@mui/material"
+import { CircularProgress, GlobalStyles, } from "@mui/material"
 import SnackbarProvider from "@/components/SnackbarProvider"
 
 // ==============================================================
@@ -53,6 +53,13 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
               <UserProvider>
                 <CartProvider>
                   <ThemeProvider>
+                    <GlobalStyles
+                      styles={{
+                        ".notistack-SnackbarContainer": {
+                          zIndex: 9999,
+                        },
+                      }}
+                    />
                     <HeaderLayout>
                       <SyncCart />
                       {modal}
