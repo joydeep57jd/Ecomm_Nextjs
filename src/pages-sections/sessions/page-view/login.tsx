@@ -13,7 +13,12 @@ import usePasswordVisible from "../use-password-visible"
 // SCHEMA & API
 import { loginSchema, LoginSchemaType } from "@/schema/auth/login.schema"
 import { loginWithCredentials, varifyCustomer, loginWithOTP } from "@/utils/api/auth"
-import { CustomerPayload, LoginWithCredentialsRequest, LoginWithOTPRequest, UserData } from "@/models/Auth.model"
+import {
+  CustomerPayload,
+  LoginWithCredentialsRequest,
+  LoginWithOTPRequest,
+  UserData
+} from "@/models/Auth.model"
 import { useRouter } from "next/navigation"
 import { setItem } from "@/utils/services/local-storage.service"
 import { useUser } from "@/contexts/UserContenxt"
@@ -32,7 +37,6 @@ export default function LoginPageView() {
 
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
-
 
   const initialValues: LoginSchemaType = { phoneNo: "", password: "", otp: "" }
 
@@ -53,6 +57,7 @@ export default function LoginPageView() {
       const data = await varifyCustomer(payload)
       if (data.alreadyCustomer) {
         setIsInitialStep(false)
+        enqueueSnackbar("User verified. Please proceed to login.", { variant: "success" })
       } else {
         enqueueSnackbar("You are not registered user. Please sign up first.", { variant: "error" })
       }
@@ -69,12 +74,14 @@ export default function LoginPageView() {
       setisApiCallInprogress(true)
       const payload = {
         PhoneCode: "+91",
-        PhoneNo: values.phoneNo,
+        PhoneNo: values.phoneNo
       }
       console.warn("payload", payload)
+      enqueueSnackbar("OTP sent successfully.", { variant: "success" })
       setIsInitialStep(false)
     } catch (err) {
       console.error("Sending OTP failed", err)
+      enqueueSnackbar("Failed to send OTP. Please try again.", { variant: "error" })
     } finally {
       setisApiCallInprogress(false)
     }
@@ -88,8 +95,7 @@ export default function LoginPageView() {
     localCarts.forEach((cart) => {
       const remoteCartIndex = finalCarts.findIndex(
         (remoteCart) =>
-          remoteCart.itemVariantId === cart.itemVariantId &&
-          cart.productId === remoteCart.productId
+          remoteCart.itemVariantId === cart.itemVariantId && cart.productId === remoteCart.productId
       )
       if (remoteCartIndex !== -1) {
         finalCarts[remoteCartIndex].qty += cart.qty
@@ -123,6 +129,8 @@ export default function LoginPageView() {
       const data = await loginWithCredentials(payload)
       postLoginCartSync(data)
     } catch (err) {
+      enqueueSnackbar("Login failed. Please check your credentials.", { variant: "error" })
+
       console.error("Login failed", err)
     } finally {
       setisApiCallInprogress(false)
@@ -139,6 +147,7 @@ export default function LoginPageView() {
       const data = await loginWithOTP(payload)
       postLoginCartSync(data)
     } catch (err) {
+      enqueueSnackbar("OTP verification failed. Please try again.", { variant: "error" })
       console.error("Login failed", err)
     } finally {
       setisApiCallInprogress(false)
@@ -163,8 +172,7 @@ export default function LoginPageView() {
         <Label>Phone Number</Label>
         <TextField fullWidth name="phoneNo" type="number" size="medium" placeholder="1234567890" />
       </div>
-      {
-        otpLoginEnabled &&
+      {otpLoginEnabled && (
         <Box mb={2}>
           <RadioGroup
             row
@@ -183,39 +191,41 @@ export default function LoginPageView() {
             />
           </RadioGroup>
         </Box>
-      }
+      )}
 
       {!isInitialStep &&
-        (loginType === "password" ? <div className="mb-2">
-          <Label>Password</Label>
-          <TextField
-            fullWidth
-            size="medium"
-            name="password"
-            autoComplete="on"
-            placeholder="*********"
-            type={visiblePassword ? "text" : "password"}
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <EyeToggleButton show={visiblePassword} click={togglePasswordVisible} />
-                )
-              }
-            }}
-          />
-        </div> : <div className="mb-2">
-          <Label>Enter OTP</Label>
-          <TextField
-            fullWidth
-            size="medium"
-            name="otp"
-            type="number"
-            placeholder="Enter 6-digit OTP"
-            inputProps={{ maxLength: 6 }}
-          />
-        </div>)
-
-      }
+        (loginType === "password" ? (
+          <div className="mb-2">
+            <Label>Password</Label>
+            <TextField
+              fullWidth
+              size="medium"
+              name="password"
+              autoComplete="on"
+              placeholder="*********"
+              type={visiblePassword ? "text" : "password"}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <EyeToggleButton show={visiblePassword} click={togglePasswordVisible} />
+                  )
+                }
+              }}
+            />
+          </div>
+        ) : (
+          <div className="mb-2">
+            <Label>Enter OTP</Label>
+            <TextField
+              fullWidth
+              size="medium"
+              name="otp"
+              type="number"
+              placeholder="Enter 6-digit OTP"
+              inputProps={{ maxLength: 6 }}
+            />
+          </div>
+        ))}
 
       <Box display="flex" gap={1}>
         <Button
@@ -227,12 +237,11 @@ export default function LoginPageView() {
           disabled={isApiCallInprogress}
           sx={{ gap: 1 }}
         >
-          {
-            isApiCallInprogress ?
-              <CircularProgress size={20} /> : <>
-                {!isInitialStep ? (loginType === "password" ? " Login" : "Send OTP") : "Continue"}
-              </>
-          }
+          {isApiCallInprogress ? (
+            <CircularProgress size={20} />
+          ) : (
+            <>{!isInitialStep ? (loginType === "password" ? " Login" : "Send OTP") : "Continue"}</>
+          )}
         </Button>
       </Box>
     </FormProvider>

@@ -36,6 +36,8 @@ export interface VariantDetails {
   isSoldOut: boolean
   itemCode: string
   itemRating: number
+  reviewCount:number
+
 }
 
 export interface PriceAndStock {
