@@ -1,3 +1,4 @@
+'use client'
 import Grid from "@mui/material/Grid"
 // GLOBAL CUSTOM COMPONENTS
 import ProductCard16 from "components/product-cards/product-card-16"
@@ -5,15 +6,14 @@ import { DataList } from "@/models/AllProduct.model"
 import { VariantOptionDetails } from "@/models/Filters"
 
 // ========================================================
-type Props = { products: DataList[], variantOptions: VariantOptionDetails[] };
+type Props = { products: DataList[], variantOptions: VariantOptionDetails[], badges: string[] };
 // ========================================================
 
 type VariantMap = Record<string, VariantOptionDetails[]>
 
-export default function ProductsGridView({ products, variantOptions }: Props) {
+export default function ProductsGridView({ products, variantOptions, badges }: Props) {
   const variantMap = variantOptions?.reduce((acc: VariantMap, cur: VariantOptionDetails) => {
     const itemVariantId = cur.itemVariantId?.toString()
-    if (!itemVariantId) return acc
     if (!acc[itemVariantId]) {
       acc[itemVariantId] = [cur]
     } else {
@@ -21,11 +21,12 @@ export default function ProductsGridView({ products, variantOptions }: Props) {
     }
     return acc
   }, {}) ?? {}
+
   return (
     <Grid container spacing={3}>
       {products.map((product) => (
         <Grid size={{ lg: 4, sm: 6, xs: 12 }} key={product.id}>
-          <ProductCard16 product={product} variantOptions={variantMap[product.itemVariantId ?? ''] ?? []} />
+          <ProductCard16 product={product} variantOptions={variantMap[product.itemVariantId ?? ''] ?? []} badges={badges} />
         </Grid>
       ))}
     </Grid>

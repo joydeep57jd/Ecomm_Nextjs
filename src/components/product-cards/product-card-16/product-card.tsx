@@ -1,3 +1,4 @@
+'use client'
 import Link from "next/link"
 import Rating from "@mui/material/Rating"
 import Typography from "@mui/material/Typography"
@@ -15,16 +16,17 @@ import { VariantOptionDetails } from "@/models/Filters"
 import { Box, Chip } from "@mui/material"
 
 // ==============================================================
-type Props = { product: DataList, variantOptions: VariantOptionDetails[] };
+type Props = { product: DataList, variantOptions: VariantOptionDetails[], badges: string[] };
 // ==============================================================
 
-export default function ProductCard16({ product, variantOptions }: Props) {
+export default function ProductCard16({ product, variantOptions, badges }: Props) {
 
   const imageAltTag = product.imageList?.[0]?.alt || "Product Image"
   const thumbnail = product.imageList?.[0]?.fullImagepath || "/assets/images/products/no-photo.png"
   const discount = product.savePricePctg || 0
   const price = +(product.mrp).toFixed(2)
   const formattedFinalPrice = calculateDiscount(price, discount)
+
 
   return (
     <StyledRoot>
@@ -49,12 +51,14 @@ export default function ProductCard16({ product, variantOptions }: Props) {
             }}>
               {
                 variantOptions.map(option => <Box key={`${option.itemVariantId}-${option.optionName}`}>
-                  <Chip
-                    label={`${option.optionName} - ${option.optionValue}`}
-                    size="small"
-                    color="primary"
-                    variant="filled"
-                  />
+                  {badges.includes(option.optionName) &&
+                    <Chip
+                      label={`${option.optionName} - ${option.optionValue}`}
+                      size="small"
+                      color="primary"
+                      variant="filled"
+                    />
+                  }
                 </Box>)
               }
             </Box>

@@ -15,6 +15,7 @@ import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.mod
 
 import ProductAction from "../../../components/product-action"
 import Loading from "@/app/loading"
+import { GetReviewResponse } from "@/models/Rating.model"
 
 // ================================================================
 type Props = {
@@ -23,10 +24,11 @@ type Props = {
   selectedVariant: string
   isLoading: boolean
   onShowReviews?: () => void
+  reviews: GetReviewResponse[]
 }
 // ================================================================
 
-export default function ProductIntro({ product, variantMap, selectedVariant, isLoading,onShowReviews }: Props) {
+export default function ProductIntro({ product, variantMap, selectedVariant, isLoading, reviews, onShowReviews }: Props) {
   return (
     <StyledRoot style={{ position: 'relative' }}>
       {
@@ -95,7 +97,7 @@ export default function ProductIntro({ product, variantMap, selectedVariant, isL
             <span>Rated:</span>
             <Rating readOnly color="warn" size="small" value={product.variantDetails?.itemRating} />
             {/* <Typography variant="h6">({product.reviews?.length || 0})</Typography> */}
-            <Typography variant="h6" style={{ cursor: "pointer" }} onClick={onShowReviews}>({1})</Typography>
+            <Typography variant="h6" style={{ cursor: "pointer" }} onClick={onShowReviews}>({reviews.length})</Typography>
           </div>
 
           {/* PRODUCT VARIANTS */}

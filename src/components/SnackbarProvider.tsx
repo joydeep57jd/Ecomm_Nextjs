@@ -26,7 +26,7 @@ export default function SnackbarProvider({ children }: PropsWithChildren) {
     <Provider
       maxSnack={4}
       autoHideDuration={2000}
-      anchorOrigin={{ vertical: "bottom", horizontal: "right" }} 
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
     >
       {children}
     </Provider>

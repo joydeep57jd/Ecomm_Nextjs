@@ -32,13 +32,15 @@ interface Props {
   products: DataList[];
   categoryOptions: GetCategoryResponse[]
   variantOptions: VariantOptionDetails[]
+  badges: string[]
 }
 // ==============================================================
 
 export default function ProductSearchPageView({
   products,
   categoryOptions,
-  variantOptions
+  variantOptions,
+  badges
 }: Props) {
   const router = useRouter()
   const pathname = usePathname()
@@ -153,7 +155,7 @@ export default function ProductSearchPageView({
               <ProductsListView products={products} />
             )} */}
 
-            <ProductsGridView products={products} variantOptions={variantOptions} />
+            <ProductsGridView products={products} variantOptions={variantOptions} badges={badges} />
           </Grid>
         </Grid>
       </Container>

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Box, Button, Radio, RadioGroup, FormControlLabel } from "@mui/material"
+import { Box, Button, Radio, RadioGroup, FormControlLabel, CircularProgress } from "@mui/material"
 
 import { TextField, FormProvider } from "components/form-hook"
 import Label from "../components/label"
@@ -19,23 +19,26 @@ import { setItem } from "@/utils/services/local-storage.service"
 import { useUser } from "@/contexts/UserContenxt"
 import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
 import useCart from "@/hooks/useCart"
+import { useSnackbar } from "notistack"
 
 export default function LoginPageView() {
   const otpLoginEnabled = process.env.NEXT_PUBLIC_OTP_LOGIN_ENABLED === "true"
   const { visiblePassword, togglePasswordVisible } = usePasswordVisible()
   const { setUser } = useUser()
   const { state, dispatch } = useCart()
-  const [isInitialStep, setIsInitialStep] = useState<boolean>(false)
+  const [isInitialStep, setIsInitialStep] = useState<boolean>(true)
   const [isApiCallInprogress, setisApiCallInprogress] = useState(false)
   const [loginType, setLoginType] = useState<"password" | "otp">("password")
 
   const router = useRouter()
+  const { enqueueSnackbar } = useSnackbar()
+
 
   const initialValues: LoginSchemaType = { phoneNo: "", password: "", otp: "" }
 
   const methods = useForm<LoginSchemaType>({
     defaultValues: initialValues,
-    resolver: yupResolver(loginSchema(isInitialStep, otpLoginEnabled))
+    resolver: yupResolver(loginSchema(isInitialStep, loginType === "otp"))
   })
 
   const { handleSubmit } = methods
@@ -47,9 +50,14 @@ export default function LoginPageView() {
         PhoneCode: "+91",
         PhoneNo: values.phoneNo
       }
-      const res = await varifyCustomer(payload)
-      setIsInitialStep(res.alreadyCustomer)
+      const data = await varifyCustomer(payload)
+      if (data.alreadyCustomer) {
+        setIsInitialStep(false)
+      } else {
+        enqueueSnackbar("You are not registered user. Please sign up first.", { variant: "error" })
+      }
     } catch (err) {
+      enqueueSnackbar("Verification failed. Please check the phone number.", { variant: "error" })
       console.error("Verification failed", err)
     } finally {
       setisApiCallInprogress(false)
@@ -101,7 +109,7 @@ export default function LoginPageView() {
 
     setItem("userDetails", data)
     setUser(data)
-
+    enqueueSnackbar("Logged In Successfully!!!", { variant: "success" })
     router.back()
   }
 
@@ -138,7 +146,7 @@ export default function LoginPageView() {
   }
 
   const handleSubmitForm = handleSubmit((values: LoginSchemaType) => {
-    !isInitialStep ? handleFirstSubmit(values) : handleSecondSubmit(values)
+    isInitialStep ? handleFirstSubmit(values) : handleSecondSubmit(values)
   })
 
   const handleFirstSubmit = (values: LoginSchemaType) => {
@@ -177,8 +185,8 @@ export default function LoginPageView() {
         </Box>
       }
 
-      {isInitialStep && loginType === "password" && (
-        <div className="mb-2">
+      {!isInitialStep &&
+        (loginType === "password" ? <div className="mb-2">
           <Label>Password</Label>
           <TextField
             fullWidth
@@ -195,11 +203,7 @@ export default function LoginPageView() {
               }
             }}
           />
-        </div>
-      )}
-
-      {loginType === "otp" && isInitialStep && (
-        <div className="mb-2">
+        </div> : <div className="mb-2">
           <Label>Enter OTP</Label>
           <TextField
             fullWidth
@@ -209,8 +213,9 @@ export default function LoginPageView() {
             placeholder="Enter 6-digit OTP"
             inputProps={{ maxLength: 6 }}
           />
-        </div>
-      )}
+        </div>)
+
+      }
 
       <Box display="flex" gap={1}>
         <Button
@@ -220,8 +225,14 @@ export default function LoginPageView() {
           color="primary"
           variant="contained"
           disabled={isApiCallInprogress}
+          sx={{ gap: 1 }}
         >
-          {isInitialStep ? (loginType === "password" ? "Login" : "Send OTP") : "Continue"}
+          {
+            isApiCallInprogress ?
+              <CircularProgress size={20} /> : <>
+                {!isInitialStep ? (loginType === "password" ? " Login" : "Send OTP") : "Continue"}
+              </>
+          }
         </Button>
       </Box>
     </FormProvider>

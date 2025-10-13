@@ -33,22 +33,29 @@ export default async function ProductSearch({ searchParams }: Props) {
     try {
       const filters = JSON.parse(atob(encodedFilters))
       const variants: string[] = []
+      const keyNames: string[] = []
       Object.keys(filters).forEach(category => {
         const options = filters[category] ?? {}
         Object.keys(options).forEach(key => {
           const value = options[key].join()
-          value && variants.push(value)
+          if (value) {
+            variants.push(value)
+            keyNames.push(key)
+          }
         })
       })
-      return variants.join("#")
+      return { name: keyNames, value: variants.join("#") }
     } catch {
-      return null
+      return { name: [], value: '' }
     }
   }
 
   const filters = getFilterValues(filter)
   const variantFilters = getFilterValues(variantFilter)
 
-  return <Products filters={filters ?? ''} search={search ?? ''} subCategory={subCategory ?? ''} subSubCategory={subSubCategory ?? ''} categoryId={category ?? ''} variantFilters={variantFilters ?? ''} />
+  return <Products filters={filters.value} search={search ?? ''} subCategory={subCategory ?? ''}
+    subSubCategory={subSubCategory ?? ''} categoryId={category ?? ''} variantFilters={variantFilters.value}
+    badges={[...filters.name, ...variantFilters.name]}
+  />
 
 }
