@@ -4,6 +4,7 @@ import { useUser } from "@/contexts/UserContenxt"
 import Password from "@/icons/Password"
 import { UserProfile } from "@/models/User.model"
 import DashboardHeader from "@/pages-sections/customer-dashboard/dashboard-header"
+import { ChangePasswordPageView } from "@/pages-sections/customer-dashboard/profile/page-view/change-password-edit"
 import { userProfile } from "@/utils/api/profile"
 
 import { ProfileEditPageView } from "pages-sections/customer-dashboard/profile/page-view"
@@ -33,7 +34,7 @@ const ChangePassword = () => {
 
   return <>
     <DashboardHeader Icon={Password} title="Change Password" />
-    <ProfileEditPageView user={profile!} />
+      <ChangePasswordPageView user={profile} />
   </>
 }
 

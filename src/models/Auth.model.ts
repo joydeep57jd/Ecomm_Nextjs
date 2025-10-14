@@ -77,3 +77,11 @@ export interface ChangePasswordPayload {
   OldPassword: string;
   NewPassword: string;
 }
+
+
+export interface ChangePasswordResponse{
+  userId:   string;
+  email:    string;
+  password: string;
+  message:  string;
+}
