@@ -7,7 +7,8 @@ import {
   CustomerPayload,
   CustomerResponse,
   LoginWithCredentialsRequest,
-  UserData
+  UserData,
+  ChangePasswordPayload
 } from "../../models/Auth.model"
 
 export const varifyCustomer = async (payload: CustomerPayload): Promise<CustomerResponse> => {
@@ -58,7 +59,7 @@ export const verifyForgotPasswordOTP = async (email: string, otp: string) => {
   return response.data
 }
 
-export const changePassword = async (data: ForgotPasswordData) => {
+export const changePassword = async (data: ChangePasswordPayload) => {
   const response = await axios.post(API_URL.AUTH.CHANGE_PASSWORD, data)
   return response.data
 }
