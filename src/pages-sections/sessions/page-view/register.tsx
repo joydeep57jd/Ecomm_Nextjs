@@ -51,7 +51,7 @@ export default function RegisterPageView() {
     try {
       const payload: SignupData = {
         ...values,
-        phone: `${values.countryCode}${values.phoneNumber}`
+        phone: `${values.phoneNumber}`
       }
       await signup(payload)
       enqueueSnackbar("Registration successful! Please login.", { variant: "success" })
