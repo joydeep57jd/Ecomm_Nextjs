@@ -23,7 +23,7 @@ const MENUS = [
     list: [
       { icon: "User3", href: "/profile", title: "Profile Info" },
       { icon: "Location", href: "/address", title: "Addresses" },
-      // { icon: "CreditCard", href: "/payment-methods", title: "Payment Methods" }
+      { icon: "Password", href: "/change-password", title: "Change Password" }
     ]
   }
 ]

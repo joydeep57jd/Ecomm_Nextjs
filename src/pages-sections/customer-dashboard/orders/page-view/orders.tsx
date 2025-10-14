@@ -21,8 +21,8 @@ export function OrdersPageView({ orders, totalPages, setCurrentPage }: Props) {
     <Fragment>
       <DashboardHeader Icon={Packages} title="My Orders" />
 
-     
-      {orders?.length === 0 ? (
+
+      {!orders?.length ? (
         <Typography textAlign="center" my={4} variant="h5">
           No orders found!
         </Typography>
