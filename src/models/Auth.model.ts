@@ -68,3 +68,20 @@ export interface UserData {
   userPhoneCountryCode: string
   userType: "b2c" | "b2b" | string
 }
+
+
+export interface ChangePasswordPayload {
+  Token:       string;
+  
+  UserId:      string;
+  OldPassword: string;
+  NewPassword: string;
+}
+
+
+export interface ChangePasswordResponse{
+  userId:   string;
+  email:    string;
+  password: string;
+  message:  string;
+}
