@@ -16,7 +16,7 @@ export const API_URL = {
     FORGOT_PASSWORD: "/frontend/ForgotPassword",
     SEND_FORGOT_PASSWORD_OTP: "/frontend/Sendforgetpasswordotp",
     VERIFY_FORGOT_PASSWORD_OTP: "/frontend/Verifyforgetpasswordotp",
-    CHANGE_PASSWORD: "/frontend/ChangeUserPassword"
+    CHANGE_PASSWORD: "/frontend/ChangeCustomerPassword"
   },
 
   USER: {

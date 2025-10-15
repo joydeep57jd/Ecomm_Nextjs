@@ -33,6 +33,7 @@ interface Props {
   categoryOptions: GetCategoryResponse[]
   variantOptions: VariantOptionDetails[]
   badges: string[]
+  priceFilters: Record<string, number>
 }
 // ==============================================================
 
@@ -40,7 +41,10 @@ export default function ProductSearchPageView({
   products,
   categoryOptions,
   variantOptions,
-  badges
+  badges,
+  priceFilters
+
+
 }: Props) {
   const router = useRouter()
   const pathname = usePathname()
@@ -80,7 +84,7 @@ export default function ProductSearchPageView({
                 </IconButton>
               )}
             >
-              <ProductFilters categoryOptions={categoryOptions} />
+              <ProductFilters categoryOptions={categoryOptions} priceFilters={priceFilters} />
             </SideNav>
           </Box>
           <FlexBox alignItems="center" columnGap={4} flexWrap="wrap">
@@ -143,7 +147,7 @@ export default function ProductSearchPageView({
           {
             categoryOptions?.length > 0 &&
             <Grid size={{ md: 3, xl: 2 }} sx={{ display: { md: "block", xs: "none" } }}>
-              <ProductFilters categoryOptions={categoryOptions} />
+              <ProductFilters categoryOptions={categoryOptions} priceFilters={priceFilters} />
             </Grid>
           }
 
