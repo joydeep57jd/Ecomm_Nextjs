@@ -16,6 +16,8 @@ type Props = {
   categoryId: string
   variantFilters: string
   badges: string[]
+  sortFilters: Record<string, boolean>
+  priceFilters: Record<string, number>
 }
 
 function Products({
@@ -25,7 +27,9 @@ function Products({
   subSubCategory,
   categoryId,
   variantFilters,
-  badges
+  badges,
+  sortFilters,
+  priceFilters
 }: Props) {
   let loadingCriteria = ""
   let loadingCategory = ""
@@ -46,14 +50,18 @@ function Products({
 
   useEffect(() => {
     if (!allProductResponse) return
+    if (loadingCriteria === getLoadingCriteria()) return
     if (page === 1) {
       fetchData()
     } else {
       setPage(1)
     }
-  }, [filters, variantFilters])
+  }, [filters, variantFilters, sortFilters, priceFilters])
 
   useEffect(() => {
+    if (!categoryId && categoryOptions) {
+      setCategoryOptions([])
+    }
     if (loadingCategory === categoryId) return
     if (categoryId) {
       fatchFilterOption()
@@ -104,7 +112,9 @@ function Products({
           OptionValueIds: filters || "",
           PageNo: page,
           PageSize: 18,
-          ItemOptionValueIds: variantFilters || ""
+          ItemOptionValueIds: variantFilters || "",
+          ...sortFilters,
+          ...priceFilters
         })
         : getAllProducts({
           ...(search ? { searchCriteria: search } : {}),
@@ -113,7 +123,9 @@ function Products({
           ...(subSubCategory && { subSubCategoryId: parseInt(subSubCategory) }),
           ...(filters && { optionValueIds: filters }),
           pageNo: page,
-          pageSize: 18
+          pageSize: 18,
+          ...sortFilters,
+          ...priceFilters
         })
     ])
 

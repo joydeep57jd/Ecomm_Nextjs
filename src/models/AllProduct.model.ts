@@ -68,4 +68,9 @@ export interface ProductRequestPayload {
   optionValueIds?: string | null
   pageNo?: number | null
   pageSize?: number | null
+  RelevanceFilter?: boolean
+  DateFilter?: boolean
+  PriceFilter?: boolean
+  MinPrice?: number
+  MaxPrice?: number
 }

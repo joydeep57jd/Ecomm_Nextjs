@@ -9,7 +9,6 @@ import { TextField, FormProvider } from "components/form-hook"
 import Label from "../components/label"
 import EyeToggleButton from "../components/eye-toggle-button"
 import usePasswordVisible from "../use-password-visible"
-
 // SCHEMA & API
 import { loginSchema, LoginSchemaType } from "@/schema/auth/login.schema"
 import { loginWithCredentials, varifyCustomer, loginWithOTP } from "@/utils/api/auth"
@@ -127,10 +126,13 @@ export default function LoginPageView() {
         Password: values.password!
       }
       const data = await loginWithCredentials(payload)
-      postLoginCartSync(data)
+      if (data) {
+        postLoginCartSync(data)
+      } else {
+        enqueueSnackbar("Login failed. Please check your credentials.", { variant: "error" })
+      }
     } catch (err) {
       enqueueSnackbar("Login failed. Please check your credentials.", { variant: "error" })
-
       console.error("Login failed", err)
     } finally {
       setisApiCallInprogress(false)
@@ -166,32 +168,49 @@ export default function LoginPageView() {
     loginType === "password" ? handleLoginWithCredentials(values) : handleLoginWithOTP(values)
   }
 
+  const handleChangeNumber = () => {
+    setIsInitialStep(true)
+    setLoginType("password")
+    methods.reset()
+    console.warn(methods.getValues())
+  }
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmitForm}>
-      <div className="mb-1">
-        <Label>Phone Number</Label>
-        <TextField fullWidth name="phoneNo" type="number" size="medium" placeholder="1234567890" />
-      </div>
-      {otpLoginEnabled && (
-        <Box mb={2}>
-          <RadioGroup
-            row
-            value={loginType}
-            onChange={(e) => setLoginType(e.target.value as "password" | "otp")}
-          >
-            <FormControlLabel
-              value="password"
-              control={<Radio color="primary" />}
-              label="Login with Password"
-            />
-            <FormControlLabel
-              value="otp"
-              control={<Radio color="primary" />}
-              label="Login with OTP"
-            />
-          </RadioGroup>
+      {
+        isInitialStep ? <>
+
+          <div className="mb-1">
+            <Label>Phone Number</Label>
+            <TextField disabled={!isInitialStep} fullWidth name="phoneNo" type="number" size="medium" placeholder="1234567890" />
+          </div>
+          {otpLoginEnabled && (
+            <Box mb={2}>
+              <RadioGroup
+                row
+                value={loginType}
+                onChange={(e) => setLoginType(e.target.value as "password" | "otp")}
+              >
+                <FormControlLabel
+                  value="password"
+                  control={<Radio color="primary" />}
+                  label="Login with Password"
+                />
+                <FormControlLabel
+                  value="otp"
+                  control={<Radio color="primary" />}
+                  label="Login with OTP"
+                />
+              </RadioGroup>
+            </Box>
+          )}
+        </> : <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
+          <Box>
+            Not you? <strong>{methods.getValues("phoneNo")}</strong>
+          </Box>
+          <Button variant="text" onClick={handleChangeNumber} size="small">Change</Button>
         </Box>
-      )}
+      }
 
       {!isInitialStep &&
         (loginType === "password" ? (

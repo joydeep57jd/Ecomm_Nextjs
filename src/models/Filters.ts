@@ -19,9 +19,14 @@ export default interface Filters {
 
 export interface CategoryWiseFilter {
   OptionValueIds: string
-  ItemOptionValueIds:string
+  ItemOptionValueIds: string
   PageNo: number
   PageSize: number
+  RelevanceFilter?: boolean
+  DateFilter?: boolean
+  PriceFilter?: boolean
+  MinPrice?: number
+  MaxPrice?: number
 }
 
 export interface CategoryWiseFilterResponse {
@@ -38,7 +43,6 @@ export interface VariantOptionDetails {
   optionName: string
   variantOptionValueId: number
   optionValue: string
-
 }
 
 export interface VariantDetail {

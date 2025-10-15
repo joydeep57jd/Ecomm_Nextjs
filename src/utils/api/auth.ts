@@ -3,7 +3,6 @@ import { API_URL } from "../constants"
 import {
   LoginWithOTPRequest,
   SignupData,
-  ForgotPasswordData,
   CustomerPayload,
   CustomerResponse,
   LoginWithCredentialsRequest,

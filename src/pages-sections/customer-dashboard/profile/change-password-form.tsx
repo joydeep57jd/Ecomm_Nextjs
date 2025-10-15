@@ -6,11 +6,9 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import Grid from "@mui/material/Grid"
 import Button from "@mui/material/Button"
 import { FormProvider, TextField } from "components/form-hook"
-import * as yup from "yup"
 import { useUser } from "@/contexts/UserContenxt"
 import { changePassword } from "@/utils/api/auth"
 import { ChangePasswordPayload } from "@/models/Auth.model"
-import { UserProfile } from "@/models/User.model"
 import {
   ChangePasswordFormType,
   changePasswordSchema
@@ -18,9 +16,7 @@ import {
 import EyeToggleButton from "@/pages-sections/sessions/components/eye-toggle-button"
 import usePasswordVisible from "@/pages-sections/sessions/use-password-visible"
 
-type Props = { user: UserProfile }
-
-export default function ChangePasswordForm({ user }: Props) {
+export default function ChangePasswordForm() {
   const oldPasswordVisibility = usePasswordVisible()
   const newPasswordVisibility = usePasswordVisible()
   const confirmPasswordVisibility = usePasswordVisible()
@@ -58,7 +54,7 @@ export default function ChangePasswordForm({ user }: Props) {
         <Grid size={{ md: 6, xs: 12 }}>
           <TextField
             fullWidth
-            size="medium"  
+            size="medium"
             type={oldPasswordVisibility.visiblePassword ? "text" : "password"}
             name="oldPassword"
             label="Old Password"
