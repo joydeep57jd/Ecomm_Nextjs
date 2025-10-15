@@ -189,6 +189,7 @@ function Products({
             products={allProductResponse.dataList}
             variantOptions={variantOptions}
             badges={currentBadges}
+            priceFilters={priceFilters}
           />
           {pageCount && !isLastDataLoaded && (
             <Box ref={loader} sx={{ mb: 6 }}>

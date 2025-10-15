@@ -16,19 +16,21 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 // TYPES
 import { GetCategoryResponse } from "@/models/Category.modal"
 import { useEffect, useState } from "react"
-import { Box, Divider, Slider, TextField } from "@mui/material"
+import { Box, Divider, Slider,  } from "@mui/material"
 import { FlexBetween } from "@/components/flex-box"
+import { currency } from "@/lib"
 
 interface Props {
   categoryOptions: GetCategoryResponse[]
+  priceFilters: Record<string, number>
 }
 
 let timeoutId: NodeJS.Timeout
-export default function ProductFilters({ categoryOptions }: Props) {
+export default function ProductFilters({ categoryOptions, priceFilters }: Props) {
   const [selectedFilters, setSelectedFilters] = useState<Record<number, Record<string, number[]>>>({})
   const [selectedVariant, setSelectedVariant] = useState<Record<number, Record<string, number[]>>>({})
-  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({ min: 0, max: 10000 })
-  const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([0, 10000])
+
+  const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>(Object.values(priceFilters).length > 1 ?Object.values(priceFilters): [0, 10000] )
   const [isFirstRangeChange, setIsFirstRangeChange] = useState(true)
 
   const router = useRouter()
@@ -75,19 +77,9 @@ export default function ProductFilters({ categoryOptions }: Props) {
     return filters
   }
 
-  const changeMaxRange = (newMax: number) => {
-    setPriceRange(prev => ({ ...prev, max: (newMax > prev.min) ? newMax : prev.max }))
-    if (newMax < selectedPriceRange[1]) {
-      setSelectedPriceRange(prev => [prev[0], newMax])
-    }
-  }
+  
 
-  const changeMinRange = (newMin: number) => {
-    setPriceRange(prev => ({ ...prev, min: (newMin >= 0 && newMin < prev.max) ? newMin : prev.min }))
-    if (newMin > selectedPriceRange[0]) {
-      setSelectedPriceRange(prev => [newMin, prev[1]])
-    }
-  }
+  
 
   const handleChangeSearchParams = (
     categoryId: number,
@@ -218,28 +210,36 @@ export default function ProductFilters({ categoryOptions }: Props) {
           <Box component={Divider} my={3} />
 
           <Typography variant="h6" sx={{ mb: 2 }}>
-            Price Range
+            Price Range - ({currency(selectedPriceRange[0],0,"0")} - {currency(selectedPriceRange[1],0,"0")})
           </Typography>
 
           <Slider
-            min={priceRange.min}
-            max={priceRange.max}
+            min={0}
+            max={10000}
             size="small"
             value={selectedPriceRange}
             valueLabelDisplay="auto"
             valueLabelFormat={(v) => `${v}`}
-            onChange={(_, v) => setSelectedPriceRange(v)}
+           onChange={(_, v) => setSelectedPriceRange(v as number[])}
           />
 
-          <FlexBetween>
+          <FlexBetween style={{position:"relative", top:"-6px"}}>
+            <Typography variant="body2" color="text.secondary">
+             0
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              10000
+            </Typography>
+          </FlexBetween>
+
+          {/* <FlexBetween>
             <TextField
               fullWidth
               size="small"
               type="number"
               placeholder="0"
-              value={priceRange.min}
-              onChange={(e) => changeMinRange(+(e.target.value || 0))
-              }
+              value={selectedPriceRange[0] ?? ""}
+               onChange={handleMinChange}
             />
 
             <Typography variant="h5" sx={{ px: 1, color: "grey.600" }}> - </Typography>
@@ -249,11 +249,10 @@ export default function ProductFilters({ categoryOptions }: Props) {
               size="small"
               type="number"
               placeholder="250"
-              value={priceRange.max}
-              onChange={(e) => changeMaxRange(+(e.target.value || 0))
-              }
+               value={selectedPriceRange[1] ?? ""}
+                onChange={handleMaxChange}
             />
-          </FlexBetween>
+          </FlexBetween> */}
         </Box>
       }
     </div>
