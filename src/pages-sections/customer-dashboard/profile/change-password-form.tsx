@@ -42,6 +42,7 @@ export default function ChangePasswordForm() {
     }
     try {
       await changePassword(payload)
+      methods.reset()
       enqueueSnackbar("Password changed successfully.", { variant: "success" })
     } catch (err) {
       enqueueSnackbar("Failed to change password", { variant: "error" })

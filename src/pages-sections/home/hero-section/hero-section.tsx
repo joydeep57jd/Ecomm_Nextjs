@@ -57,18 +57,18 @@
 // }
 
 import Container from "components/Container"
-import CarouselCard1 from "components/carousel-cards/carousel-card-1"
 // LOCAL CUSTOM COMPONENT
 import CarouselBanner from "./carousel-banner"
 import { Section } from "@/models/Home.model"
+import CarouselCard1 from "@/components/carousel-cards/carousel-card-1"
 // API FUNCTIONS
 
 type bannerSectionProps = {
   bannerSection: Section[]
 }
 
-export default async function Section1({ bannerSection }: bannerSectionProps) {
-  if (!bannerSection || bannerSection.length === 0) return null
+export default function HeroSection({ bannerSection }: bannerSectionProps) {
+  if (!bannerSection?.length) return null
 
   return (
     <Container>

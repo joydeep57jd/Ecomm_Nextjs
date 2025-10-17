@@ -3,19 +3,19 @@
 import { Fragment, useEffect, useState } from "react"
 // LOCAL CUSTOM COMPONENTS
 
-import Section9 from "../section-9"
-import HeroSection from "../hero-section"
-import ProductSection from "../product-section"
 import { Section } from "@/models/Home.model"
 import { HomeAPI } from "@/utils/api"
+import ProductSection from "../product-section"
+import Section9 from "../section-9"
+import HeroSection from "../hero-section"
+import Loading from "@/app/loading"
 
 export default function HomePageView() {
   const [productSections, setProductSections] = useState<Section[]>([])
   const [bannerSections, setBannerSections] = useState<Section[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    console.warn("HomePageView rendered")
-
     getSections()
   }, [])
 
@@ -30,26 +30,24 @@ export default function HomePageView() {
       )
       setProductSections(productSections)
       setBannerSections(bannerSections)
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 500)
     } catch (error) {
       console.error("Error fetching sections:", error)
+    } finally {
+      console.warn(productSections, bannerSections)
     }
   }
 
   return (
-    <Fragment>
-      {/* HERO SLIDER SECTION */}
-      {/* <HeroSection bannerSection={bannerSections} /> */}
+    isLoading ? <Loading isSmallLoader={true} /> :
+      <Fragment>
+        <HeroSection bannerSection={bannerSections} />
+        <ProductSection sections={productSections} />
+        <Section9 />
 
-      {/* FLASH DEALS SECTION */}
-      {/* <ProductSection sections={productSections} /> */}
-
-      {/* CUSTOM SOLUTIONS SECTION */}
-
-      {/* SERVICES SECTION */}
-      {/* <Section9 /> */}
-
-      {/* POPUP NEWSLETTER FORM */}
-      {/* <Newsletter /> */}
-    </Fragment>
+        {/* <Newsletter /> */}
+      </Fragment>
   )
 }
