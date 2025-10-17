@@ -25,7 +25,7 @@ const ACCORDION_SUMMARY_STYLES = {
 
 export const renderLevels = (data: any[], handleClose: () => void,expanded: string | false,
   setExpanded: (val: string | false) => void, parentKey = "") => {
-  return data.map((item: any, index: number) => {
+  return data?.map((item: any, index: number) => {
     let children = []
     let keyName = ''
 

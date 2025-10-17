@@ -29,7 +29,7 @@ export default function MultiLevelMenu() {
   const activeRoute = (path: string) => (pathname === path ? 1 : 0)
 
   const renderLevels = (data: any) => {
-    return data.map((item: any, index: number) => {
+    return data?.map((item: any, index: number) => {
       if (item.type === "label") {
         return (
           <ListLabel key={index} compact={COMPACT}>

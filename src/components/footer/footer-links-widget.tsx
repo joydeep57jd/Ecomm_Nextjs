@@ -14,7 +14,7 @@ export function FooterLinksWidget({ links, title }: Props) {
     <Fragment>
       <Heading>{title}</Heading>
 
-      {links.map((item, ind) => (
+      {links?.map((item, ind) => (
         <StyledLink href={item.url} key={ind}>
           {item.title}
         </StyledLink>

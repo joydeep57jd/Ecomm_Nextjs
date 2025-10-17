@@ -15,6 +15,7 @@ import {
 } from "@/schema/profile/changepassword.schema"
 import EyeToggleButton from "@/pages-sections/sessions/components/eye-toggle-button"
 import usePasswordVisible from "@/pages-sections/sessions/use-password-visible"
+import { enqueueSnackbar } from "notistack"
 
 export default function ChangePasswordForm() {
   const oldPasswordVisibility = usePasswordVisible()
@@ -41,7 +42,9 @@ export default function ChangePasswordForm() {
     }
     try {
       await changePassword(payload)
+      enqueueSnackbar("Password changed successfully.", { variant: "success" })
     } catch (err) {
+      enqueueSnackbar("Failed to change password", { variant: "error" })
       console.error("Failed to change password", err)
     } finally {
       setIsSaving(false)

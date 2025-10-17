@@ -9,6 +9,6 @@ export const metadata: Metadata = {
   keywords: ["e-commerce", "e-commerce template", "next.js", "react"]
 }
 
-export default function Home() {
+export default async function Home() {
   return <HomePageView />
 }
