@@ -46,12 +46,22 @@ const AddressCard = styled("div", {
   }),
   h6: { marginBottom: theme.spacing(0.5) },
   p: { color: theme.palette.grey[700] },
-  height: '-webkit-fill-available'
+  height: "-webkit-fill-available"
 }))
 
-type Props = { deliveryAddresses: Address[], getAddresses(): Promise<void>, setSelectedPinCode?(value: string): void, setSelectedDelivaryAddressData?(data: DelivaryAddressData): void };
+type Props = {
+  deliveryAddresses: Address[]
+  getAddresses(): Promise<void>
+  setSelectedPinCode?(value: string): void
+  setSelectedDelivaryAddressData?(data: DelivaryAddressData): void
+}
 
-export default function DeliveryAddresses({ deliveryAddresses, getAddresses, setSelectedPinCode, setSelectedDelivaryAddressData }: Props) {
+export default function DeliveryAddresses({
+  deliveryAddresses,
+  getAddresses,
+  setSelectedPinCode,
+  setSelectedDelivaryAddressData
+}: Props) {
   const {
     openModal,
     toggleModal,
@@ -72,10 +82,12 @@ export default function DeliveryAddresses({ deliveryAddresses, getAddresses, set
 
   useEffect(() => {
     if (deliveryAddresses) {
-      setAddresses(deliveryAddresses.map(a => ({
-        customer: { ...a, userid: user!.id },
-        CustomerId: +user!.customerId
-      })))
+      setAddresses(
+        deliveryAddresses.map((a) => ({
+          customer: { ...a, userid: user!.id },
+          CustomerId: +user!.customerId
+        }))
+      )
       setIsReloadRequired(false)
     }
   }, [deliveryAddresses])
@@ -86,33 +98,39 @@ export default function DeliveryAddresses({ deliveryAddresses, getAddresses, set
     }
   }, [isReloadRequired])
 
-
-
   const { control } = useFormContext()
 
-
-  const HeaderSection = (setSelectedPinCode && setSelectedDelivaryAddressData) ? <>
-    <FlexBetween sx={{
-      width: '100%'
-    }} mb={4}>
-      <Heading number={1} title="Delivery Address" mb={0} />
-      <Button color="primary" variant="outlined" onClick={handleAddNewAddress}>
-        Add New Address
-      </Button>
-    </FlexBetween>
-  </>
-    :
-    <div>
-      <DashboardHeader Icon={Location} title="Adderesses" />
-      <div style={{
-        display: 'flex', justifyContent: 'end', marginBottom: '1.5rem'
-      }}>
-        <Button color="primary" variant="outlined" onClick={handleAddNewAddress}>
-          Add New Address
-        </Button>
-
+  const HeaderSection =
+    setSelectedPinCode && setSelectedDelivaryAddressData ? (
+      <>
+        <FlexBetween
+          sx={{
+            width: "100%"
+          }}
+          mb={4}
+        >
+          <Heading number={1} title="Delivery Address" mb={0} />
+          <Button color="primary" variant="outlined" onClick={handleAddNewAddress}>
+            Add New Address
+          </Button>
+        </FlexBetween>
+      </>
+    ) : (
+      <div>
+        <DashboardHeader Icon={Location} title="Adderesses" />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "end",
+            marginBottom: "1.5rem"
+          }}
+        >
+          <Button color="primary" variant="outlined" onClick={handleAddNewAddress}>
+            Add New Address
+          </Button>
+        </div>
       </div>
-    </div>
+    )
 
   if (!Array.isArray(addresses) || addresses.length === 0) {
     return (
@@ -123,7 +141,10 @@ export default function DeliveryAddresses({ deliveryAddresses, getAddresses, set
           No delivery addresses found. Please add a new address.
         </Typography>
         {openModal && (
-          <DeliveryAddressForm handleCloseModal={toggleModal} deliveryAddress={editDeliveryAddress} />
+          <DeliveryAddressForm
+            handleCloseModal={toggleModal}
+            deliveryAddress={editDeliveryAddress}
+          />
         )}
       </Card>
     )
@@ -135,19 +156,25 @@ export default function DeliveryAddresses({ deliveryAddresses, getAddresses, set
 
       <Grid container spacing={2}>
         {addresses.map((address) => (
-
           <Controller
             name="address"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <Grid size={{ md: 4, sm: 6, xs: 12 }} sx={{ borderRadius: '12px', border: '1px solid #fff', ...(address.customer.addrid === field.value && { borderColor: 'primary.main' }) }} key={address.customer.addrid}>
+              <Grid
+                size={{ md: 4, sm: 6, xs: 12 }}
+                sx={{
+                  borderRadius: "12px",
+                  border: "1px solid #fff",
+                  ...(address.customer.addrid === field.value && { borderColor: "primary.main" })
+                }}
+                key={address.customer.addrid}
+              >
                 <AddressItem
                   address={address}
                   isSelected={address.customer.addrid === field.value}
                   hasError={Boolean(error)}
                   onSelect={(address) => {
-                    if (setSelectedPinCode &&
-                      setSelectedDelivaryAddressData) {
+                    if (setSelectedPinCode && setSelectedDelivaryAddressData) {
                       field.onChange(address.customer.addrid)
                       setSelectedPinCode && setSelectedPinCode(address.customer.pin)
                       setSelectedDelivaryAddressData && setSelectedDelivaryAddressData(address)
@@ -175,12 +202,12 @@ export default function DeliveryAddresses({ deliveryAddresses, getAddresses, set
 }
 
 interface AddressItemProps {
-  hasError: boolean;
-  isSelected: boolean;
-  address: DelivaryAddressData;
-  onDelete: (id: number) => void;
-  onSelect: (address: DelivaryAddressData) => void;
-  onEdit: (address: DelivaryAddressData) => void;
+  hasError: boolean
+  isSelected: boolean
+  address: DelivaryAddressData
+  onDelete: (id: number) => void
+  onSelect: (address: DelivaryAddressData) => void
+  onEdit: (address: DelivaryAddressData) => void
 }
 
 function AddressItem({
@@ -212,9 +239,11 @@ function AddressItem({
       <Typography variant="body1">{address.customer.address1}</Typography>
 
       <Typography variant="body1">{address.customer.address2 || ""}</Typography>
+      <Typography variant="body1">{address.customer.email || ""}</Typography>
 
-      <Typography variant="body1">{address.customer.country} - {address.customer.pin}</Typography>
-
+      <Typography variant="body1">
+        {address.customer.country} - {address.customer.pin}
+      </Typography>
     </AddressCard>
   )
 }

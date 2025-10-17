@@ -18,6 +18,7 @@ import {
 import React, { useEffect, useState } from "react"
 import SaveCollection from "./save-collection"
 import { SingleProductResponse } from "@/models/SingleProduct.model"
+import { enqueueSnackbar } from "notistack"
 
 type Props = {
   handleCloseModal(isReloadRequired: boolean): void
@@ -67,8 +68,10 @@ function WishlistSelector({ handleCloseModal, product }: Props) {
           wishListCategory?.find((collection) => collection.wishListCategoryId == collectionId)
             ?.wishListCategoryName || ""
       })
+      enqueueSnackbar("Item added to wishlist", { variant: "success" })
       handleCloseModal(true)
     } catch {
+      enqueueSnackbar("Failed to add item to wishlist", { variant: "error" })
     } finally {
       setIsSaving(false)
     }

@@ -57,10 +57,13 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
     resolver: yupResolver(validationSchema) as Resolver<FormValues>
   })
 
-  const { reset, getValues, formState } = methods
+  const { reset, getValues, handleSubmit } = methods
+
+  const formSubmit = handleSubmit(() => {
+    save()
+  })
 
   const save = async () => {
-    if (!formState.isValid) return
     setIsSaving(true)
     const payload: DelivaryAddressData = {
       CustomerId: Number(user?.customerId),
@@ -87,15 +90,15 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
 
   return (
     <Dialog open onClose={handleCloseModal}>
-      <DialogTitle>
-        <Typography variant="h4">
-          {deliveryAddress ? 'Edit' : 'Add New'} Address Information
-        </Typography>
-      </DialogTitle>
-      <Divider />
-      <DialogContent>
+      <FormProvider methods={methods} onSubmit={formSubmit}>
+        <DialogTitle>
+          <Typography variant="h4">
+            {deliveryAddress ? 'Edit' : 'Add New'} Address Information
+          </Typography>
+        </DialogTitle>
+        <Divider />
+        <DialogContent>
 
-        <FormProvider methods={methods} onSubmit={save}>
           <Grid container spacing={3}>
             <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="fname" label="Enter Your First Name" />
@@ -115,6 +118,9 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
             <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="address2" label="Address line 2" />
             </Grid>
+            <Grid size={{ sm: 6, xs: 12 }}>
+              <TextField fullWidth name="email" label="Email" />
+            </Grid>
 
             <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="phone" label="Enter Your Phone" />
@@ -129,18 +135,18 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
             </Grid>
 
           </Grid>
-        </FormProvider>
-      </DialogContent>
-      <Divider />
-      <DialogActions sx={{ paddingX: 3, paddingY: 2 }}>
-        <Button onClick={() => handleCloseModal(false)} color="primary" variant="outlined">
-          Cancel
-        </Button>
-        <Button onClick={save} color="primary" variant="contained" loading={isSaving}>
-          Save
-        </Button>
+        </DialogContent>
+        <Divider />
+        <DialogActions sx={{ paddingX: 3, paddingY: 2 }}>
+          <Button onClick={() => handleCloseModal(false)} color="primary" variant="outlined">
+            Cancel
+          </Button>
+          <Button type="submit" color="primary" variant="contained" loading={isSaving}>
+            Save
+          </Button>
 
-      </DialogActions>
+        </DialogActions>
+      </FormProvider>
     </Dialog>
   )
 }

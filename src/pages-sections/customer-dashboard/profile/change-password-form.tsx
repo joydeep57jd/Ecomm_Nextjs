@@ -15,6 +15,7 @@ import {
 } from "@/schema/profile/changepassword.schema"
 import EyeToggleButton from "@/pages-sections/sessions/components/eye-toggle-button"
 import usePasswordVisible from "@/pages-sections/sessions/use-password-visible"
+import { enqueueSnackbar } from "notistack"
 
 export default function ChangePasswordForm() {
   const oldPasswordVisibility = usePasswordVisible()
@@ -32,6 +33,7 @@ export default function ChangePasswordForm() {
   const { handleSubmit } = methods
 
   const handleSave = handleSubmit(async (values) => {
+    
     setIsSaving(true)
     const payload: ChangePasswordPayload = {
       Token: userCtx!.token,
@@ -41,8 +43,12 @@ export default function ChangePasswordForm() {
     }
     try {
       await changePassword(payload)
+      methods.reset()
+      enqueueSnackbar("Password changed successfully", { variant: "success" })
+      
     } catch (err) {
       console.error("Failed to change password", err)
+      enqueueSnackbar("Failed to change password. Please try again.", {variant:"error"})
     } finally {
       setIsSaving(false)
     }

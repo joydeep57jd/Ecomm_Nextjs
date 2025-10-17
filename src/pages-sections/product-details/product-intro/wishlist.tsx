@@ -6,7 +6,8 @@ import HeartLine from "@/icons/HeartLine"
 import { SingleProductResponse } from "@/models/SingleProduct.model"
 import { CustomerWishItemElement } from "@/models/WishList.modal"
 import { deleteCustomerWishItem, getCustomerWishItem } from "@/utils/api/wishList"
-import { Avatar, CircularProgress } from "@mui/material"
+import { Alert, Avatar, CircularProgress, Snackbar } from "@mui/material"
+import { enqueueSnackbar } from "notistack"
 import React, { useEffect, useState } from "react"
 
 type Props = {
@@ -21,6 +22,7 @@ function Wishlist({ product }: Props) {
   const [isWishItemLoading, setIsWishItemLoading] = useState(false)
   const [isAdded, setIsAdded] = useState(false)
   const [open, setOpen] = useState(false)
+  const [showLoginAlert, setShowLoginAlert] = useState(false)
   const { user } = useUser()
 
   useEffect(() => {
@@ -39,6 +41,8 @@ function Wishlist({ product }: Props) {
     setCustomerWishItemElements(items)
     checkIsAddedToWishList(items)
     setIsWishItemLoading(false)
+      
+    
   }
 
   const checkIsAddedToWishList = (items: CustomerWishItemElement[]) => {
@@ -48,6 +52,10 @@ function Wishlist({ product }: Props) {
   }
 
   const toggleItem = async () => {
+    if (!user?.customerId) {
+      setShowLoginAlert(true)
+      return
+    }
     if (isWishItemLoading) return
     if (!isAdded) setOpen(true)
     else {
@@ -66,6 +74,7 @@ function Wishlist({ product }: Props) {
       )!.customerWishItemId,
       Date: new Date().toISOString()
     })
+    enqueueSnackbar("Item remove to wishlist", { variant: "success" })
     setIsAdded(false)
   }
 
@@ -74,6 +83,10 @@ function Wishlist({ product }: Props) {
     if (isToggled) {
       getWishListItems()
     }
+  }
+  
+  const handleCloseAlert = () => {
+    setShowLoginAlert(false)
   }
 
   return (
@@ -98,6 +111,16 @@ function Wishlist({ product }: Props) {
         )}
       </Avatar>
       {open && <WishlistSelector product={product} handleCloseModal={handleCloseModal} />}
+       <Snackbar 
+        open={showLoginAlert} 
+        autoHideDuration={2000} 
+        onClose={handleCloseAlert}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseAlert} severity="info" sx={{ width: '100%' }}>
+          Please login first to add items to your wishlist
+        </Alert>
+      </Snackbar>
     </div>
   )
 }
