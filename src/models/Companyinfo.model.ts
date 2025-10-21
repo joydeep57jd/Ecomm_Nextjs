@@ -50,10 +50,61 @@ export interface CompanyInfo {
     isEmailMandatory:            boolean;
 }
 
+
+export interface CompanyInfo {
+    companyid:                   number;
+    name:                        string;
+    pincoderq:                   boolean;
+    address:                     Address;
+    email:                       Email;
+    phoneno:                     Phoneno;
+    url:                         null;
+    termsncondnord:              null;
+    imagepath:                   string;
+    termsncondnpayment:          null;
+    about:                       null;
+    theme:                       Theme;
+    brands:                      Brand[];
+    footer:                      Footer;
+    currency:                    Currency;
+    facebook:                    string;
+    showFacebookOnline:          boolean;
+    instagram:                   string;
+    showInstagramOnline:         boolean;
+    twitter:                     string;
+    showTwitterOnline:           boolean;
+    contactEmail:                string;
+    showContactEmailOnline:      boolean;
+    contactPhone:                string;
+    showContactPhoneOnline:      boolean;
+    googleClientId:              null;
+    faceBookApiId:               null;
+    isPhonePeActive:             boolean;
+    companyLogo:                 string;
+    companyFooterLogo:           string;
+    googleMapApiKey:             null;
+    googleClientSecret:          null;
+    showState:                   boolean;
+    showCity:                    boolean;
+    showDistrict:                boolean;
+    favIconFileName:             string;
+    adminPhoneCode:              string;
+    servicePhoneCode:            string;
+    adminPhoneCountryCode:       string;
+    servicePhoneCountryCode:     string;
+    companyPaymentMethod:        CompanyPaymentMethod[];
+    menuType:                    number;
+    isDescriptionPrimary:        boolean;
+    announcementText:            string;
+    announcementTextColor:       string;
+    announcementBackgroundColor: string;
+    showItemlevelButton:         boolean;
+    isEmailMandatory:            boolean;
+}
+
 export interface Address {
-    line1: string;
     address1: string;
-    address2: string;
+    address2: null;
     pin:      string;
     state:    string;
     country:  string;
@@ -96,55 +147,54 @@ export interface Footer {
 }
 
 export interface AboutUsDtl {
-    aboutUs:     null;
+    aboutUs:     string;
     showAboutUs: boolean;
     isHtml:      boolean;
 }
 
 export interface CancellationRefundPolicyDtl {
-    cancellation_RefundPolicy:     null;
+    cancellation_RefundPolicy:     string;
     showCancellation_RefundPolicy: boolean;
     isHtml:                        boolean;
 }
 
 export interface ContactUsDtl {
-    contactUs:     null;
-    showContactUs: boolean;
-    isHtml:        boolean;
+    contactUs:     string;
+    
 }
 
 export interface FooterPaymentAPIBannerDtl {
-    footerPaymentApiBanner:     null;
+    footerPaymentApiBanner:     string;
     showFooterPaymentApiBanner: boolean;
     isHtml:                     boolean;
 }
 
 export interface PrivacyPolicyDtl {
-    privacyPolicy:     null;
+    privacyPolicy:     string;
     showPrivacyPolicy: boolean;
     isHtml:            boolean;
 }
 
 export interface ReturnPolicyDtl {
-    returnPolicy:     null;
+    returnPolicy:     string;
     showReturnPolicy: boolean;
     isHtml:           boolean;
 }
 
 export interface TermsAndConditionsDtl {
-    termsAndConditions:     null;
+    termsAndConditions:     string;
     showTermsAndConditions: boolean;
     isHtml:                 boolean;
 }
 
 export interface TinNoDtl {
-    tinNo:     null;
+    tinNo:     string;
     showTINNo: boolean;
     isHtml:    boolean;
 }
 
 export interface TradeLicenseDtl {
-    tradeLicenseNo:     null;
+    tradeLicenseNo:     string;
     showTradeLicenseNo: boolean;
     isHtml:             boolean;
 }
@@ -162,3 +212,7 @@ export interface Theme {
     desktop_card_height: null;
     mobile_card_height:  null;
 }
+
+
+// Duplicate interfaces removed: the file already declares these interfaces earlier.
+// Keeping a single set of interface declarations to avoid conflicting/merged types.

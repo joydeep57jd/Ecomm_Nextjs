@@ -21,15 +21,15 @@ import { Box, IconButton } from "@mui/material"
 import { Tune } from "@mui/icons-material"
 
 const SORT_OPTIONS = [
-  { label: "Relevance", value: "relevance" },
-  { label: "Date", value: "date" },
+  { label: "new arrival", value: "new arrival" },
   { label: "Price Low to High", value: "price-low-to-high" },
+
   { label: "Price High to Low", value: "price-high-to-low" }
 ]
 
 // ==============================================================
 interface Props {
-  products: DataList[];
+  products: DataList[]
   categoryOptions: GetCategoryResponse[]
   variantOptions: VariantOptionDetails[]
   badges: string[]
@@ -43,13 +43,11 @@ export default function ProductSearchPageView({
   variantOptions,
   badges,
   priceFilters
-
-
 }: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const sort = searchParams.get("sort") || "relevance"
+  const sort = searchParams.get("sort") || "new arrival"
 
   const handleChangeSearchParams = (key: string, value: string) => {
     if (!key || !value) return
@@ -144,15 +142,20 @@ export default function ProductSearchPageView({
 
         <Grid container spacing={4}>
           {/* PRODUCT FILTER SIDEBAR AREA */}
-          {
-            categoryOptions?.length > 0 &&
+          {categoryOptions?.length > 0 && (
             <Grid size={{ md: 3, xl: 2 }} sx={{ display: { md: "block", xs: "none" } }}>
               <ProductFilters categoryOptions={categoryOptions} priceFilters={priceFilters} />
             </Grid>
-          }
+          )}
 
           {/* PRODUCT VIEW AREA */}
-          <Grid size={{ xs: 12, md: categoryOptions?.length ? 9 : 12, xl: categoryOptions?.length ? 10 : 12 }}>
+          <Grid
+            size={{
+              xs: 12,
+              md: categoryOptions?.length ? 9 : 12,
+              xl: categoryOptions?.length ? 10 : 12
+            }}
+          >
             {/* {view === "grid" ? (
               <ProductsGridView products={products} />
             ) : (

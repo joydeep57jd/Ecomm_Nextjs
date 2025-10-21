@@ -47,7 +47,7 @@ function Wishlist({ product }: Props) {
 
   const checkIsAddedToWishList = (items: CustomerWishItemElement[]) => {
     const isAdded =
-      items.findIndex((item) => item.variantid === product?.variantDetails?.itemVariantId) > -1
+      items?.findIndex((item) => item.variantid === product?.variantDetails?.itemVariantId) > -1
     setIsAdded(isAdded)
   }
 

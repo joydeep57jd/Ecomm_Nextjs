@@ -50,7 +50,7 @@ export default function ProductCard16({ product, variantOptions, badges }: Props
               mb: 2
             }}>
               {
-                variantOptions.map(option => <Box key={`${option.itemVariantId}-${option.optionName}`}>
+                variantOptions?.map(option => <Box key={`${option.itemVariantId}-${option.optionName}`}>
                   {badges.includes(option.optionName) &&
                     <Chip
                       label={`${option.optionName} - ${option.optionValue}`}

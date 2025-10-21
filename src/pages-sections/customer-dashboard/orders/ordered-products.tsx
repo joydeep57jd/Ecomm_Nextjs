@@ -57,7 +57,7 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
 
       await customerCancelRequest(payload)
 
-      refreshOrder()
+      await refreshOrder()
     } catch (error) {
       console.error("Cancel order failed:", error)
     } finally {
