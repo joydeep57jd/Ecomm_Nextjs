@@ -21,7 +21,7 @@ import { Box, IconButton } from "@mui/material"
 import { Tune } from "@mui/icons-material"
 
 const SORT_OPTIONS = [
-  { label: "new arrival", value: "new arrival" },
+  { label: "New Arrival ", value: "new arrival" },
   { label: "Price Low to High", value: "price-low-to-high" },
 
   { label: "Price High to Low", value: "price-high-to-low" }
