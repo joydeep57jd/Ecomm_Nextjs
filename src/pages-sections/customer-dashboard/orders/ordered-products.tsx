@@ -18,7 +18,8 @@ import { useState } from "react"
 import { useUser } from "@/contexts/UserContenxt"
 import { customerCancelRequest, GetStatementInvoice } from "@/utils/api/order"
 import { CustCancelRequest } from "@/models/Order.model"
-import { OrderStatus } from "@/enums/order-status.enum"
+import Link from "next/link"
+
 
 // ==============================================================
 // PROPS
@@ -65,31 +66,33 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
     }
   }
 
-const handleOpenInvoice = async () => {
-  try {
-    setLoadingInvoice(true)
-    const res = await GetStatementInvoice(order.orderId.toString())
+  const handleOpenInvoice = async () => {
+    try {
+      setLoadingInvoice(true)
+      const res = await GetStatementInvoice(order.orderId.toString())
 
-    const html = res.html
+      const html = res.html
 
-    const newWindow = window.open("", "_blank")
-    if (newWindow) {
-      newWindow.document.write(html)
-      newWindow.document.title = `Invoice - ${order.custOrdNo}`
-      newWindow.document.close()
-    } else {
-      console.error("Unable to open new tab")
+      const newWindow = window.open("", "_blank")
+      if (newWindow) {
+        newWindow.document.write(html)
+        newWindow.document.title = `Invoice - ${order.custOrdNo}`
+        newWindow.document.close()
+      } else {
+        console.error("Unable to open new tab")
+      }
+    } catch (error) {
+      console.error("Error fetching invoice:", error)
+    } finally {
+      setLoadingInvoice(false)
     }
-  } catch (error) {
-    console.error("Error fetching invoice:", error)
-  } finally {
-    setLoadingInvoice(false)
   }
-}
 
+  const isDelivered = (item: Product) => item.status?.toLowerCase().includes("delivered")
 
-  const isDelivered = order.orderStatus === OrderStatus.DELIVERED
-  const hasInvoice = !!order.isInvoiced
+  const isCancelled = (item: Product) => item.status?.toLowerCase().includes("cancel")
+
+  // const hasInvoice = !!order.items.find((item)=>item.invDate)
 
   return (
     <>
@@ -105,23 +108,14 @@ const handleOpenInvoice = async () => {
         <FlexBetween px={3} py={2} flexWrap="wrap" gap={1} bgcolor="grey.50">
           <Item title="Order ID:" value={order.custOrdNo} />
           <Item title="Placed on:" value={format(new Date(order.orderDate), "dd MMM, yyyy")} />
-
-          {isDelivered && (
-            <Button
-              variant="contained"
-              color="success"
-              size="small"
-              onClick={handleOpenInvoice}
-              disabled={loadingInvoice}
-            >
-              {loadingInvoice ? <CircularProgress size={16} color="inherit" /> : "View Invoice"}
-            </Button>
-          )}
         </FlexBetween>
 
         {order.items.map((item, ind) => (
           <FlexBetween key={ind} px={2} py={1} flexWrap="wrap" gap={1}>
+               <Link href={`/products/${item.itemId}${item.itemId ? `?variantId=${item.itemVariantId}` : ''}`}>
             <FlexBox gap={2} alignItems="center">
+           
+
               <Avatar
                 variant="rounded"
                 sx={{
@@ -130,6 +124,7 @@ const handleOpenInvoice = async () => {
                   backgroundColor: "grey.50"
                 }}
               >
+               
                 <Image
                   alt={item.imageAlt}
                   src={item.imageName}
@@ -154,46 +149,60 @@ const handleOpenInvoice = async () => {
                 </Typography>
               </div>
             </FlexBox>
+              </Link>
 
             <FlexBox gap={1}>
-              {isDelivered ? (
+              {isDelivered(item) ? (
                 <>
+                 <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={handleOpenInvoice}
+                    disabled={loadingInvoice}
+                  >
+                    {loadingInvoice ? (
+                      <CircularProgress size={16} color="inherit" />
+                    ) : (
+                      "View Invoice"
+                    )}
+                  </Button>
+                  
                   <Button variant="outlined" color="primary" size="small">
                     Return Order
                   </Button>
 
+                  
                   <Button onClick={() => setSelectedProduct(item)} variant="text" color="primary">
                     Write a Review
                   </Button>
+
+                 
+                 
                 </>
-              ) : !hasInvoice ? (
-                item.status.toLowerCase().includes("cancel") ? (
-                  <Typography variant="body2" color="error" fontWeight={500}>
-                    {item.status}
-                  </Typography>
-                ) : (
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    size="small"
-                    disabled={loadingCancelId === item.orderDetailId}
-                    onClick={() => handleCancelOrder(item)}
-                  >
-                    {loadingCancelId === item.orderDetailId ? (
-                      <FlexBox gap={1} alignItems="center">
-                        <CircularProgress size={16} color="inherit" />
-                        <Typography variant="caption">Cancelling...</Typography>
-                      </FlexBox>
-                    ) : (
-                      "Cancel Invoice"
-                    )}
-                  </Button>
-                )
+              ) : isCancelled(item) ? (
+                <Typography variant="body2" color="error" fontWeight={500}>
+                  {item.status}
+                </Typography>
+              ) : !item.invDate ? (
+                <Button
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                  disabled={loadingCancelId === item.orderDetailId}
+                  onClick={() => handleCancelOrder(item)}
+                >
+                  {loadingCancelId === item.orderDetailId ? (
+                    <FlexBox gap={1} alignItems="center">
+                      <CircularProgress size={16} color="inherit" />
+                      <Typography variant="caption">Cancelling...</Typography>
+                    </FlexBox>
+                  ) : (
+                    "Cancel Item"
+                  )}
+                </Button>
               ) : (
-                <FlexBox gap={1} alignItems="center">
-                  <Typography color="text.secondary">{item.status}</Typography>
-                  {loadingCancelId === item.orderDetailId && <CircularProgress size={16} />}
-                </FlexBox>
+                <Typography color="text.secondary">{item.status}</Typography>
               )}
             </FlexBox>
           </FlexBetween>

@@ -9,7 +9,7 @@ import {
 } from "@/models/Order.model"
 import axiosInstance from "../axiosInstance"
 import API_URL from "../constants"
-import {  OrderPayload, OrderResponse } from "@/models/OrderHistory.modal"
+import { OrderPayload, OrderResponse } from "@/models/OrderHistory.modal"
 
 export const getOrderHistory = async (payload: OrderPayload): Promise<OrderResponse> => {
   const { data } = await axiosInstance.post<{ data: OrderResponse }>(
@@ -111,15 +111,14 @@ export const placeOrder = async (payload: PlaceOrderRequest) => {
   return data.data
 }
 
-
-export const customerCancelRequest = async(payload:CustCancelRequest)=>{
- await axiosInstance.post(API_URL.ORDER.CUST_CANCEL_REQUEST,payload)
-
+export const customerCancelRequest = async (payload: CustCancelRequest) => {
+  await axiosInstance.post(API_URL.ORDER.CUST_CANCEL_REQUEST, payload)
 }
 
-
-export const GetStatementInvoice = async(orderId:string)=>{
-    const {data} =await axiosInstance.post<{data:StatmentInvoiceResponse}>(API_URL.ORDER.INVOICE,{orderId})
-    return data.data
+export const GetStatementInvoice = async (orderId: string) => {
+  const { data } = await axiosInstance.post<{ data: StatmentInvoiceResponse }>(
+    API_URL.ORDER.INVOICE,
+    { orderId }
+  )
+  return data.data
 }
-

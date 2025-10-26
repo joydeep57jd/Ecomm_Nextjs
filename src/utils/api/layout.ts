@@ -42,7 +42,7 @@ const getLayoutData = async (): Promise<LayoutModel> => {
       title: companyInfoData!?.contactPhone
     },
     footer: {
-      about: [],
+      about: [companyInfoData!?.footer],
       appStoreUrl: "",
       contact: {
         address: {

@@ -13,7 +13,7 @@ export interface CompanyInfo {
     about:                       null;
     theme:                       Theme;
     brands:                      Brand[];
-    footer:                      Footer;
+    footer:                      FooterDetails;
     currency:                    Currency;
     facebook:                    string;
     showFacebookOnline:          boolean;
@@ -65,7 +65,7 @@ export interface CompanyInfo {
     about:                       null;
     theme:                       Theme;
     brands:                      Brand[];
-    footer:                      Footer;
+    footer:                     FooterDetails;
     currency:                    Currency;
     facebook:                    string;
     showFacebookOnline:          boolean;
@@ -134,7 +134,7 @@ export interface Email {
     admin:       string;
 }
 
-export interface Footer {
+export interface FooterDetails {
     tradeLicenseDtl:              TradeLicenseDtl;
     tinNoDtl:                     TinNoDtl;
     aboutUsDtl:                   AboutUsDtl;

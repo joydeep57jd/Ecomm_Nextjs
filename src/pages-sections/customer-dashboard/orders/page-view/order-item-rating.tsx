@@ -39,12 +39,11 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
     resolver: yupResolver(ratingSchema)
   })
 
-  const { watch, setValue, getValues, formState } = methods
+  const { watch, setValue, getValues } = methods
 
   const save = async () => {
-   methods.trigger()
-    
-    if (!formState.isValid) return
+    const isValid = await methods.trigger()
+    if (!isValid) return
     setIsSaving(true)
     try {
       const payload: SaveRatingRequest = {

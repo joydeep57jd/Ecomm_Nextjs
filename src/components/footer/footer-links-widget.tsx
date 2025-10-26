@@ -10,13 +10,16 @@ interface Props {
 // ==============================================================
 
 export function FooterLinksWidget({ links, title }: Props) {
+  
+  const stripHTML = (html: string) => html.replace(/<[^>]+>/g, '')
+
   return (
     <Fragment>
       <Heading>{title}</Heading>
 
       {links.map((item, ind) => (
         <StyledLink href={item.url} key={ind}>
-          {item.title}
+          {stripHTML(item.title)}  
         </StyledLink>
       ))}
     </Fragment>

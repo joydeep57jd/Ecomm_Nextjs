@@ -1,5 +1,6 @@
 import { CategoryMenuItem } from "models/Category.model"
 import { Category } from "./Category.modal"
+import { FooterDetails } from "./Companyinfo.model"
 
 export interface Socials {
   google: string
@@ -49,7 +50,7 @@ export interface Footer {
   description: string
   appStoreUrl: string
   playStoreUrl: string
-  about: Link[]
+  about: FooterDetails[]
   customers: Link[]
   socials: Socials
   contact: {
