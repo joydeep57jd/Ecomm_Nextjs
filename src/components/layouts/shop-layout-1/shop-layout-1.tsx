@@ -38,7 +38,7 @@ interface Props extends PropsWithChildren {
 export default function ShopLayout1({ children, data }: Props) {
   const { footer, header, topbar, mobileNavigation } = data
     const footerDetails = footer!.about[0]
-    console.warn(footerDetails)
+    
 
  const aboutLinks = [
   { title: footerDetails.aboutUsDtl.aboutUs, url: "#" },
