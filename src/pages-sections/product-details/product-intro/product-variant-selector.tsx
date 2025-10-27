@@ -20,14 +20,17 @@ export default function ProductVariantSelector({ variantMap, product, selectedVa
 
   useEffect(() => {
     if (product?.variantOptionList) {
-      const varint = product?.variantOptionList?.map(v => v.variantOptionValueId).join()
+      const varint = product.variantOptionList
+        .filter((v) => v.appliedOnVariant) 
+        .map((v) => v.variantOptionValueId) 
+        .join()
+     
       if (selectedVariant === varint) return
       const optionSearchParams = new URLSearchParams(searchParams)
       optionSearchParams.set("variant", varint)
       router.replace(`${pathname}?${optionSearchParams}`, { scroll: false })
     }
   }, [product])
-
 
   return Array.from(variantMap.entries()).map(([variantLabel, variants], index) => (
     <div className="mb-1" key={variantLabel}>
@@ -40,10 +43,22 @@ export default function ProductVariantSelector({ variantMap, product, selectedVa
           const optionSearchParams = new URLSearchParams(searchParams)
           const currentVaraintId = searchParams.get("variant")
           if (currentVaraintId) {
-            const newVarintId = currentVaraintId?.split(",").map((variantId, variantIndex) => variantIndex === index ? variant.variantOptionValueId : variantId).join() ?? ""
+            const newVarintId =
+              currentVaraintId
+                ?.split(",")
+                .map((variantId, variantIndex) =>
+                  variantIndex === index ? variant.variantOptionValueId : variantId
+                )
+                .join() ?? ""
             optionSearchParams.set("variant", newVarintId)
           } else {
-            const newVarintId = Array.from(variantMap.entries()).map(([, variants], variantIndex) => variantIndex === index ? variant.variantOptionValueId : variants[0].variantOptionValueId).join()
+            const newVarintId = Array.from(variantMap.entries())
+              .map(([, variants], variantIndex) =>
+                variantIndex === index
+                  ? variant.variantOptionValueId
+                  : variants[0].variantOptionValueId
+              )
+              .join()
             optionSearchParams.set("variant", newVarintId)
           }
           optionSearchParams.delete("variantId")
@@ -54,12 +69,14 @@ export default function ProductVariantSelector({ variantMap, product, selectedVa
 
           // The variant is active if it's in the url params.
 
-          const isActive = product?.variantOptionList?.find(v => v.optionName === variantLabel)?.optionValue === variant.optionValue
+          const isActive =
+            product?.variantOptionList?.find((v) => v.optionName === variantLabel)?.optionValue ===
+            variant.optionValue
 
           return (
             <Chip
               key={variant.variantOptionValueId}
-              label={(variant.optionValue)}
+              label={variant.optionValue}
               size="small"
               color="primary"
               onClick={optionUrl}

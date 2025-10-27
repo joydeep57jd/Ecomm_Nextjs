@@ -151,6 +151,7 @@ export interface CustCancelRequest {
 
 export interface StatmentInvoiceResponse {
   html: string;
+  htmlc: string;
   id:   null;
 }
 

@@ -16,6 +16,7 @@ type Props = {
 }
 
 function SingleProduct({ slug, variantId, variant }: Props) {
+  
   let loadingSlug = "",
     loadinVariant = "",
     loadinVariantId = ""
@@ -88,7 +89,7 @@ function SingleProduct({ slug, variantId, variant }: Props) {
         ReviewStatus: 1,
         ItemVariantId: productDetails.variantDetails.itemVariantId
       })
-    
+
       setReviews(fetchedReviews)
     }
     setIsLoading(false)

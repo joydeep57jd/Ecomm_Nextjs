@@ -3,9 +3,12 @@ export interface ProductDetailsRequest {
 }
 
 export interface VariantOption {
+  variantOptionId: number
   variantOptionValueId: number
   optionValue: string
   optionName: string
+  appliedOnVariant: boolean
+
 }
 
 export interface SingleProductResponse {

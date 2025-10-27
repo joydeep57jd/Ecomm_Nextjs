@@ -46,6 +46,8 @@ export interface Item {
   invDate: string
   status: string
   orderDetailId: number
+  invoiceId:number
+  invoiceNumber:string
 }
 
 export interface OrderPayload {

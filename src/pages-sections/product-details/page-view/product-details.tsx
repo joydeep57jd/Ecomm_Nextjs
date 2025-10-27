@@ -12,17 +12,19 @@ import Product from "models/Product.model"
 import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
 import { useRouter } from "next/navigation"
 import { GetReviewResponse } from "@/models/Rating.model"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import ProductSpecification from "../product-specification"
 
 // ==============================================================
 interface Props {
-  product: SingleProductResponse;
+  product: SingleProductResponse
   variantMap: Map<string, VariantOption[]>
-  relatedProducts: Product[];
-  frequentlyBought: Product[];
+  relatedProducts: Product[]
+  frequentlyBought: Product[]
   selectedVariant: string
-  isLoading: boolean,
+  isLoading: boolean
   reviews: GetReviewResponse[]
+  
 }
 // ==============================================================
 
@@ -30,9 +32,12 @@ export default function ProductDetailsPageView(props: Props) {
   const [activeTab, setActiveTab] = useState(0)
   const router = useRouter()
 
+  useEffect(() => {
   if (!props.product?.variantDetails) {
     router.push("/")
   }
+}, [props.product?.variantDetails])
+
 
   const onShowReviews = () => {
     setActiveTab(1)
@@ -47,17 +52,27 @@ export default function ProductDetailsPageView(props: Props) {
   return (
     <Container className="mt-2 mb-2">
       {/* PRODUCT DETAILS INFO AREA */}
-      <ProductIntro product={props.product} variantMap={props.variantMap} selectedVariant={props.selectedVariant} isLoading={props.isLoading} onShowReviews={onShowReviews}  />
+      <ProductIntro
+        product={props.product}
+        variantMap={props.variantMap}
+        selectedVariant={props.selectedVariant}
+        isLoading={props.isLoading}
+        onShowReviews={onShowReviews}
+      />
 
       {/* PRODUCT DESCRIPTION AND REVIEW */}
-      <ProductTabs description={<ProductDescription product={props.product} />} reviews={<ProductReviews reviews={props.reviews} />} activeTab={activeTab}
-        onTabChange={setActiveTab} />
+      <ProductTabs
+        description={<ProductDescription product={props.product} />}
+        reviews={<ProductReviews reviews={props.reviews} />}
+        specifications={<ProductSpecification specifications={props.product?.variantOptionList}  />}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
 
       {/* FREQUENTLY BOUGHT PRODUCTS AREA */}
       {/* <FrequentlyBought products={props.frequentlyBought} /> */}
 
       {/* AVAILABLE SHOPS AREA */}
-
 
       {/* RELATED PRODUCTS AREA */}
       {/* <RelatedProducts products={props.relatedProducts} /> */}

@@ -19,6 +19,8 @@ export default async function ProductDetails({ params, searchParams }: SlugParam
   const resolvedSearchParams = await searchParams
   const variantId = resolvedSearchParams?.variantId ?? ''
   const variant = resolvedSearchParams?.variant ?? ''
+  
+  
 
   return <SingleProduct slug={slug} variantId={variantId} variant={variant} />
 }

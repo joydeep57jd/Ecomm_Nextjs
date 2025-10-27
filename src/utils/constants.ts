@@ -33,7 +33,7 @@ export const API_URL = {
     HISTORY: "/frontend/GetOrderHistory",
     HISTORY_CUSTOMER: "/frontend/GetOrderHistoryCustomer",
     ORDER_DETAIL: "/frontend",
-    INVOICE: "/frontend/GetStatementInvoice",
+    INVOICE: "/frontend/GetStatementInv",
     CHECKOUT: "/frontend/CheckOutOrder",
     GET_DELIVEY_CHARGE: "/frontend/GetDeliveryCharge",
     PLACE_ORDER: "/frontend/PlaceOrder",

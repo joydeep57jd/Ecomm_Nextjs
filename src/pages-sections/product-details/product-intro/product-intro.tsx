@@ -95,7 +95,7 @@ export default function ProductIntro({ product, variantMap, selectedVariant, isL
           {/* PRODUCT RATING */}
           <div className="rating">
             <span>Rated:</span>
-            <Rating readOnly color="warn" size="small" value={product.variantDetails?.itemRating} />
+            <Rating readOnly color="warn" size="small" value={product?.variantDetails?.itemRating} />
             {/* <Typography variant="h6">({product.reviews?.length || 0})</Typography> */}
             <Typography variant="h6" style={{ cursor: "pointer" }} onClick={onShowReviews}>({product.variantDetails?.reviewCount})</Typography>
           </div>

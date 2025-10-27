@@ -12,7 +12,7 @@ export default function ProductDescription({ product }: Props) {
         Specification:
       </Typography>
 
-      <div dangerouslySetInnerHTML={{ __html: product.variantDetails.itemDesc }}>
+      <div dangerouslySetInnerHTML={{ __html: product?.variantDetails?.itemDesc }}>
         {/* Brand: Beats <br />
         Model: S450 <br />
         Wireless Bluetooth Headset <br />

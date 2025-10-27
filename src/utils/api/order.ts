@@ -115,10 +115,10 @@ export const customerCancelRequest = async (payload: CustCancelRequest) => {
   await axiosInstance.post(API_URL.ORDER.CUST_CANCEL_REQUEST, payload)
 }
 
-export const GetStatementInvoice = async (orderId: string) => {
-  const { data } = await axiosInstance.post<{ data: StatmentInvoiceResponse }>(
+export const GetStatementInvoice = async (invoiceNo: string) => {
+  const { data } = await axiosInstance.post(
     API_URL.ORDER.INVOICE,
-    { orderId }
+    { invoiceNo }
   )
-  return data.data
+  return data
 }

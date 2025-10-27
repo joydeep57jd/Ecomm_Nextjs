@@ -69,13 +69,14 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
   const handleOpenInvoice = async () => {
     try {
       setLoadingInvoice(true)
-      const res = await GetStatementInvoice(order.orderId.toString())
+      const invoiceNo = order.items?.find(item=>item.invoiceNumber)?.invoiceNumber!
+      const res = await GetStatementInvoice(invoiceNo)
 
-      const html = res.html
+      const htmlc = res.html
 
       const newWindow = window.open("", "_blank")
       if (newWindow) {
-        newWindow.document.write(html)
+        newWindow.document.write(htmlc)
         newWindow.document.title = `Invoice - ${order.custOrdNo}`
         newWindow.document.close()
       } else {

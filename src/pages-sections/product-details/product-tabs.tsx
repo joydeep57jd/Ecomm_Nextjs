@@ -23,12 +23,13 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 interface Props {
   reviews: ReactNode;
   description: ReactNode;
+  specifications: ReactNode;
   activeTab: number
   onTabChange: (value: number) => void
 }
 // ==============================================================
 
-export default function ProductTabs({ reviews, description, activeTab, onTabChange }: Props) {
+export default function ProductTabs({ reviews, description, activeTab, onTabChange, specifications }: Props) {
   const handleChangeTab = (_: SyntheticEvent, value: number) => onTabChange(value)
   // const handleChangeTab = (_: SyntheticEvent, value: number) => setSelectedOption(value)
 
@@ -42,6 +43,7 @@ export default function ProductTabs({ reviews, description, activeTab, onTabChan
       >
         <Tab className="inner-tab" label="Description" />
         <Tab className="inner-tab" label="Review" />
+        <Tab className="inner-tab" label="Specification" />
       </StyledTabs>
 
       <div className="mb-3">
@@ -49,6 +51,7 @@ export default function ProductTabs({ reviews, description, activeTab, onTabChan
         {selectedOption === 1 && reviews} */}
         {activeTab === 0 && description}
         {activeTab === 1 && reviews}
+         {activeTab === 2 && specifications}
       </div>
     </Fragment>
   )

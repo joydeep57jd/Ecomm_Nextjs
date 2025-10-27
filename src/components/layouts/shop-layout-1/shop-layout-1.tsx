@@ -41,14 +41,14 @@ export default function ShopLayout1({ children, data }: Props) {
     
 
  const aboutLinks = [
-  { title: footerDetails.aboutUsDtl.aboutUs, url: "#" },
-  { title: footerDetails.contactUsDtl.contactUs, url: "#" },
-  { title: footerDetails.privacyPolicyDtl.privacyPolicy, url: "#" },
-  { title: footerDetails.termsAndConditionsDtl.termsAndConditions, url: "#" },
-  { title: footerDetails.cancellation_RefundPolicyDtl.cancellation_RefundPolicy, url: "#" },
-  { title: footerDetails.returnPolicyDtl.returnPolicy, url: "#" },
-  { title: footerDetails.tradeLicenseDtl.tradeLicenseNo, url: "#" },
-  { title: footerDetails.tinNoDtl.tinNo, url: "#" }
+  { title: footerDetails?.aboutUsDtl?.aboutUs, url: "#" },
+  { title: footerDetails?.contactUsDtl?.contactUs, url: "#" },
+  { title: footerDetails?.privacyPolicyDtl?.privacyPolicy, url: "#" },
+  { title: footerDetails?.termsAndConditionsDtl?.termsAndConditions, url: "#" },
+  { title: footerDetails?.cancellation_RefundPolicyDtl?.cancellation_RefundPolicy, url: "#" },
+  { title: footerDetails?.returnPolicyDtl?.returnPolicy, url: "#" },
+  { title: footerDetails?.tradeLicenseDtl?.tradeLicenseNo, url: "#" },
+  { title: footerDetails?.tinNoDtl?.tinNo, url: "#" }
 ].filter(item => item.title)
 
   const MOBILE_VERSION_HEADER = (

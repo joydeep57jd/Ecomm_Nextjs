@@ -19,46 +19,45 @@ const enum sortField {
 // ==============================================================
 interface Props {
   searchParams: Promise<{
-    search: string;
-    page: string;
-    sort: sortField;
-    category: string;
-    subCategory: string;
-    subSubCategory: string;
+    search: string
+    page: string
+    sort: sortField
+    category: string
+    subCategory: string
+    subSubCategory: string
     filter: string
-    variantFilter: string;
+    variantFilter: string
     price: string
-  }>;
+  }>
 }
 // ==============================================================
 
 export default async function ProductSearch({ searchParams }: Props) {
-  const { search, category, subCategory, subSubCategory, filter, variantFilter, sort, price } = await searchParams
+  const { search, category, subCategory, subSubCategory, filter, variantFilter, sort, price } =
+    await searchParams
 
   const sortFieldValue = {
     [sortField.RELEVANCE]: true,
     [sortField.DATE]: true,
     [sortField.PRICE_LOW_TO_HIGH]: false,
-    [sortField.PRICE_HIGH_TO_LOW]: true,
+    [sortField.PRICE_HIGH_TO_LOW]: true
   }
 
   const sortFieldKey = {
     [sortField.RELEVANCE]: "RelevanceFilter",
     [sortField.DATE]: "DateFilter",
     [sortField.PRICE_LOW_TO_HIGH]: "PriceFilter",
-    [sortField.PRICE_HIGH_TO_LOW]: "PriceFilter",
+    [sortField.PRICE_HIGH_TO_LOW]: "PriceFilter"
   }
-
-
 
   const getFilterValues = (encodedFilters: string) => {
     try {
       const filters = JSON.parse(atob(encodedFilters))
       const variants: string[] = []
       const keyNames: string[] = []
-      Object.keys(filters).forEach(category => {
+      Object.keys(filters).forEach((category) => {
         const options = filters[category] ?? {}
-        Object.keys(options).forEach(key => {
+        Object.keys(options).forEach((key) => {
           const value = options[key].join()
           if (value) {
             variants.push(value)
@@ -68,12 +67,13 @@ export default async function ProductSearch({ searchParams }: Props) {
       })
       return { name: keyNames, value: variants.join("#") }
     } catch {
-      return { name: [], value: '' }
+      return { name: [], value: "" }
     }
   }
 
   const getSortFilter = () => {
-    const field = Object.keys(sortFieldValue).find(key => key === sort) as sortField ?? sortField.RELEVANCE
+    const field =
+      (Object.keys(sortFieldValue).find((key) => key === sort) as sortField) ?? sortField.RELEVANCE
     return field ? { [sortFieldKey[field]]: sortFieldValue[field] } : {}
   }
 
@@ -89,9 +89,17 @@ export default async function ProductSearch({ searchParams }: Props) {
   const sortFilters = getSortFilter()
   const priceFilters = getPriceFilter()
 
-  return <Products filters={filters.value} search={search ?? ''} subCategory={subCategory ?? ''}
-    subSubCategory={subSubCategory ?? ''} categoryId={category ?? ''} variantFilters={variantFilters.value} sortFilters={sortFilters} priceFilters={priceFilters}
-    badges={[...filters.name, ...variantFilters.name]}
-  />
-
+  return (
+    <Products
+      filters={filters.value}
+      search={search ?? ""}
+      subCategory={subCategory ?? ""}
+      subSubCategory={subSubCategory ?? ""}
+      categoryId={category ?? ""}
+      variantFilters={variantFilters.value}
+      sortFilters={sortFilters}
+      priceFilters={priceFilters}
+      badges={[...filters.name, ...variantFilters.name]}
+    />
+  )
 }
