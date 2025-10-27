@@ -48,15 +48,15 @@ export default function CheckoutAlternativePageView() {
     state: { remoteCarts, cart }
   } = useCart()
 
- useEffect(() => {
-  if (user  && !remoteCarts) {
-    syncUser(user)
-  }
+  useEffect(() => {
+    if (user && !remoteCarts) {
+      syncUser(user)
+    }
 
-  if (user?.customerId) {
-    getInitialData()
-  }
-}, [remoteCarts, user])
+    if (user?.customerId) {
+      getInitialData()
+    }
+  }, [remoteCarts, user])
 
   useEffect(() => {
     if (!cart.length && !orderResponse) {
@@ -65,7 +65,6 @@ export default function CheckoutAlternativePageView() {
   }, [cart])
 
   const syncUser = async (user: UserData) => {
-    
     const remoteCarts = await getCart(+user.customerId)
     const finalCarts: Cart[] = getLocalCartFromRemoteCart(remoteCarts || [])
     dispatch({
@@ -73,8 +72,8 @@ export default function CheckoutAlternativePageView() {
       carts: finalCarts,
       isLoggedIn: true,
       remoteCarts: remoteCarts || [],
-      isSyncRequired:false,
-      user:user!
+      isSyncRequired: false,
+      user: user!
     })
   }
 
@@ -130,7 +129,7 @@ export default function CheckoutAlternativePageView() {
     }
   }, [selectedPinCode])
 
-  const order = async () => {
+  const order = async (paymentMethod: string) => {
     console.warn(checkoutOrderResponse, selectedDelivaryAddressData)
 
     if (!selectedDelivaryAddressData || !checkoutOrderResponse) {
@@ -152,7 +151,6 @@ export default function CheckoutAlternativePageView() {
       dist = "",
       email = "",
       mname = "",
-      paymentmode = "",
       spclrequest = "",
       state = "",
       type = ""
@@ -173,7 +171,7 @@ export default function CheckoutAlternativePageView() {
         dist,
         email,
         mname,
-        paymentmode: paymentmode || "",
+        paymentmode: paymentMethod,
         spclrequest: spclrequest || "",
         state,
         type

@@ -3,6 +3,7 @@ import { Resolver, useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import Button from "@mui/material/Button"
+import Typography from "@mui/material/Typography"
 
 import { Fragment, useState } from "react"
 // GLOBAL CUSTOM COMPONENTS
@@ -16,6 +17,7 @@ import FormLabel from "@/pages-sections/payment/form-label"
 import { Address } from "@/models/User.model"
 import DeliveryAddresses from "./delivery-addresses"
 import { DelivaryAddressData } from "@/models/Address.model"
+import { Divider } from "@mui/material"
 
 const validationSchema = yup.object().shape({
   card: yup.string().optional(),
@@ -42,19 +44,27 @@ const validationSchema = yup.object().shape({
   })
 })
 
-type FormValues = yup.InferType<typeof validationSchema>;
+type FormValues = yup.InferType<typeof validationSchema>
 
 interface Props {
-  deliveryAddresses: Address[];
+  deliveryAddresses: Address[]
   getAddresses(): Promise<void>
   setSelectedPinCode(value: string): void
   setSelectedDelivaryAddressData(data: DelivaryAddressData): void
-  order(): Promise<void>
+  order(paymentMethod: string): Promise<void>
   placingOrder: boolean
 }
 
-export default function CheckoutForm({ deliveryAddresses, getAddresses, setSelectedPinCode, order, setSelectedDelivaryAddressData, placingOrder }: Props) {
-  const [paymentMethod, setPaymentMethod] = useState<"credit-card" | "paypal" | "cod">("cod")
+export default function CheckoutForm({
+  deliveryAddresses,
+  getAddresses,
+  setSelectedPinCode,
+  order,
+  setSelectedDelivaryAddressData,
+  placingOrder
+}: Props) {
+  const [paymentMethod, setPaymentMethod] = useState<"online" | "COD" | "">("")
+  const [paymentError, setPaymentError] = useState(false)
 
   const initialValues: FormValues = {
     card: "",
@@ -85,18 +95,29 @@ export default function CheckoutForm({ deliveryAddresses, getAddresses, setSelec
     // router.push("/payment");
   })
 
-  const handleChangeTo = (method: "credit-card" | "paypal" | "cod") => {
+  const handleChangeTo = (method: "online" | "COD") => {
     setPaymentMethod(method)
-    if (method === "credit-card" || method === "paypal") {
-      alert("Online payment mode is coming soon")
+    setPaymentError(false)
+  }
+
+  const handlePlaceOrder = () => {
+    if (!paymentMethod) {
+      setPaymentError(true)
+      return
     }
+    order(paymentMethod)
   }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmitForm}>
       {/* <DeliveryDate deliveryTimes={deliveryTimes} /> */}
 
-      <DeliveryAddresses deliveryAddresses={deliveryAddresses} getAddresses={getAddresses} setSelectedDelivaryAddressData={setSelectedDelivaryAddressData} setSelectedPinCode={setSelectedPinCode} />
+      <DeliveryAddresses
+        deliveryAddresses={deliveryAddresses}
+        getAddresses={getAddresses}
+        setSelectedDelivaryAddressData={setSelectedDelivaryAddressData}
+        setSelectedPinCode={setSelectedPinCode}
+      />
 
       <Card>
         <Heading number={2} title="Payment Details" />
@@ -113,28 +134,32 @@ export default function CheckoutForm({ deliveryAddresses, getAddresses, setSelec
             <Divider sx={{ my: 3, mx: -4 }} /> */}
 
             {/* PAYPAL CARD OPTION */}
-            {/* <FormLabel
+            <FormLabel
               name="paypal"
-              title="Pay with Paypal"
-              checked={paymentMethod === "paypal"}
-              handleChange={() => handleChangeTo("paypal")}
+              title="Pay with Online Payment"
+              checked={paymentMethod === "online"}
+              handleChange={() => handleChangeTo("online")}
             />
 
-            <Divider sx={{ my: 3, mx: -4 }} /> */}
+            <Divider sx={{ my: 3, mx: -4 }} />
 
             {/* CASH ON DELIVERY OPTION */}
             <FormLabel
               name="cod"
               title="Cash On Delivery"
-              checked={paymentMethod === "cod"}
-              handleChange={() => handleChangeTo("cod")}
+              checked={paymentMethod === "COD"}
+              handleChange={() => handleChangeTo("COD")}
             />
           </Card>
-
-
         </Fragment>
 
         <Voucher />
+
+        {paymentError && (
+          <Typography color="error" sx={{ mt: 1, mb: 2 }}>
+            Please select a payment method
+          </Typography>
+        )}
 
         <Button
           size="large"
@@ -142,7 +167,7 @@ export default function CheckoutForm({ deliveryAddresses, getAddresses, setSelec
           color="primary"
           variant="contained"
           loading={isSubmitting || placingOrder}
-          onClick={order}
+          onClick={handlePlaceOrder}
         >
           Place Order
         </Button>
