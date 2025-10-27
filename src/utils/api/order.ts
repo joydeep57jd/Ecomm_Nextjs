@@ -5,7 +5,7 @@ import {
   PlaceOrderResponse,
   PlaceOrderRequest,
   CustCancelRequest,
-  StatmentInvoiceResponse
+ 
 } from "@/models/Order.model"
 import axiosInstance from "../axiosInstance"
 import API_URL from "../constants"
