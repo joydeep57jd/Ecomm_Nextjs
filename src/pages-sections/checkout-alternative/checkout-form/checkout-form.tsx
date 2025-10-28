@@ -63,7 +63,7 @@ export default function CheckoutForm({
   setSelectedDelivaryAddressData,
   placingOrder
 }: Props) {
-  const [paymentMethod, setPaymentMethod] = useState<"online" | "COD" | "">("")
+  const [paymentMethod, setPaymentMethod] = useState<"online" | "cod" | "">("")
   const [paymentError, setPaymentError] = useState(false)
 
   const initialValues: FormValues = {
@@ -95,7 +95,7 @@ export default function CheckoutForm({
     // router.push("/payment");
   })
 
-  const handleChangeTo = (method: "online" | "COD") => {
+  const handleChangeTo = (method: "online" | "cod") => {
     setPaymentMethod(method)
     setPaymentError(false)
   }
@@ -147,8 +147,8 @@ export default function CheckoutForm({
             <FormLabel
               name="cod"
               title="Cash On Delivery"
-              checked={paymentMethod === "COD"}
-              handleChange={() => handleChangeTo("COD")}
+              checked={paymentMethod === "cod"}
+              handleChange={() => handleChangeTo("cod")}
             />
           </Card>
         </Fragment>
