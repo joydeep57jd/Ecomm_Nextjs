@@ -20,7 +20,6 @@ import { customerCancelRequest, GetStatementInvoice } from "@/utils/api/order"
 import { CustCancelRequest } from "@/models/Order.model"
 import Link from "next/link"
 
-
 // ==============================================================
 // PROPS
 // ==============================================================
@@ -69,7 +68,7 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
   const handleOpenInvoice = async () => {
     try {
       setLoadingInvoice(true)
-      const invoiceNo = order.items?.find(item=>item.invoiceNumber)?.invoiceNumber!
+      const invoiceNo = order.items?.find((item) => item.invoiceNumber)?.invoiceNumber!
       const res = await GetStatementInvoice(invoiceNo)
 
       const htmlc = res.html
@@ -89,9 +88,9 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
     }
   }
 
-  const isDelivered = (item: Product) => item.status?.toLowerCase().includes("delivered")
+  const isDelivered = (item: Product) => item.isDelivered
 
-  const isCancelled = (item: Product) => item.status?.toLowerCase().includes("cancel")
+  const isCancelled = (item: Product) => item.isCancelled
 
   // const hasInvoice = !!order.items.find((item)=>item.invDate)
 
@@ -113,49 +112,48 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
 
         {order.items.map((item, ind) => (
           <FlexBetween key={ind} px={2} py={1} flexWrap="wrap" gap={1}>
-               <Link href={`/products/${item.itemId}${item.itemId ? `?variantId=${item.itemVariantId}` : ''}`}>
-            <FlexBox gap={2} alignItems="center">
-           
-
-              <Avatar
-                variant="rounded"
-                sx={{
-                  height: 60,
-                  width: 60,
-                  backgroundColor: "grey.50"
-                }}
-              >
-               
-                <Image
-                  alt={item.imageAlt}
-                  src={item.imageName}
-                  width={60}
-                  height={60}
-                  style={{
+            <Link
+              href={`/products/${item.itemId}${item.itemId ? `?variantId=${item.itemVariantId}` : ""}`}
+            >
+              <FlexBox gap={2} alignItems="center">
+                <Avatar
+                  variant="rounded"
+                  sx={{
                     height: 60,
                     width: 60,
-                    borderRadius: "100%",
-                    objectFit: "contain",
-                    border: "1px solid #ead7d7"
+                    backgroundColor: "grey.50"
                   }}
-                />
-              </Avatar>
+                >
+                  <Image
+                    alt={item.imageAlt}
+                    src={item.imageName}
+                    width={60}
+                    height={60}
+                    style={{
+                      height: 60,
+                      width: 60,
+                      borderRadius: "100%",
+                      objectFit: "contain",
+                      border: "1px solid #ead7d7"
+                    }}
+                  />
+                </Avatar>
 
-              <div>
-                <Typography noWrap variant="h6">
-                  {item.name}
-                </Typography>
-                <Typography lineHeight={2} variant="body1" color="text.secondary">
-                  {currency(item.price + item.tax)} x {item.qty}
-                </Typography>
-              </div>
-            </FlexBox>
-              </Link>
+                <div>
+                  <Typography noWrap variant="h6">
+                    {item.name}
+                  </Typography>
+                  <Typography lineHeight={2} variant="body1" color="text.secondary">
+                    {currency(item.price + item.tax)} x {item.qty}
+                  </Typography>
+                </div>
+              </FlexBox>
+            </Link>
 
             <FlexBox gap={1}>
               {isDelivered(item) ? (
                 <>
-                 <Button
+                  <Button
                     variant="contained"
                     color="primary"
                     size="small"
@@ -168,18 +166,14 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                       "View Invoice"
                     )}
                   </Button>
-                  
+
                   <Button variant="outlined" color="primary" size="small">
                     Return Order
                   </Button>
 
-                  
                   <Button onClick={() => setSelectedProduct(item)} variant="text" color="primary">
                     Write a Review
                   </Button>
-
-                 
-                 
                 </>
               ) : isCancelled(item) ? (
                 <Typography variant="body2" color="error" fontWeight={500}>

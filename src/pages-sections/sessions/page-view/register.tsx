@@ -55,6 +55,7 @@ export default function RegisterPageView() {
       }
       await signup(payload)
       enqueueSnackbar("Registration successful! Please login.", { variant: "success" })
+       localStorage.setItem('prevPath', '/register')
       router.push("/login")
     } catch (error) {
       console.error("Error during registration:", error)

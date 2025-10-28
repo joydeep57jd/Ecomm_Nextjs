@@ -33,11 +33,21 @@ type Props = {
 function OrderItemRating({ handleCloseModal, product }: Props) {
   const { user } = useUser()
   const [isSaving, setIsSaving] = useState(false)
+  const isEditMode = Boolean(product.ratingId)
+  
 
-  const methods = useForm({
-    defaultValues: initialRatingFormValues,
+   const methods = useForm({
+    defaultValues: {
+      ...initialRatingFormValues,
+      
+      ...(isEditMode && {
+        rating: product.rating || 0,
+        comment: product.note || ""
+      })
+    },
     resolver: yupResolver(ratingSchema)
   })
+
 
   const { watch, setValue, getValues } = methods
 
@@ -51,7 +61,10 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
         rating: getValues("rating"),
         customerId: +user!.customerId,
         itemId: product.itemId,
-        variantId: product.itemVariantId
+        variantId: product.itemVariantId,
+        OrderdetailId:product.orderDetailId,
+        RatingId:product.ratingId || 0
+        
       }
       await saveRating(payload)
       handleCloseModal(true)
@@ -62,10 +75,12 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
   }
 
   return (
-    <Dialog open onClose={handleCloseModal} fullWidth>
-      <DialogTitle>
-        <Typography variant="h4">Add your review</Typography>
-      </DialogTitle>
+    <Dialog open onClose={() => handleCloseModal(false)} fullWidth>
+     <DialogTitle>
+        <Typography variant="h4">
+          {isEditMode ? "Edit your review" : "Add your review"}
+        </Typography>
+        </DialogTitle>
       <Divider />
       <DialogContent>
         <Box sx={{ display: "flex", alignItems: "center", marginBottom: 2, gap: 1 }}>
@@ -107,7 +122,7 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
               size="medium"
               name="rating"
               value={watch("rating")}
-              onChange={(_, value) => setValue("rating", value!, { shouldValidate: true })}
+              onChange={(_, value) => setValue("rating", value || 0, { shouldValidate: true })}
             />
           </RatingGroup>
           <Box>

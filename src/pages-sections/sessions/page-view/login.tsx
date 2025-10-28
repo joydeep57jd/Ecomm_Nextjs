@@ -18,7 +18,7 @@ import {
   LoginWithOTPRequest,
   UserData
 } from "@/models/Auth.model"
-import { useRouter } from "next/navigation"
+import { useRouter, } from "next/navigation"
 import { setItem } from "@/utils/services/local-storage.service"
 import { useUser } from "@/contexts/UserContenxt"
 import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
@@ -33,6 +33,7 @@ export default function LoginPageView() {
   const [isInitialStep, setIsInitialStep] = useState<boolean>(true)
   const [isApiCallInprogress, setisApiCallInprogress] = useState(false)
   const [loginType, setLoginType] = useState<"password" | "otp">("password")
+  
 
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
@@ -115,7 +116,16 @@ export default function LoginPageView() {
     setItem("userDetails", data)
     setUser(data)
     enqueueSnackbar("Logged In Successfully!!!", { variant: "success" })
-    router.back()
+
+    const prevPath = localStorage.getItem("prevPath")
+
+    localStorage.removeItem("prevPath")
+
+    if (prevPath === "/register") {
+      router.replace("/")
+    } else {
+      router.back()
+    }
   }
 
   const handleLoginWithCredentials = async (values: LoginSchemaType) => {
@@ -172,17 +182,23 @@ export default function LoginPageView() {
     setIsInitialStep(true)
     setLoginType("password")
     methods.reset()
-    console.warn(methods.getValues())
+   
   }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmitForm}>
-      {
-        isInitialStep ? <>
-
+      {isInitialStep ? (
+        <>
           <div className="mb-1">
             <Label>Phone Number</Label>
-            <TextField disabled={!isInitialStep} fullWidth name="phoneNo" type="number" size="medium" placeholder="1234567890" />
+            <TextField
+              disabled={!isInitialStep}
+              fullWidth
+              name="phoneNo"
+              type="number"
+              size="medium"
+              placeholder="1234567890"
+            />
           </div>
           {otpLoginEnabled && (
             <Box mb={2}>
@@ -204,13 +220,17 @@ export default function LoginPageView() {
               </RadioGroup>
             </Box>
           )}
-        </> : <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
+        </>
+      ) : (
+        <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
           <Box>
             Not you? <strong>{methods.getValues("phoneNo")}</strong>
           </Box>
-          <Button variant="text" onClick={handleChangeNumber} size="small">Change</Button>
+          <Button variant="text" onClick={handleChangeNumber} size="small">
+            Change
+          </Button>
         </Box>
-      }
+      )}
 
       {!isInitialStep &&
         (loginType === "password" ? (

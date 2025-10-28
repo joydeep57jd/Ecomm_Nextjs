@@ -3,7 +3,9 @@ export interface SaveRatingRequest {
   variantId: number
   customerId: number
   rating: number
+  RatingId?: number
   note: string
+  OrderdetailId:number
 }
 
 export interface GetReviewPayload {

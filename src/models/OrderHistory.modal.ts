@@ -48,6 +48,12 @@ export interface Item {
   orderDetailId: number
   invoiceId:number
   invoiceNumber:string
+  ratingId:number
+  note:string
+  isDelivered:boolean
+  isCancelled:boolean
+  
+
 }
 
 export interface OrderPayload {
