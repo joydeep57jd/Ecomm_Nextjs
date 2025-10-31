@@ -178,6 +178,12 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
               ) : isCancelled(item) ? (
                 <Typography variant="body2" color="error" fontWeight={500}>
                   {item.status}
+
+                  {item.refundAmount > 0 && (
+                    <Typography color="error" fontWeight={500}>
+                      {currency(Number(item.refundAmount.toFixed(2)) ?? 0)}
+                    </Typography>
+                  )}
                 </Typography>
               ) : !item.invDate ? (
                 <Button

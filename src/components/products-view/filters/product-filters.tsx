@@ -32,7 +32,7 @@ export default function ProductFilters({ categoryOptions, priceFilters }: Props)
 
   const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>(Object.values(priceFilters).length > 1 ?Object.values(priceFilters): [0, 10000] )
   const [isFirstRangeChange, setIsFirstRangeChange] = useState(true)
-
+ 
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()

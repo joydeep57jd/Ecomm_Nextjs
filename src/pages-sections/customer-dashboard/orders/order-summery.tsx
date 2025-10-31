@@ -14,6 +14,9 @@ type Props = { order: OrderListCustomer };
 // ==============================================================
 
 export default function OrderSummery({ order }: Props) {
+
+  const isRefund = order.items.some((item)=>item?.isCancelled)
+  const salePrice = order.items.find((item) => item?.price !== undefined)?.price
   return (
     <Grid container spacing={3}>
       {/* <Grid size={{ md: 6, xs: 12 }}>
@@ -35,6 +38,7 @@ export default function OrderSummery({ order }: Props) {
           <ListItem title="Subtotal:" value={currency(+order.total)} />
           <ListItem title="Shipping fee:" value={currency(+order.delvCharge)} />
           <ListItem title="Discount:" value={currency(+order.discount)} />
+          
 
           <Divider sx={{ mb: 1 }} />
 
@@ -42,6 +46,10 @@ export default function OrderSummery({ order }: Props) {
             <Typography variant="h6">Total</Typography>
             <Typography variant="h6">{currency(+order.total)}</Typography>
           </FlexBetween>
+          {isRefund ?<FlexBetween mb={2}>
+            <Typography variant="h6">Refund</Typography>
+            <Typography variant="h6">{currency(salePrice ?? 0)}</Typography>
+          </FlexBetween>:<></>}
 
           {/* <p>Paid by Credit/Debit Card</p> */}
         </Card>

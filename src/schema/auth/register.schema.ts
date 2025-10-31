@@ -7,8 +7,14 @@ export const registerSchema = yup.object().shape({
   phoneNumber: yup
     .string()
     .required("Mobile Number is required")
-    .matches(/^[0-9]{10}$/, "Enter a valid 10-digit number"),
-  email: yup.string().email("Invalid Email Address").required("Email is required"),
+    .matches(/^[6-9][0-9]{9}$/, "Enter a valid 10-digit mobile number starting with 6–9"), 
+
+  email: yup
+    .string()
+    .email("Invalid Email Address")
+    .matches(/^[\w.%+-]+@[A-Za-z0-9.-]+\.(com|net)$/, "Email must end with .com or .net")
+    .required("Email is required"),
+
   password: yup.string().required("Password is required"),
   re_password: yup
     .string()

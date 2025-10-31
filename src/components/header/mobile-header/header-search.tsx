@@ -34,7 +34,8 @@ export function HeaderSearch() {
 
       {
         open && <div style={{
-          position: 'relative'
+          position: 'relative',
+          top:"20px"
         }}>
 
           <SearchInput2 setOpen={setOpen} />

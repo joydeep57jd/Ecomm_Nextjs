@@ -18,7 +18,7 @@ import {
   LoginWithOTPRequest,
   UserData
 } from "@/models/Auth.model"
-import { useRouter, } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { setItem } from "@/utils/services/local-storage.service"
 import { useUser } from "@/contexts/UserContenxt"
 import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
@@ -33,7 +33,6 @@ export default function LoginPageView() {
   const [isInitialStep, setIsInitialStep] = useState<boolean>(true)
   const [isApiCallInprogress, setisApiCallInprogress] = useState(false)
   const [loginType, setLoginType] = useState<"password" | "otp">("password")
-  
 
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
@@ -182,7 +181,6 @@ export default function LoginPageView() {
     setIsInitialStep(true)
     setLoginType("password")
     methods.reset()
-   
   }
 
   return (

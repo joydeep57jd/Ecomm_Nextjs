@@ -80,7 +80,7 @@ export default function ShopLayout1({ children, data }: Props) {
       <Sticky fixedOn={0} scrollDistance={300}>
         {header && (
           <Header mobileHeader={MOBILE_VERSION_HEADER}>
-            <Header.Left>
+            <Header.Left>  
               <Header.Logo url={header.logo} />
             </Header.Left>
 

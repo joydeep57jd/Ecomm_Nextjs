@@ -117,7 +117,7 @@ export default function DeliveryAddresses({
       </>
     ) : (
       <div>
-        <DashboardHeader Icon={Location} title="Adderesses" />
+        <DashboardHeader Icon={Location} title="Address" />
         <div
           style={{
             display: "flex",

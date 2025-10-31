@@ -129,7 +129,7 @@ function WishlistSelector({ handleCloseModal, product }: Props) {
           )}
         </FormControl>
         <Button onClick={() => setIsAddingNewCollection(true)} color="primary" variant="outlined">
-          + Add new coection
+          + Add new collection
         </Button>
       </DialogContent>
       <Divider />

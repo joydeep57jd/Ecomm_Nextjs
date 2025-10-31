@@ -52,6 +52,7 @@ export interface Item {
   note:string
   isDelivered:boolean
   isCancelled:boolean
+  refundAmount:number
   
 
 }

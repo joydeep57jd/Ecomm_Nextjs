@@ -22,9 +22,9 @@ import { Tune } from "@mui/icons-material"
 
 const SORT_OPTIONS = [
   { label: "New Arrival ", value: "new arrival" },
-  { label: "Price Low to High", value: "price-low-to-high" },
+  { label: "Price: Low to High", value: "price-low-to-high" },
 
-  { label: "Price High to Low", value: "price-high-to-low" }
+  { label: "Price: High to Low", value: "price-high-to-low" }
 ]
 
 // ==============================================================

@@ -84,6 +84,7 @@ export default async function ProductSearch({ searchParams }: Props) {
     return {}
   }
 
+
   const filters = getFilterValues(filter)
   const variantFilters = getFilterValues(variantFilter)
   const sortFilters = getSortFilter()
