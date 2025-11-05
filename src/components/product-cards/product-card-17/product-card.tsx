@@ -9,7 +9,6 @@ import { ImageWrapper, ContentWrapper, StyledCard } from "./styles"
 import { currency } from "lib"
 import { Product } from "@/models/Home.model"
 
-
 // ========================================================
 interface ProductCard17Props {
   // Accept either standard Product or wishlist item shape
@@ -22,9 +21,8 @@ interface ProductCard17Props {
 export default function ProductCard17({
   product,
   bgWhite = false,
-  isWishList = false,
+  isWishList = false
 }: ProductCard17Props) {
-
   const title = product.title
   const slug = product.slug
   const price = product.price
@@ -37,7 +35,10 @@ export default function ProductCard17({
       <ImageWrapper>
         <Discount discount={discount} />
 
-        <Link href={`/products/${slug}${product.itemVariantId ? `?variantId=${product.itemVariantId}` : ''}`} aria-label={`View ${title}`}>
+        <Link
+          href={`/products/${slug}${product.itemVariantId ? `?variantId=${product.itemVariantId}` : ""}`}
+          aria-label={`View ${title}`}
+        >
           <Image
             width={750}
             height={750}

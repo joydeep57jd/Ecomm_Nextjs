@@ -30,31 +30,29 @@ const getColor = (status: string) => {
 }
 
 export default function OrderRow({ order }: Props) {
+ const items = order.items ?? []
+  const firstItem = items[0]
   
   return (
-    <Link href={`/orders/details?id=${btoa(order.custOrdNo)}`}>
+     <Link href={`/orders/details?id=${btoa(order.custOrdNo)}`}>
       <TableRow elevation={0} sx={{ gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr" }}>
-        <Box sx={{
-          display: 'flex', alignItems: 'center',
-          gap: 2
-        }}>
-          <Box sx={{
-            display: 'flex', alignItems: 'center',
-          }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Image
               alt="Logo"
               width={40}
               height={40}
-              src={order?.items[0].imageName}
+              src={firstItem?.imageName }
               style={{ marginLeft: 8, borderRadius: '100%' }}
             />
-            {
-              order.items.length > 1 &&
+
+            {items.length > 1 && (
               <Typography noWrap variant="h5">
-                +{order.items.length - 1}
+                +{items.length - 1}
               </Typography>
-            }
+            )}
           </Box>
+
           <Typography noWrap variant="h5">
             #{order.custOrdNo}
           </Typography>
@@ -85,3 +83,4 @@ export default function OrderRow({ order }: Props) {
     </Link>
   )
 }
+

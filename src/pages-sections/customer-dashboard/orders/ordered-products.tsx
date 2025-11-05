@@ -19,6 +19,8 @@ import { useUser } from "@/contexts/UserContenxt"
 import { customerCancelRequest, GetStatementInvoice } from "@/utils/api/order"
 import { CustCancelRequest } from "@/models/Order.model"
 import Link from "next/link"
+import OrderItemReturn from "./page-view/order-item-return"
+
 
 // ==============================================================
 // PROPS
@@ -33,10 +35,12 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [loadingInvoice, setLoadingInvoice] = useState(false)
   const [loadingCancelId, setLoadingCancelId] = useState<number | null>(null)
+  const [modalType, setModalType] = useState<"rating" | "return"| "cancel" | null>(null)
 
   const handleCloseModal = (isReloadRequired: boolean) => {
     setSelectedProduct(null)
-    console.warn(isReloadRequired)
+    setModalType(null)
+   if (isReloadRequired) refreshOrder()
   }
 
   const handleCancelOrder = async (item: Product) => {
@@ -87,6 +91,15 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
       setLoadingInvoice(false)
     }
   }
+  const canReturn = (item: Product) => {
+    const now = new Date()
+
+    const lastReturn = item.lastReturnDate
+      ? new Date(item.lastReturnDate)
+      : new Date(item.deliveryDate)
+
+    return now <= lastReturn
+  }
 
   const isDelivered = (item: Product) => item.isDelivered
 
@@ -110,7 +123,7 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
           <Item title="Placed on:" value={format(new Date(order.orderDate), "dd MMM, yyyy")} />
         </FlexBetween>
 
-        {order.items.map((item, ind) => (
+        {order?.items?.map((item, ind) => (
           <FlexBetween key={ind} px={2} py={1} flexWrap="wrap" gap={1}>
             <Link
               href={`/products/${item.itemId}${item.itemId ? `?variantId=${item.itemVariantId}` : ""}`}
@@ -166,12 +179,28 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                       "View Invoice"
                     )}
                   </Button>
+                  {canReturn(item) && (
+                    <Button
+                      onClick={() => {
+                        setSelectedProduct(item)
+                        setModalType("return")
+                      }}
+                      variant="outlined"
+                      color="primary"
+                      size="small"
+                    >
+                      Return Item
+                    </Button>
+                  )}
 
-                  <Button variant="outlined" color="primary" size="small">
-                    Return Order
-                  </Button>
-
-                  <Button onClick={() => setSelectedProduct(item)} variant="text" color="primary">
+                  <Button
+                    onClick={() => {
+                      setSelectedProduct(item)
+                      setModalType("rating")
+                    }}
+                    variant="text"
+                    color="primary"
+                  >
                     Write a Review
                   </Button>
                 </>
@@ -210,14 +239,32 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
         ))}
       </Card>
 
-      {!!selectedProduct && (
+      {modalType === "rating" && selectedProduct && (
         <OrderItemRating
           handleCloseModal={handleCloseModal}
           itemId={selectedProduct.itemId}
           variantId={selectedProduct.itemVariantId}
           product={selectedProduct}
+        
         />
       )}
+
+      {modalType === "return" && selectedProduct && (
+        <OrderItemReturn
+          handleCloseModal={handleCloseModal}
+          itemId={selectedProduct.itemId}
+          variantId={selectedProduct.itemVariantId}
+          product={selectedProduct}
+            order = {order}
+        />
+
+      )}
+
+      {/* {modalType=== "cancel" && selectedProduct && (
+        
+        
+      )} */}
+
     </>
   )
 }

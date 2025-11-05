@@ -15,6 +15,9 @@ import { GetReviewResponse } from "@/models/Rating.model"
 import { useEffect, useState } from "react"
 import ProductSpecification from "../product-specification"
 
+import { IconButton, Box } from "@mui/material"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+
 // ==============================================================
 interface Props {
   product: SingleProductResponse
@@ -24,7 +27,6 @@ interface Props {
   selectedVariant: string
   isLoading: boolean
   reviews: GetReviewResponse[]
-  
 }
 // ==============================================================
 
@@ -33,11 +35,10 @@ export default function ProductDetailsPageView(props: Props) {
   const router = useRouter()
 
   useEffect(() => {
-  if (!props.product?.variantDetails) {
-    router.push("/")
-  }
-}, [props.product?.variantDetails])
-
+    if (!props.product?.variantDetails) {
+      router.push("/")
+    }
+  }, [props.product?.variantDetails])
 
   const onShowReviews = () => {
     setActiveTab(1)
@@ -52,6 +53,12 @@ export default function ProductDetailsPageView(props: Props) {
   return (
     <Container className="mt-2 mb-2">
       {/* PRODUCT DETAILS INFO AREA */}
+      {/* <DashboardHeader href={`/products/search?category=${props.product.variantDetails.categoryId}`} title="Product Page" /> */}
+      <Box display="flex" alignItems="center" mb={2}>
+        <IconButton onClick={() => router.back()} aria-label="Go Back">
+          <ArrowBackIcon />
+        </IconButton>
+      </Box>
       <ProductIntro
         product={props.product}
         variantMap={props.variantMap}
@@ -64,7 +71,7 @@ export default function ProductDetailsPageView(props: Props) {
       <ProductTabs
         description={<ProductDescription product={props.product} />}
         reviews={<ProductReviews reviews={props.reviews} />}
-        specifications={<ProductSpecification specifications={props.product?.variantOptionList}  />}
+        specifications={<ProductSpecification specifications={props.product?.variantOptionList} />}
         activeTab={activeTab}
         onTabChange={setActiveTab}
       />

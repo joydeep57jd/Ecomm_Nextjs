@@ -32,7 +32,7 @@ export default function ProductVariantSelector({ variantMap, product, selectedVa
     }
   }, [product])
 
-  return Array.from(variantMap.entries()).map(([variantLabel, variants], index) => (
+  return Array.from(variantMap?.entries())?.map(([variantLabel, variants], index) => (
     <div className="mb-1" key={variantLabel}>
       <Typography variant="h6" sx={{ mb: 1 }}>
         {variantLabel}

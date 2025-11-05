@@ -46,15 +46,15 @@ export interface Item {
   invDate: string
   status: string
   orderDetailId: number
-  invoiceId:number
-  invoiceNumber:string
-  ratingId:number
-  note:string
-  isDelivered:boolean
-  isCancelled:boolean
-  refundAmount:number
-  
+  invoiceId: number
+  invoiceNumber: string
+  ratingId: number
+  note: string
+  isDelivered: boolean
+  isCancelled: boolean
+  refundAmount: number
 
+  deliveryDate: string
 }
 
 export interface OrderPayload {

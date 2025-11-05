@@ -13,6 +13,7 @@ import DeleteWishListCategoryModal from "./delete-wishlist-category"
 import Trash from "@/icons/Trash"
 import { useUser } from "@/contexts/UserContenxt"
 import { deleteCustomerWishItem } from "@/utils/api/wishList"
+import AddToCart from "@/components/add-to-cart"
 
 interface Props {
   categories: WishListCategory[]
@@ -31,7 +32,7 @@ export default function WishListPageView({
   deletingCategoryId,
   items,
   setCategories,
-  setOmerWishItems,
+  setOmerWishItems
 }: Props) {
   const { user } = useUser()
   const [deletingItems, setDeletingItems] = useState<Record<number, Set<number>>>({})
@@ -45,7 +46,7 @@ export default function WishListPageView({
   }
 
   const deleteItem = async (customerWishItemId: number) => {
-    setDeletingItems(prev => {
+    setDeletingItems((prev) => {
       if (!prev[+selectedCategoryId]) prev[+selectedCategoryId] = new Set()
       prev[+selectedCategoryId].add(customerWishItemId)
       return { ...prev }
@@ -57,19 +58,21 @@ export default function WishListPageView({
       Date: new Date().toISOString()
     })
 
-    setDeletingItems(prev => {
+    setDeletingItems((prev) => {
       prev[+selectedCategoryId].delete(customerWishItemId)
       return { ...prev }
     })
-    setOmerWishItems(prev => {
-      prev[selectedCategoryId] = prev[selectedCategoryId].filter(i => i.customerWishItemId !== customerWishItemId)
+    setOmerWishItems((prev) => {
+      prev[selectedCategoryId] = prev[selectedCategoryId].filter(
+        (i) => i.customerWishItemId !== customerWishItemId
+      )
       return { ...prev }
     })
   }
 
   const handleCloseDeleteModal = (isReloadRequired: boolean) => {
     if (isReloadRequired && deleteCategoryId !== null) {
-      setCategories(prev => (prev!).filter((cat) => cat.wishListCategoryId !== deleteCategoryId))
+      setCategories((prev) => prev!.filter((cat) => cat.wishListCategoryId !== deleteCategoryId))
       onDeleteCategory(categories.find((c) => c.wishListCategoryId === deleteCategoryId)!)
     }
     setDeleteCategoryId(null)
@@ -167,32 +170,63 @@ export default function WishListPageView({
             size={{ lg: 4, sm: 6, xs: 12 }}
             key={`${product.customerWishItemId}-${product.itemId}-${product.variantid}-${index}`}
           >
-            <Box sx={{
-              position: "relative",
-            }}>
-              <Box sx={{
-                position: "absolute",
-                top: 16,
-                right: 16,
-                cursor: "pointer",
-                zIndex: 10,
-                background: "#fff",
-                borderRadius: "100%",
-                height: 32,
-                width: 32,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.2)"
-              }}
+            <Box sx={{ position: "relative" }}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 16,
+                  right: 16,
+                  cursor: "pointer",
+                  zIndex: 10,
+                  background: "#fff",
+                  borderRadius: "50%",
+                  height: 32,
+                  width: 32,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                  transition: "all 0.2s ease-in-out",
+                  "&:hover": {
+                    transform: "scale(1.1)",
+                    background: "#f9f9f9"
+                  }
+                }}
                 onClick={() => deleteItem(product.customerWishItemId)}
               >
-
-                {
-                  deletingItems[+selectedCategoryId]?.has(product.customerWishItemId) ?
-                    <CircularProgress size={16} /> : <Trash />
-                }
+                {deletingItems[+selectedCategoryId]?.has(product.customerWishItemId) ? (
+                  <CircularProgress size={16} />
+                ) : (
+                  <Trash sx={{ fontSize: 18, color: "#d32f2f" }} />
+                )}
               </Box>
+
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 16,
+                  right: 60,
+                  zIndex: 10
+                }}
+              >
+                <AddToCart
+                  variantType="icon"
+                  cart={{
+                    productId: product.itemId,
+                    productName: product.variantName,
+                    productPrice: product.price_regular,
+                    qty: 1,
+                    productImage: product.images[0].fullImagepath,
+                    itemVariantId: product.variantid,
+                    stockQty: product.stockQty ?? 1,
+                    mrp: product.mrp,
+                    variantName: product.variantName
+                    
+
+                  }}
+                />
+              </Box>
+
               <ProductCard17
                 bgWhite
                 product={{

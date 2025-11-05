@@ -1,21 +1,20 @@
 "use client"
 
-
 import Button from "@mui/material/Button"
-// GLOBAL CUSTOM HOOK
-
-// CUSTOM DATA MODEL
-
+import IconButton from "@mui/material/IconButton"
+import { ShoppingCart } from "@mui/icons-material"
 import { useUser } from "@/contexts/UserContenxt"
 import { Cart } from "@/models/CartProductItem.models"
 import useCart from "@/hooks/useCart"
 import { useCartDrawer } from "@/contexts/CartDrawerContext"
 
-// ================================================================
-type Props = { cart: Cart, fullWidth?: boolean };
-// ================================================================
+type Props = {
+  cart: Cart
+  fullWidth?: boolean
+  variantType?: "button" | "icon"
+}
 
-export default function AddToCart({ cart, fullWidth }: Props) {
+export default function AddToCart({ cart, fullWidth, variantType = "button" }: Props) {
   const { user } = useUser()
   const { dispatch } = useCart()
   const { setOpen } = useCartDrawer()
@@ -28,6 +27,22 @@ export default function AddToCart({ cart, fullWidth }: Props) {
       user: user ?? undefined
     })
     setOpen(true)
+  }
+
+  if (variantType === "icon") {
+    return (
+      <IconButton
+        onClick={handleAddToCart}
+        disabled={!cart.stockQty}
+        sx={{
+          background: "#fff",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+          "&:hover": { background: "#f5f5f5" }
+        }}
+      >
+        <ShoppingCart sx={{ fontSize: 18}} />
+      </IconButton>
+    )
   }
 
   return (
