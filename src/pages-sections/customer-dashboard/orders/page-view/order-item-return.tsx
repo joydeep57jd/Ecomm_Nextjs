@@ -36,6 +36,7 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
   })
 
   const onSubmit = async (data: { comment: string; attachments: File[] }) => {
+    console.warn("Return Data:", data)
     const payload: OrderReturnPayload = {
       OrderDetailId: product.orderDetailId,
       OrderId: order.orderId,

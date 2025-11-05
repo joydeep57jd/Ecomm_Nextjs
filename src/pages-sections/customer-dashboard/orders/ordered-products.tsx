@@ -35,12 +35,12 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [loadingInvoice, setLoadingInvoice] = useState(false)
   const [loadingCancelId, setLoadingCancelId] = useState<number | null>(null)
-  const [modalType, setModalType] = useState<"rating" | "return"| "cancel" | null>(null)
+  const [modalType, setModalType] = useState<"rating" | "return" | "cancel" | null>(null)
 
   const handleCloseModal = (isReloadRequired: boolean) => {
     setSelectedProduct(null)
     setModalType(null)
-   if (isReloadRequired) refreshOrder()
+    if (isReloadRequired) refreshOrder()
   }
 
   const handleCancelOrder = async (item: Product) => {
@@ -98,12 +98,39 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
       ? new Date(item.lastReturnDate)
       : new Date(item.deliveryDate)
 
-    return now <= lastReturn
+    return true || now <= lastReturn
   }
 
   const isDelivered = (item: Product) => item.isDelivered
 
   const isCancelled = (item: Product) => item.isCancelled
+
+  const getModal = (selectedProduct: Product) => {
+    switch (modalType) {
+      case "rating":
+        return (
+          <OrderItemRating
+            handleCloseModal={handleCloseModal}
+            itemId={selectedProduct.itemId}
+            variantId={selectedProduct.itemVariantId}
+            product={selectedProduct}
+          />
+        )
+      case "return":
+        return (
+          <OrderItemReturn
+            handleCloseModal={handleCloseModal}
+            itemId={selectedProduct.itemId}
+            variantId={selectedProduct.itemVariantId}
+            product={selectedProduct}
+            order={order}
+          />
+        )
+
+      default:
+        break
+    }
+  }
 
   // const hasInvoice = !!order.items.find((item)=>item.invDate)
 
@@ -239,31 +266,9 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
         ))}
       </Card>
 
-      {modalType === "rating" && selectedProduct && (
-        <OrderItemRating
-          handleCloseModal={handleCloseModal}
-          itemId={selectedProduct.itemId}
-          variantId={selectedProduct.itemVariantId}
-          product={selectedProduct}
-        
-        />
-      )}
-
-      {modalType === "return" && selectedProduct && (
-        <OrderItemReturn
-          handleCloseModal={handleCloseModal}
-          itemId={selectedProduct.itemId}
-          variantId={selectedProduct.itemVariantId}
-          product={selectedProduct}
-            order = {order}
-        />
-
-      )}
-
-      {/* {modalType=== "cancel" && selectedProduct && (
-        
-        
-      )} */}
+      {
+        selectedProduct && getModal(selectedProduct)
+      }
 
     </>
   )

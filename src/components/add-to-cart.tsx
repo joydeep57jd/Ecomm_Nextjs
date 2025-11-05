@@ -40,7 +40,7 @@ export default function AddToCart({ cart, fullWidth, variantType = "button" }: P
           "&:hover": { background: "#f5f5f5" }
         }}
       >
-        <ShoppingCart sx={{ fontSize: 18}} />
+        <ShoppingCart sx={{ fontSize: 18 }} />
       </IconButton>
     )
   }

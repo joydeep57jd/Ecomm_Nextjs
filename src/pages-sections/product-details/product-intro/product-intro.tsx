@@ -24,11 +24,11 @@ type Props = {
   selectedVariant: string
   isLoading: boolean
   onShowReviews?: () => void
- 
+
 }
 // ================================================================
 
-export default function ProductIntro({ product, variantMap, selectedVariant, isLoading,  onShowReviews }: Props) {
+export default function ProductIntro({ product, variantMap, selectedVariant, isLoading, onShowReviews }: Props) {
   return (
     <StyledRoot style={{ position: 'relative' }}>
       {
@@ -134,6 +134,27 @@ export default function ProductIntro({ product, variantMap, selectedVariant, isL
               }))
 
             }} />
+          }
+
+          {
+            JSON.stringify({
+              productId: product.variantDetails?.itemId,
+              itemVariantId: product.variantDetails?.itemVariantId,
+              productPrice: product.priceAndStock?.salePrice,
+              productName: product.variantDetails?.itemName,
+              productImage: product.imageList[0].fullImagepath,
+              qty: 1,
+              stockQty: product.priceAndStock?.stockQty,
+              variantName: product.variantDetails.variantName,
+              mrp: product.priceAndStock.mrp,
+              variantOptionDetails: product.variantOptionList.map(variant => ({
+                itemVariantId: 0,
+                optionName: variant.optionName,
+                optionValue: variant.optionValue,
+                variantOptionId: 0,
+                variantOptionValueId: variant.variantOptionValueId
+              }))
+            })
           }
 
           {/* SHOP NAME */}

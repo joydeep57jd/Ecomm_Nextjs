@@ -16,11 +16,11 @@ type Props = {
 }
 
 function SingleProduct({ slug, variantId, variant }: Props) {
-  
+
   let loadingSlug = "",
     loadinVariant = "",
     loadinVariantId = ""
-  const [variantMap, setVariantMap] = useState<Map<string, VariantOption[]>>()
+  const [variantMap, setVariantMap] = useState<Map<string, VariantOption[]>>(new Map())
   const [selectedVariant, setSelectedVariant] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [product, setProduct] = useState<SingleProductResponse>()

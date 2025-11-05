@@ -1,6 +1,6 @@
 "use client"
 
-import { Dispatch, Fragment, SetStateAction, useState } from "react"
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react"
 import Favorite from "@mui/icons-material/Favorite"
 import DashboardHeader from "../dashboard-header"
 import { CustomerWishItemElement, WishListCategory } from "@/models/WishList.modal"
@@ -14,6 +14,8 @@ import Trash from "@/icons/Trash"
 import { useUser } from "@/contexts/UserContenxt"
 import { deleteCustomerWishItem } from "@/utils/api/wishList"
 import AddToCart from "@/components/add-to-cart"
+import { getProduct } from "@/utils/api/product"
+import { SingleProductResponse } from "@/models/SingleProduct.model"
 
 interface Props {
   categories: WishListCategory[]
@@ -40,10 +42,34 @@ export default function WishListPageView({
   const [editingCategory, setEditingCategory] = useState<WishListCategory | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [deleteCategoryId, setDeleteCategoryId] = useState<number | null>(null)
+  const [fetchedProductsByCategoryId, setFetchedProductsByCategoryId] = useState(new Set<number>())
+  const [products, setProducts] = useState<Record<number, SingleProductResponse>>({})
 
   const handleOpenDeleteModal = (categoryId: number) => {
     setDeleteCategoryId(categoryId)
   }
+
+  useEffect(() => {
+    if (!fetchedProductsByCategoryId.has(+selectedCategoryId)) {
+      const productIds = (items[selectedCategoryId] ?? []).map((i) => i.variantid)
+      fetchProducts(productIds)
+
+      const fetchedIds = fetchedProductsByCategoryId
+      fetchedIds.add(+selectedCategoryId)
+      setFetchedProductsByCategoryId(fetchedIds)
+    };
+
+  }, [selectedCategoryId])
+
+  const fetchProducts = async (productIds: number[]) => {
+    const productList = await Promise.all(productIds.map((productId) => getProduct({ itemVariantId: productId })))
+    const productMap = productList.reduce<Record<number, SingleProductResponse>>((acc, product) => {
+      acc[product.variantDetails.itemVariantId] = product
+      return acc
+    }, {})
+    setProducts((prev) => ({ ...prev, ...productMap }))
+  }
+
 
   const deleteItem = async (customerWishItemId: number) => {
     setDeletingItems((prev) => {
@@ -209,22 +235,53 @@ export default function WishListPageView({
                   zIndex: 10
                 }}
               >
-                <AddToCart
-                  variantType="icon"
-                  cart={{
-                    productId: product.itemId,
-                    productName: product.variantName,
-                    productPrice: product.price_regular,
-                    qty: 1,
-                    productImage: product.images[0].fullImagepath,
-                    itemVariantId: product.variantid,
-                    stockQty: product.stockQty ?? 1,
-                    mrp: product.mrp,
-                    variantName: product.variantName
-                    
+                {
+                  products[product.variantid] && <>
+                    <AddToCart
+                      variantType="icon"
+                      cart={{
+                        productId: products[product.variantid].variantDetails?.itemId,
+                        itemVariantId: products[product.variantid].variantDetails?.itemVariantId,
+                        productPrice: products[product.variantid].priceAndStock?.salePrice,
+                        productName: products[product.variantid].variantDetails?.itemName,
+                        productImage: products[product.variantid].imageList[0].fullImagepath,
+                        qty: 1,
+                        stockQty: products[product.variantid].priceAndStock?.stockQty,
+                        variantName: products[product.variantid].variantDetails.variantName,
+                        mrp: products[product.variantid].priceAndStock.mrp,
+                        variantOptionDetails: products[product.variantid].variantOptionList.map(variant => ({
+                          itemVariantId: 0,
+                          optionName: variant.optionName,
+                          optionValue: variant.optionValue,
+                          variantOptionId: 0,
+                          variantOptionValueId: variant.variantOptionValueId
+                        }))
 
-                  }}
-                />
+                      }}
+                    />
+                    <div style={{ position: 'absolute', top: '40px', background: 'white', padding: '4px', borderRadius: '4px', boxShadow: '0 2px 4px rgba(0,0,0,0.2)', width: '400px', wordBreak: 'break-all' }}>
+
+                      {JSON.stringify({
+                        productId: product.id,
+                        itemVariantId: product.variantid,
+                        productPrice: product.price_regular,
+                        productName: product.name,
+                        productImage: product.images[0].fullImagepath,
+                        qty: 1,
+                        stockQty: product.stockQty ?? 1,
+                        variantName: product.variantName,
+                        mrp: product.mrp,
+                        variantOptionDetails: products[product.variantid]!.variantOptionList.map(variant => ({
+                          itemVariantId: 0,
+                          optionName: variant.optionName,
+                          optionValue: variant.optionValue,
+                          variantOptionId: 0,
+                          variantOptionValueId: variant.variantOptionValueId
+                        }))
+                      })}
+                    </div>
+                  </>
+                }
               </Box>
 
               <ProductCard17
