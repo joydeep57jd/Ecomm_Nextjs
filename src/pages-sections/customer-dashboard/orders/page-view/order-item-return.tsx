@@ -18,6 +18,8 @@ import { useForm } from "react-hook-form"
 import { OrderListCustomer, Item as Product } from "@/models/OrderHistory.modal"
 import { orderReturn } from "@/utils/api/order"
 import { OrderReturnPayload } from "@/models/Return.model"
+import { useUser } from "@/contexts/UserContenxt"
+import { currency } from "@/lib"
 
 type Props = {
   handleCloseModal(isReloadRequired: boolean): void
@@ -28,12 +30,18 @@ type Props = {
 }
 
 const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
+  const { user } = useUser()
   const methods = useForm({
     defaultValues: {
       comment: "",
       attachments: [] as File[]
     }
   })
+
+  const _price = (product.price + product.tax) * product.qty
+  {
+    currency(_price)
+  }
 
   const onSubmit = async (data: { comment: string; attachments: File[] }) => {
     console.warn("Return Data:", data)
@@ -45,11 +53,11 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
       OrderQty: product.qty,
       status: "Return Requested",
       InvoiceId: product.invoiceId,
-      Id: "",
+      Id: user?.id ?? "",
       InvoiceDetailId: order.invoiceDetailId,
       SerialNumber: null,
-      DeliveryPersonId: null,
-      Amount: product.refundAmount,
+      DeliveryPersonId: "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+      Amount: _price,
       ItemCode: null,
       ItemName: product.name,
       ItemVariantName: product.name ?? "",

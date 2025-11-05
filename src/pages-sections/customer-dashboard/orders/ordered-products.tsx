@@ -98,8 +98,37 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
       ? new Date(item.lastReturnDate)
       : new Date(item.deliveryDate)
 
-    return true || now <= lastReturn
+    return  now <= lastReturn
   }
+
+  // How many days after delivery user can return
+// const RETURN_WINDOW_DAYS = 25
+
+// // Manually FORCE test mode (turn ON/OFF)
+// const FORCE_SHOW = false   // show return button always
+// const FORCE_HIDE = true   // hide return button always
+
+// const canReturn = (item: Product) => {
+//   // Manual test override
+//   if (FORCE_SHOW) return true
+//   if (FORCE_HIDE) return false
+
+//   // Already refund initiated → don't show
+//   if (item.status === "Refund Initiated") return false
+
+//   // Must be delivered
+//   if (!item.isDelivered) return false
+
+//   const now = new Date()
+//   const deliveryDate = new Date(item.deliveryDate)
+
+//   // Extend return date window
+//   deliveryDate.setDate(deliveryDate.getDate() + RETURN_WINDOW_DAYS)
+
+//   return now <= deliveryDate
+// }
+
+
 
   const isDelivered = (item: Product) => item.isDelivered
 
