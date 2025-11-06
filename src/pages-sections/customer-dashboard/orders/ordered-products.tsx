@@ -20,7 +20,7 @@ import { customerCancelRequest, GetStatementInvoice } from "@/utils/api/order"
 import { CustCancelRequest } from "@/models/Order.model"
 import Link from "next/link"
 import OrderItemReturn from "./page-view/order-item-return"
-
+import CancelItem from "./page-view/cancel-item"
 
 // ==============================================================
 // PROPS
@@ -62,6 +62,7 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
       await customerCancelRequest(payload)
 
       await refreshOrder()
+      handleCloseModal(true)
     } catch (error) {
       console.error("Cancel order failed:", error)
     } finally {
@@ -98,37 +99,35 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
       ? new Date(item.lastReturnDate)
       : new Date(item.deliveryDate)
 
-    return  now <= lastReturn
+    return now <= lastReturn
   }
 
   // How many days after delivery user can return
-// const RETURN_WINDOW_DAYS = 25
+  // const RETURN_WINDOW_DAYS = 25
 
-// // Manually FORCE test mode (turn ON/OFF)
-// const FORCE_SHOW = false   // show return button always
-// const FORCE_HIDE = true   // hide return button always
+  // // Manually FORCE test mode (turn ON/OFF)
+  // const FORCE_SHOW = false   // show return button always
+  // const FORCE_HIDE = true   // hide return button always
 
-// const canReturn = (item: Product) => {
-//   // Manual test override
-//   if (FORCE_SHOW) return true
-//   if (FORCE_HIDE) return false
+  // const canReturn = (item: Product) => {
+  //   // Manual test override
+  //   if (FORCE_SHOW) return true
+  //   if (FORCE_HIDE) return false
 
-//   // Already refund initiated → don't show
-//   if (item.status === "Refund Initiated") return false
+  //   // Already refund initiated → don't show
+  //   if (item.status === "Refund Initiated") return false
 
-//   // Must be delivered
-//   if (!item.isDelivered) return false
+  //   // Must be delivered
+  //   if (!item.isDelivered) return false
 
-//   const now = new Date()
-//   const deliveryDate = new Date(item.deliveryDate)
+  //   const now = new Date()
+  //   const deliveryDate = new Date(item.deliveryDate)
 
-//   // Extend return date window
-//   deliveryDate.setDate(deliveryDate.getDate() + RETURN_WINDOW_DAYS)
+  //   // Extend return date window
+  //   deliveryDate.setDate(deliveryDate.getDate() + RETURN_WINDOW_DAYS)
 
-//   return now <= deliveryDate
-// }
-
-
+  //   return now <= deliveryDate
+  // }
 
   const isDelivered = (item: Product) => item.isDelivered
 
@@ -153,6 +152,15 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
             variantId={selectedProduct.itemVariantId}
             product={selectedProduct}
             order={order}
+          />
+        )
+      case "cancel":
+        return (
+          <CancelItem
+            handleCloseModal={handleCloseModal}
+            item={selectedProduct}
+            onConfirm={() => handleCancelOrder(selectedProduct)}
+            loading={loadingCancelId === selectedProduct.orderDetailId}
           />
         )
 
@@ -272,20 +280,15 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                 </Typography>
               ) : !item.invDate ? (
                 <Button
+                  onClick={() => {
+                    setSelectedProduct(item)
+                    setModalType("cancel")
+                  }}
                   variant="outlined"
                   color="error"
                   size="small"
-                  disabled={loadingCancelId === item.orderDetailId}
-                  onClick={() => handleCancelOrder(item)}
                 >
-                  {loadingCancelId === item.orderDetailId ? (
-                    <FlexBox gap={1} alignItems="center">
-                      <CircularProgress size={16} color="inherit" />
-                      <Typography variant="caption">Cancelling...</Typography>
-                    </FlexBox>
-                  ) : (
-                    "Cancel Item"
-                  )}
+                  Cancel Item
                 </Button>
               ) : (
                 <Typography color="text.secondary">{item.status}</Typography>
@@ -295,10 +298,7 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
         ))}
       </Card>
 
-      {
-        selectedProduct && getModal(selectedProduct)
-      }
-
+      {selectedProduct && getModal(selectedProduct)}
     </>
   )
 }

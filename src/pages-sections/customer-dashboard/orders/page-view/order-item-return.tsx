@@ -19,7 +19,18 @@ import { OrderListCustomer, Item as Product } from "@/models/OrderHistory.modal"
 import { orderReturn } from "@/utils/api/order"
 import { OrderReturnPayload } from "@/models/Return.model"
 import { useUser } from "@/contexts/UserContenxt"
-import { currency } from "@/lib"
+// import { currency } from "@/lib"
+
+// ✅ Yup Validation
+import * as yup from "yup"
+import { yupResolver } from "@hookform/resolvers/yup"
+
+const returnSchema = yup.object().shape({
+  comment: yup
+    .string()
+    .required("Reason is required")
+    .min(3, "Reason must be at least 3 characters")
+})
 
 type Props = {
   handleCloseModal(isReloadRequired: boolean): void
@@ -31,20 +42,17 @@ type Props = {
 
 const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
   const { user } = useUser()
+
   const methods = useForm({
+    resolver: yupResolver(returnSchema),
     defaultValues: {
-      comment: "",
-      attachments: [] as File[]
+      comment: ""
     }
   })
 
   const _price = (product.price + product.tax) * product.qty
-  {
-    currency(_price)
-  }
 
-  const onSubmit = async (data: { comment: string; attachments: File[] }) => {
-    console.warn("Return Data:", data)
+  const onSubmit = async () => {
     const payload: OrderReturnPayload = {
       OrderDetailId: product.orderDetailId,
       OrderId: order.orderId,
@@ -67,11 +75,10 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
       storeId: 0
     }
 
-    console.warn("Return payload:", payload)
-
     try {
       await orderReturn(payload)
       handleCloseModal(true)
+      
     } catch (error) {
       console.error("Return Failed:", error)
       handleCloseModal(false)
@@ -87,8 +94,8 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
       <Divider />
 
       <DialogContent>
-        {/* Product */}
-        <Box sx={{ display: "flex", alignItems: "center", marginBottom: 2, gap: 1 }}>
+        {/* Product Info */}
+        <Box sx={{ display: "flex", alignItems: "center", mb: 2, gap: 1 }}>
           <Avatar variant="rounded" sx={{ height: 60, width: 60, backgroundColor: "grey.50" }}>
             <Image
               alt={product.imageAlt}
@@ -105,19 +112,22 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
             />
           </Avatar>
 
-          <div>
-            <Typography noWrap variant="h6">
-              {product.name}
-            </Typography>
-          </div>
+          <Typography noWrap variant="h6">
+            {product.name}
+          </Typography>
         </Box>
 
+        
+        {/* <Typography variant="body2" sx={{ mb: 2 }}>
+          Refund Amount: <strong>{currency(_price)}</strong>
+        </Typography> */}
+
+        {/* Form */}
         <FormProvider methods={methods} onSubmit={methods.handleSubmit(onSubmit)}>
           <Box>
             <Typography
               variant="h6"
               sx={{ mb: 1, color: "grey.700", span: { color: "error.main" } }}
-              color="grey.700"
             >
               Reason <span>*</span>
             </Typography>
@@ -126,39 +136,19 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
               rows={4}
               multiline
               fullWidth
-              name="comment"
+              {...methods.register("comment")}
               variant="outlined"
               placeholder="Why are you returning this item?"
+              error={!!methods.formState.errors.comment}
+              helperText={methods.formState.errors.comment?.message}
             />
-          </Box>
-
-          <Box mt={3}>
-            <Typography variant="h6" sx={{ mb: 1, color: "grey.700" }}>
-              Upload Files
-            </Typography>
-
-            <input
-              type="file"
-              multiple
-              accept="image/*,application/pdf"
-              onChange={(e) => {
-                const files = Array.from(e.target.files || [])
-                methods.setValue("attachments", files)
-              }}
-            />
-
-            {methods.watch("attachments")?.length > 0 && (
-              <Typography variant="body2" color="text.secondary" mt={1}>
-                {methods.watch("attachments").length} file(s) selected
-              </Typography>
-            )}
           </Box>
         </FormProvider>
       </DialogContent>
 
       <Divider />
 
-      <DialogActions sx={{ paddingX: 3, paddingY: 2 }}>
+      <DialogActions sx={{ px: 3, py: 2 }}>
         <Button onClick={() => handleCloseModal(false)} color="primary" variant="outlined">
           Cancel
         </Button>
