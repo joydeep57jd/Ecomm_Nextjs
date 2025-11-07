@@ -291,7 +291,14 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                   Cancel Item
                 </Button>
               ) : (
-                <Typography color="text.secondary">{item.status}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {item.status}
+                  {item.refundAmount > 0 && (
+                    <Typography color="text.secondary" fontWeight={500}>
+                      {currency(Number(item.refundAmount.toFixed(2)) ?? 0)}
+                    </Typography>
+                  )}
+                </Typography>
               )}
             </FlexBox>
           </FlexBetween>
