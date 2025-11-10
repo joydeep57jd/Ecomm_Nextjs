@@ -9,7 +9,7 @@ import {
 import axiosInstance from "../axiosInstance"
 import API_URL from "../constants"
 import { OrderPayload, OrderResponse } from "@/models/OrderHistory.modal"
-import { OrderReturnPayload } from "@/models/Return.model"
+import { OrderReturnPayload, ReturnWithImagePayload } from "@/models/Return.model"
 
 export const getOrderHistory = async (payload: OrderPayload): Promise<OrderResponse> => {
   const { data } = await axiosInstance.post<{ data: OrderResponse }>(
@@ -54,5 +54,11 @@ export const GetStatementInvoice = async (invoiceNo: string) => {
 
 export const orderReturn = async (paylaod: OrderReturnPayload) => {
   const { data } = await axiosInstance.post(API_URL.ORDER.CUST_RETURN_ORDER, paylaod)
+  return data.data
+}
+
+
+export const orderReturnImage = async(payload:ReturnWithImagePayload)=>{
+  const {data} = await axiosInstance.post(API_URL.ORDER.CUST_RETURN_ORDERIMAGE,payload)
   return data.data
 }

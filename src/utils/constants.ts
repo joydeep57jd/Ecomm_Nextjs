@@ -42,7 +42,8 @@ export const API_URL = {
     GET_CANCEL_MASTER_REASON: "/frontend/GetCancellationMasterFront",
     GET_CANCEL_REASON: "/frontend/GetCancellationMasterFront",
     CUST_CANCEL_REQUEST:"/ProductManagement/CreateCancelRequest",
-    CUST_RETURN_ORDER:"/FrontEnd/SaveExchangeReturnItemsForInvoice"
+    CUST_RETURN_ORDER:"/FrontEnd/SaveExchangeReturnItemsForInvoice",
+    CUST_RETURN_ORDERIMAGE:"/Frontend/AddReturnProductImage"
   },
 
   CART: {
