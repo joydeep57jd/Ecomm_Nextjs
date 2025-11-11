@@ -4,11 +4,13 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Box, Button, Radio, RadioGroup, FormControlLabel, CircularProgress } from "@mui/material"
+import ReCAPTCHA from "react-google-recaptcha"
 
 import { TextField, FormProvider } from "components/form-hook"
 import Label from "../components/label"
 import EyeToggleButton from "../components/eye-toggle-button"
 import usePasswordVisible from "../use-password-visible"
+
 // SCHEMA & API
 import { loginSchema, LoginSchemaType } from "@/schema/auth/login.schema"
 import { loginWithCredentials, varifyCustomer, loginWithOTP } from "@/utils/api/auth"
@@ -25,6 +27,9 @@ import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
 import useCart from "@/hooks/useCart"
 import { useSnackbar } from "notistack"
 
+const RECAPTCHA_SITE_KEY =
+  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY 
+
 export default function LoginPageView() {
   const otpLoginEnabled = process.env.NEXT_PUBLIC_OTP_LOGIN_ENABLED === "true"
   const { visiblePassword, togglePasswordVisible } = usePasswordVisible()
@@ -33,6 +38,7 @@ export default function LoginPageView() {
   const [isInitialStep, setIsInitialStep] = useState<boolean>(true)
   const [isApiCallInprogress, setisApiCallInprogress] = useState(false)
   const [loginType, setLoginType] = useState<"password" | "otp">("password")
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null)
 
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
@@ -46,6 +52,10 @@ export default function LoginPageView() {
 
   const { handleSubmit } = methods
 
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token)
+  }
+
   const handleVerify = async (values: LoginSchemaType) => {
     try {
       setisApiCallInprogress(true)
@@ -55,10 +65,13 @@ export default function LoginPageView() {
       }
       const data = await varifyCustomer(payload)
       if (data.alreadyCustomer) {
+        setRecaptchaToken(null) // reset recaptcha
         setIsInitialStep(false)
         enqueueSnackbar("User verified. Please proceed to login.", { variant: "success" })
       } else {
-        enqueueSnackbar("You are not registered user. Please sign up first.", { variant: "error" })
+        enqueueSnackbar("You are not a registered user. Please sign up first.", {
+          variant: "error"
+        })
       }
     } catch (err) {
       enqueueSnackbar("Verification failed. Please check the phone number.", { variant: "error" })
@@ -77,6 +90,7 @@ export default function LoginPageView() {
       }
       console.warn("payload", payload)
       enqueueSnackbar("OTP sent successfully.", { variant: "success" })
+      setRecaptchaToken(null) // reset recaptcha
       setIsInitialStep(false)
     } catch (err) {
       console.error("Sending OTP failed", err)
@@ -117,7 +131,6 @@ export default function LoginPageView() {
     enqueueSnackbar("Logged In Successfully!!!", { variant: "success" })
 
     const prevPath = localStorage.getItem("prevPath")
-
     localStorage.removeItem("prevPath")
 
     if (prevPath === "/register") {
@@ -128,6 +141,11 @@ export default function LoginPageView() {
   }
 
   const handleLoginWithCredentials = async (values: LoginSchemaType) => {
+    if (!recaptchaToken) {
+      enqueueSnackbar("Please verify the reCAPTCHA first", { variant: "warning" })
+      return
+    }
+
     try {
       setisApiCallInprogress(true)
       const payload: LoginWithCredentialsRequest = {
@@ -149,6 +167,11 @@ export default function LoginPageView() {
   }
 
   const handleLoginWithOTP = async (values: LoginSchemaType) => {
+    if (!recaptchaToken) {
+      enqueueSnackbar("Please verify the reCAPTCHA first", { variant: "warning" })
+      return
+    }
+
     try {
       const payload: LoginWithOTPRequest = {
         PhoneCode: "+91",
@@ -181,12 +204,14 @@ export default function LoginPageView() {
     setIsInitialStep(true)
     setLoginType("password")
     methods.reset()
+    setRecaptchaToken(null)
   }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmitForm}>
       {isInitialStep ? (
         <>
+          
           <div className="mb-1">
             <Label>Phone Number</Label>
             <TextField
@@ -198,6 +223,7 @@ export default function LoginPageView() {
               placeholder="1234567890"
             />
           </div>
+
           {otpLoginEnabled && (
             <Box mb={2}>
               <RadioGroup
@@ -220,50 +246,60 @@ export default function LoginPageView() {
           )}
         </>
       ) : (
-        <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
-          <Box>
-            Not you? <strong>{methods.getValues("phoneNo")}</strong>
+        <>
+          
+          <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
+            <Box>
+              Not you? <strong>{methods.getValues("phoneNo")}</strong>
+            </Box>
+            <Button variant="text" onClick={handleChangeNumber} size="small">
+              Change
+            </Button>
           </Box>
-          <Button variant="text" onClick={handleChangeNumber} size="small">
-            Change
-          </Button>
-        </Box>
+
+          {loginType === "password" ? (
+            <div className="mb-2">
+              <Label>Password</Label>
+              <TextField
+                fullWidth
+                size="medium"
+                name="password"
+                autoComplete="on"
+                placeholder="*********"
+                type={visiblePassword ? "text" : "password"}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <EyeToggleButton show={visiblePassword} click={togglePasswordVisible} />
+                    )
+                  }
+                }}
+              />
+            </div>
+          ) : (
+            <div className="mb-2">
+              <Label>Enter OTP</Label>
+              <TextField
+                fullWidth
+                size="medium"
+                name="otp"
+                type="number"
+                placeholder="Enter 6-digit OTP"
+                inputProps={{ maxLength: 6 }}
+              />
+            </div>
+          )}
+
+        
+          <Box my={2} display="flex" justifyContent="first">
+            {RECAPTCHA_SITE_KEY ? (
+              <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
+            ) : null}
+          </Box>
+        </>
       )}
 
-      {!isInitialStep &&
-        (loginType === "password" ? (
-          <div className="mb-2">
-            <Label>Password</Label>
-            <TextField
-              fullWidth
-              size="medium"
-              name="password"
-              autoComplete="on"
-              placeholder="*********"
-              type={visiblePassword ? "text" : "password"}
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <EyeToggleButton show={visiblePassword} click={togglePasswordVisible} />
-                  )
-                }
-              }}
-            />
-          </div>
-        ) : (
-          <div className="mb-2">
-            <Label>Enter OTP</Label>
-            <TextField
-              fullWidth
-              size="medium"
-              name="otp"
-              type="number"
-              placeholder="Enter 6-digit OTP"
-              inputProps={{ maxLength: 6 }}
-            />
-          </div>
-        ))}
-
+     
       <Box display="flex" gap={1}>
         <Button
           fullWidth
@@ -271,13 +307,26 @@ export default function LoginPageView() {
           type="submit"
           color="primary"
           variant="contained"
-          disabled={isApiCallInprogress}
-          sx={{ gap: 1 }}
+          disabled={
+            isApiCallInprogress ||
+            (!isInitialStep && !recaptchaToken) 
+          }
+          sx={{
+            gap: 1,
+            opacity: !isInitialStep && !recaptchaToken ? 0.7 : 1,
+            cursor: !isInitialStep && !recaptchaToken ? "not-allowed" : "pointer"
+          }}
         >
           {isApiCallInprogress ? (
             <CircularProgress size={20} />
           ) : (
-            <>{!isInitialStep ? (loginType === "password" ? " Login" : "Send OTP") : "Continue"}</>
+            <>
+              {isInitialStep
+                ? "Continue"
+                : loginType === "password"
+                ? "Login"
+                : "Send OTP"}
+            </>
           )}
         </Button>
       </Box>
