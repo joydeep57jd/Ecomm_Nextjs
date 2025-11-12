@@ -256,22 +256,42 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
                 component="label"
                 startIcon={<CloudUploadIcon />}
                 sx={{
+                  height: { xs: 100, sm: 120, md: 140 },
+                  width: { xs: "90%", sm: "80%", md: 550 },
                   borderStyle: "dashed",
                   textTransform: "none",
                   borderColor: "grey.400",
                   color: "grey.700",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: { xs: "0.9rem", sm: "1rem" },
                   "&:hover": {
                     borderColor: "primary.main",
                     backgroundColor: "rgba(25,118,210,0.04)"
-                  }
+                  },
+                  mx: "auto",
+                  mt: 2
                 }}
               >
-                Upload Files
+                <Typography
+                  sx={{
+                    fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" }
+                  }}
+                >
+                  Upload Files
+                </Typography>
+
                 <input
                   type="file"
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    opacity: 0,
+                    cursor: "pointer"
+                  }}
                   multiple
                   accept="image/*,application/pdf"
-                  hidden
                   onChange={handleFileChange}
                 />
               </Button>
