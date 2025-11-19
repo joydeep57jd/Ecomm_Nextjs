@@ -53,6 +53,7 @@ export interface Item {
   isDelivered: boolean
   isCancelled: boolean
   refundAmount: number
+  pickupDate:string
 
   deliveryDate: string
 }

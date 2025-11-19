@@ -36,7 +36,7 @@ export default function ProductCard17({
         <Discount discount={discount} />
 
         <Link
-          href={`/products/${slug}${product.itemVariantId ? `?variantId=${product.itemVariantId}` : ""}`}
+          href={`/products/${slug}${product.itemVariantId ? `?variantId=${product?.itemVariantId}` : ""}`}
           aria-label={`View ${title}`}
         >
           <Image

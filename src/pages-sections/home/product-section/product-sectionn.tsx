@@ -33,17 +33,17 @@ export default function ProductSection() {
 
   return (
     <Container>
-      {sections.map((section) => {
+      {sections?.map((section) => {
         const products: SectionItem[] = section.responseSectionItemAndImage?.sectionItems || []
 
         if (products.length === 0) return null
 
-        return section.sectionName.toLowerCase().includes("banner") ? <></> : (
+        return section?.sectionName.toLowerCase().includes("banner") ? <></> : (
           <ProductsCarousel
             key={section.companyTemplateSectionId}
             title={section.sectionName || "Products"}
           >
-            {products.map((product) => (
+            {products?.map((product) => (
               <Box pb={0.6} key={product.itemId}>
                 <ProductCard17
                   product={{

@@ -92,43 +92,18 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
       setLoadingInvoice(false)
     }
   }
-  const canReturn = (item: Product) => {
+  const getDaysLeftToReturn = (item: Product) => {
     const now = new Date()
 
     const lastReturn = item.lastReturnDate
       ? new Date(item.lastReturnDate)
       : new Date(item.deliveryDate)
 
-    return now <= lastReturn
+    const diffMs = lastReturn.getTime() - now.getTime()
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
+
+    return diffDays
   }
-
-  // How many days after delivery user can return
-  // const RETURN_WINDOW_DAYS = 25
-
-  // // Manually FORCE test mode (turn ON/OFF)
-  // const FORCE_SHOW = false   // show return button always
-  // const FORCE_HIDE = true   // hide return button always
-
-  // const canReturn = (item: Product) => {
-  //   // Manual test override
-  //   if (FORCE_SHOW) return true
-  //   if (FORCE_HIDE) return false
-
-  //   // Already refund initiated → don't show
-  //   if (item.status === "Refund Initiated") return false
-
-  //   // Must be delivered
-  //   if (!item.isDelivered) return false
-
-  //   const now = new Date()
-  //   const deliveryDate = new Date(item.deliveryDate)
-
-  //   // Extend return date window
-  //   deliveryDate.setDate(deliveryDate.getDate() + RETURN_WINDOW_DAYS)
-
-  //   return now <= deliveryDate
-  // }
-
   const isDelivered = (item: Product) => item.isDelivered
 
   const isCancelled = (item: Product) => item.isCancelled
@@ -169,8 +144,6 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
     }
   }
 
-  // const hasInvoice = !!order.items.find((item)=>item.invDate)
-
   return (
     <>
       <Card
@@ -183,7 +156,7 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
         }}
       >
         <FlexBetween px={3} py={2} flexWrap="wrap" gap={1} bgcolor="grey.50">
-          <Item title="Order ID:" value={order.custOrdNo} />
+          <Item title="Order ID:" value={order?.custOrdNo} />
           <Item title="Placed on:" value={format(new Date(order.orderDate), "dd MMM, yyyy")} />
         </FlexBetween>
 
@@ -243,7 +216,8 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                       "View Invoice"
                     )}
                   </Button>
-                  {canReturn(item) && (
+
+                  {getDaysLeftToReturn(item) > 0 && (
                     <Button
                       onClick={() => {
                         setSelectedProduct(item)
@@ -252,8 +226,23 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                       variant="outlined"
                       color="primary"
                       size="small"
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        lineHeight: 1.2
+                      }}
                     >
                       Return Item
+                      {item.lastReturnDate && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{ fontSize: "0.70rem", mt: 0.3 }}
+                        >
+                          {`${getDaysLeftToReturn(item)} days left`}
+                        </Typography>
+                      )}
                     </Button>
                   )}
 
@@ -292,10 +281,16 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                 </Button>
               ) : (
                 <Typography variant="body2" color="text.secondary">
-                  {item.status}
-                  {item.refundAmount > 0 && (
-                    <Typography color="text.secondary" fontWeight={500}>
-                      {currency(Number(item.refundAmount.toFixed(2)) ?? 0)}
+                  {item.status}{" "}
+                  {item.refundAmount && <>:{currency(Number(item.refundAmount.toFixed(2)) ?? 0)}</>}
+                  {item.pickupDate && (
+                    <Typography color="text.secondary">
+                      Pickup Date:{" "}
+                      {new Date(item.pickupDate).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "numeric",
+                        year: "numeric"
+                      })}
                     </Typography>
                   )}
                 </Typography>
