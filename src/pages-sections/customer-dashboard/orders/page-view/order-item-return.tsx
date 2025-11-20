@@ -56,6 +56,10 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
     }
   })
 
+  methods.register("attachments", {
+    validate: (files) => (files && files.length > 0) || "At least one file is required"
+  })
+
   const _price = (product.price + product.tax) * product.qty
 
   const convertToBase64 = (files: File[]): Promise<UploadedFile[]> => {
@@ -239,8 +243,8 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
           </Box>
 
           <Box mt={3}>
-            <Typography variant="subtitle1" sx={{ mb: 1, color: "grey.700" }}>
-              Upload Files
+            <Typography variant="subtitle1" sx={{ mb: 1, color: "grey.700", span: { color: "error.main" } }}>
+              Upload Files <span>*</span>
             </Typography>
 
             {fileLoading ? (
@@ -279,7 +283,7 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
                     fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" }
                   }}
                 >
-                  Upload Files
+                  Upload Files 
                 </Typography>
 
                 <input
@@ -295,6 +299,12 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
                   onChange={handleFileChange}
                 />
               </Button>
+            )}
+
+            {methods.formState.errors.attachments && (
+              <Typography color="error" sx={{ mt: 1, fontSize: "0.8rem" }}>
+                {methods.formState.errors.attachments.message}
+              </Typography>
             )}
 
             {methods.watch("attachments")?.length > 0 && !fileLoading && (
