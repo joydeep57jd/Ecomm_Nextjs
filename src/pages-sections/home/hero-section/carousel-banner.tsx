@@ -13,12 +13,12 @@ export default function CarouselBanner({ children }: PropsWithChildren) {
     <Box
       mt={4}
       borderRadius={3}
-      bgcolor="grey.50"
+      // bgcolor="grey.50"
       position="relative"
-      px={{ xs: 3, sm: 6 }}
-      py={{ xs: 3, sm: 4 }}
+      px={{ xs: 1, sm: 2 }}
+      py={{ xs: 1, sm: 2 }}
     >
-      <Carousel ref={ref} api={api} sx={{ py: { xs: 2, sm: 5 } }}>
+      <Carousel ref={ref} api={api} sx={{ py: { xs: 1, sm: 2 } }}>
         {children}
       </Carousel>
 
