@@ -82,13 +82,25 @@ export default function DeliveryAddresses({
 
   useEffect(() => {
     if (deliveryAddresses) {
-      setAddresses(
-        deliveryAddresses.map((a) => ({
-          customer: { ...a, userid: user!.id },
-          CustomerId: +user!.customerId
-        }))
-      )
+      const mapped = deliveryAddresses.map((a) => ({
+        customer: { ...a, userid: user!.id },
+        CustomerId: +user!.customerId
+      }))
+
+      setAddresses(mapped)
       setIsReloadRequired(false)
+
+      if (mapped.length > 0) {
+        const defaultAddress = mapped.find((a) => a.customer.isDefault === true) || mapped[0]
+
+        setValue("address", defaultAddress.customer.addrid, {
+          shouldValidate: true,
+          shouldDirty: true
+        })
+
+        if (setSelectedPinCode) setSelectedPinCode(defaultAddress.customer.pin)
+        if (setSelectedDelivaryAddressData) setSelectedDelivaryAddressData(defaultAddress)
+      }
     }
   }, [deliveryAddresses])
 
@@ -98,7 +110,7 @@ export default function DeliveryAddresses({
     }
   }, [isReloadRequired])
 
-  const { control } = useFormContext()
+  const { control, setValue } = useFormContext()
 
   const HeaderSection =
     setSelectedPinCode && setSelectedDelivaryAddressData ? (

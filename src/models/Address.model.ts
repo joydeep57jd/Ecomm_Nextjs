@@ -26,4 +26,6 @@ export interface Customer {
   deliveryslot?: string | null
   UserPhoneCountryCode?: string
   PhoneCode?: string
+  isDefault?: boolean
+
 }

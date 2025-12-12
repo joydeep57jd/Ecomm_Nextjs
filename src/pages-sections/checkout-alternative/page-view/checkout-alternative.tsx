@@ -99,7 +99,7 @@ export default function CheckoutAlternativePageView() {
     const checkoutOrderRequest: CheckoutOrderRequest = {
       discoutcode: "",
       ordered: {
-        items: remoteCarts!.map((c) => ({
+        items: remoteCarts!?.map((c) => ({
           batchId: c.batchId,
           id: c.id,
           quantity: c.quantity,

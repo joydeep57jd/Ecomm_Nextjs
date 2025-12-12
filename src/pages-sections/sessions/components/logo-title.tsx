@@ -14,7 +14,7 @@ export default function LogoWithTitle() {
       }
   return (
     <FlexRowCenter flexDirection="column" gap={2} mb={4}>
-      <Image width={110} height={30} src={getLogo()} alt="Bazaar Ecommerce Template" />
+      <Image width={180} height={30} src={getLogo()} alt="Logo Image" />
        
     </FlexRowCenter>
   )

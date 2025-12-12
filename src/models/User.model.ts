@@ -39,6 +39,7 @@ export interface Address {
   customerId: number
   phoneCode: string
   phoneCountryCode: string
+  isDefault?: boolean
 }
 
 export interface AddressType {
