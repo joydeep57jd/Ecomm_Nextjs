@@ -49,7 +49,7 @@ export default function CheckoutSummary({ checkoutOrderResponse, deliveryCharge 
 
       <ListItem title="Subtotal" value={checkoutOrderResponse?.totalamt} />
       <ListItem title="Shipping" value={deliveryCharge} />
-      <ListItem title="Tax" value={checkoutOrderResponse?.totaltaxamt} />
+      {/* <ListItem title="Tax" value={checkoutOrderResponse?.totaltaxamt} /> */}
       <ListItem title="Voucher" value={0} mb={3} />
 
       <Divider sx={{ mb: 1 }} />
