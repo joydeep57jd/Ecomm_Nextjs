@@ -6,7 +6,7 @@ import { styled } from "@mui/material/styles"
 // STYLED COMPONENT
 const StyledChip = styled(Chip, {
   shouldForwardProp: (prop) => prop !== "shape"
-})<{ shape: "rounded" | "square" }>(({ shape }) => ({
+})<{ shape: "rounded" | "square" }>(({ theme, shape }) => ({
   zIndex: 1,
   top: "15px",
   left: "15px",
@@ -16,7 +16,18 @@ const StyledChip = styled(Chip, {
   borderRadius: 8,
   fontSize: "10px",
   position: "absolute",
-  ...(shape === "square" && { borderRadius: 0 })
+
+  ...(shape === "square" && { borderRadius: 0 }),
+
+
+  [theme.breakpoints.down("sm")]: {
+    top: "8px",
+    left: "8px",
+    fontSize: "9px",
+    paddingLeft: 2,
+    paddingRight: 2,
+    height: 18
+  }
 }))
 
 // ==============================================================

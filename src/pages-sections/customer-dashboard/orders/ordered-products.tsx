@@ -33,7 +33,8 @@ type Props = { order: OrderListCustomer; refreshOrder: () => void }
 export default function OrderedProducts({ order, refreshOrder }: Props) {
   const { user } = useUser()
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-  const [loadingInvoice, setLoadingInvoice] = useState(false)
+  const [loadingInvoiceId, setLoadingInvoiceId] = useState<number | null>(null)
+
   const [loadingCancelId, setLoadingCancelId] = useState<number | null>(null)
   const [modalType, setModalType] = useState<"rating" | "return" | "cancel" | null>(null)
 
@@ -70,11 +71,11 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
     }
   }
 
-  const handleOpenInvoice = async () => {
+  const handleOpenInvoice = async (item: Product) => {
     try {
-      setLoadingInvoice(true)
-      const invoiceNo = order.items?.find((item) => item.invoiceNumber)?.invoiceNumber!
-      const res = await GetStatementInvoice(invoiceNo)
+      if (!item.invoiceNumber) return
+      setLoadingInvoiceId(item.orderDetailId)
+      const res = await GetStatementInvoice(item.invoiceNumber!)
 
       const htmlc = res.html
 
@@ -89,9 +90,21 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
     } catch (error) {
       console.error("Error fetching invoice:", error)
     } finally {
-      setLoadingInvoice(false)
+      setLoadingInvoiceId(null)
     }
   }
+
+  const formatDeliveryDate = (date?: string) => {
+    if (!date) return "--"
+
+    return new Date(date).toLocaleDateString("en-IN", {
+      weekday: "short",
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    })
+  }
+
   const getDaysLeftToReturn = (item: Product) => {
     const now = new Date()
 
@@ -200,70 +213,68 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
               </FlexBox>
             </Link>
 
-            <FlexBox gap={1}>
+            <FlexBox gap={1.5} flexWrap="wrap" alignItems="center">
               {isDelivered(item) ? (
                 <>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    onClick={handleOpenInvoice}
-                    disabled={loadingInvoice}
-                  >
-                    {loadingInvoice ? (
-                      <CircularProgress size={16} color="inherit" />
-                    ) : (
-                      "View Invoice"
-                    )}
-                  </Button>
+                  <FlexBox flexDirection="column" gap={0.2}>
+                    <Typography variant="caption" color="text.secondary">
+                      Delivered on {formatDeliveryDate(item.deliveryDate)}
+                    </Typography>
+                  </FlexBox>
 
-                  {getDaysLeftToReturn(item) > 0 && (
+                  <FlexBox gap={1} flexWrap="wrap">
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={() => handleOpenInvoice(item)}
+                      disabled={loadingInvoiceId === item.orderDetailId}
+                    >
+                      {loadingInvoiceId === item.orderDetailId ? (
+                        <CircularProgress size={16} color="inherit" />
+                      ) : (
+                        "Invoice"
+                      )}
+                    </Button>
+
+                    {getDaysLeftToReturn(item) > 0 && (
+                      <Button
+                        onClick={() => {
+                          setSelectedProduct(item)
+                          setModalType("return")
+                        }}
+                        variant="outlined"
+                        size="small"
+                      >
+                        Return
+                        <Typography
+                          component="span"
+                          variant="caption"
+                          color="error"
+                          sx={{ ml: 0.5 }}
+                        >
+                          ({getDaysLeftToReturn(item)} days left)
+                        </Typography>
+                      </Button>
+                    )}
+
                     <Button
                       onClick={() => {
                         setSelectedProduct(item)
-                        setModalType("return")
+                        setModalType("rating")
                       }}
-                      variant="outlined"
-                      color="primary"
+                      variant="text"
                       size="small"
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        lineHeight: 1.2
-                      }}
                     >
-                      Return Item
-                      {item.lastReturnDate && (
-                        <Typography
-                          variant="caption"
-                          color="error"
-                          sx={{ fontSize: "0.70rem", mt: 0.3 }}
-                        >
-                          {`${getDaysLeftToReturn(item)} days left`}
-                        </Typography>
-                      )}
+                      Review
                     </Button>
-                  )}
-
-                  <Button
-                    onClick={() => {
-                      setSelectedProduct(item)
-                      setModalType("rating")
-                    }}
-                    variant="text"
-                    color="primary"
-                  >
-                    Write a Review
-                  </Button>
+                  </FlexBox>
                 </>
               ) : isCancelled(item) ? (
                 <Typography variant="body2" color="error" fontWeight={500}>
                   {item.status}
-
                   {item.refundAmount > 0 && (
-                    <Typography color="error" fontWeight={500}>
-                      {currency(Number(item.refundAmount.toFixed(2)) ?? 0)}
+                    <Typography variant="caption" display="block">
+                      Refund: {currency(Number(item.refundAmount.toFixed(2)))}
                     </Typography>
                   )}
                 </Typography>
@@ -281,18 +292,7 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                 </Button>
               ) : (
                 <Typography variant="body2" color="text.secondary">
-                  {item.status}{" "}
-                  {item.refundAmount && <>:{currency(Number(item.refundAmount.toFixed(2)) ?? 0)}</>}
-                  {item.pickupDate && (
-                    <Typography color="text.secondary">
-                      Pickup Date:{" "}
-                      {new Date(item.pickupDate).toLocaleDateString("en-IN", {
-                        day: "2-digit",
-                        month: "numeric",
-                        year: "numeric"
-                      })}
-                    </Typography>
-                  )}
+                  {item.status}
                 </Typography>
               )}
             </FlexBox>

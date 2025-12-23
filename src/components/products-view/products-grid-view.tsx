@@ -25,7 +25,7 @@ export default function ProductsGridView({ products, variantOptions, badges }: P
   return (
     <Grid container spacing={3}>
       {products.map((product) => (
-        <Grid size={{ lg: 4, sm: 6, xs: 12 }} key={product.id}>
+        <Grid size={{ lg: 4, sm: 6, xs: 6, md:4}} key={product.id}>
           <ProductCard16 product={product} variantOptions={variantMap[product.itemVariantId ?? ''] ?? []} badges={badges} />
         </Grid>
       ))}
