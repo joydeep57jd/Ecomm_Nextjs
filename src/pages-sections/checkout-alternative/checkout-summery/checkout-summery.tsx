@@ -11,6 +11,7 @@ import useCart from "hooks/useCart"
 // CUSTOM UTILS LIBRARY FUNCTION
 import { currency } from "lib"
 import { CheckoutOrderResponse } from "@/models/Order.model"
+import { RemoteCart } from "@/models/CartProductItem.models"
 
 const CARD_STYLES = {
   padding: 3,
@@ -21,9 +22,10 @@ const CARD_STYLES = {
 type Props = {
   checkoutOrderResponse: CheckoutOrderResponse
   deliveryCharge: number
+  Product:RemoteCart[]
 }
 
-export default function CheckoutSummary({ checkoutOrderResponse, deliveryCharge }: Props) {
+export default function CheckoutSummary({ checkoutOrderResponse,  Product }: Props) {
   const { state } = useCart()
 
 
@@ -35,20 +37,20 @@ export default function CheckoutSummary({ checkoutOrderResponse, deliveryCharge 
         Your order
       </Typography>
 
-      {state.cart.map((item) => (
-        <FlexBetween mb={1.5} key={`${item.productId}-${item.itemVariantId}`}>
+      {Product.map((item) => (
+        <FlexBetween mb={1.5} key={`${item.id}-${item.variantid}`}>
           <Typography variant="body1">
-            <strong>{item.qty}</strong> x {item.productName}
+            <strong>{item.quantity}</strong> x {item.name}
           </Typography>
 
-          <Typography variant="body1">{currency(item.productPrice * item.qty)}</Typography>
+          <Typography variant="body1">{currency(item.price_regular * item.quantity)}</Typography>
         </FlexBetween>
       ))}
 
       <Divider sx={{ my: 3 }} />
 
       <ListItem title="Subtotal" value={checkoutOrderResponse?.totalamt} />
-      <ListItem title="Shipping" value={deliveryCharge} />
+      <ListItem title="Shipping" value={checkoutOrderResponse?.deliverychargeamt} />
       {/* <ListItem title="Tax" value={checkoutOrderResponse?.totaltaxamt} /> */}
       <ListItem title="Voucher" value={0} mb={3} />
 

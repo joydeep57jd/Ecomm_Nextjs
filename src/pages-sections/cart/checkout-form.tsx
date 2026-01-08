@@ -1,54 +1,56 @@
-// MUI
 import Card from "@mui/material/Card"
 import Button from "@mui/material/Button"
 import ListItem from "../checkout/checkout-summery/list-item"
-import useCart from "@/hooks/useCart"
 import { useEffect, useState } from "react"
 import { useUser } from "@/contexts/UserContenxt"
 import { useRouter } from "next/navigation"
-
-
+import { Cart } from "@/models/CartProductItem.models"
 
 type PriceDetails = {
-  mrp: number, discount: number, totalPrice: number
+  mrp: number
+  discount: number
+  totalPrice: number
 }
 
-export default function CheckoutForm() {
-  const {user} = useUser()
+type Props = {
+  cartItems: Cart[]
+}
+
+export default function CheckoutForm({ cartItems }: Props) {
+  const { user } = useUser()
   const router = useRouter()
 
-  const [priceDetails, setPriceDetails] = useState<PriceDetails | null>(null)
-
-  const { state: { cart } } = useCart()
+  const [priceDetails, setPriceDetails] = useState<PriceDetails>({
+    mrp: 0,
+    discount: 0,
+    totalPrice: 0
+  })
 
   useEffect(() => {
-    const detals = cart?.reduce((acc, cart) => {
-      const mrp = cart.mrp
-      const actualPrice = cart.productPrice
-      const qty = cart.qty
-      const totalActualPrice = +(actualPrice * qty).toFixed(2)
-      const totalMrp = +(mrp * qty).toFixed(2)
-      const toalDiscount = +(totalMrp - totalActualPrice).toFixed(2)
+    const details = cartItems.reduce(
+      (acc, item) => {
+        const qty = item.qty
+        const mrp = item.mrp
+        const price = item.productPrice
 
-      acc.discount += toalDiscount
-      acc.mrp += totalMrp
-      acc.totalPrice += totalActualPrice
+        const totalMrp = mrp * qty
+        const totalActual = price * qty
 
-      return acc
-    }, { mrp: 0, discount: 0, totalPrice: 0 })
+        acc.mrp += totalMrp
+        acc.totalPrice += totalActual
+        acc.discount += totalMrp - totalActual
 
-    setPriceDetails(detals!)
-  }, [cart])
+        return acc
+      },
+      { mrp: 0, discount: 0, totalPrice: 0 }
+    )
 
-  const checkOut =()=>{
-    if(user){
-      router.push("/checkout")
-    }else{
-      router.push("/login")
-    }
+    setPriceDetails(details)
+  }, [cartItems])
 
+  const checkOut = () => {
+    router.push(user ? `/checkout?businessUnitId=${cartItems[0].businessUnitId}` : "/login")
   }
-
 
   return (
     <Card
@@ -60,25 +62,17 @@ export default function CheckoutForm() {
         backgroundColor: "grey.50"
       }}
     >
+      <ListItem title={`Price (${cartItems.length})`} value={priceDetails.mrp} />
+      <ListItem title="Discount" value={priceDetails.discount} />
+      <ListItem title="Total Amount" value={priceDetails.totalPrice} />
 
-      {/* <FlexBox alignItems="center" gap={1} my={2}>
-        <TextField
-          fullWidth
-          size="small"
-          label="Voucher"
-          variant="outlined"
-          placeholder="Voucher"
-        />
-
-        <Button variant="outlined" color="primary">
-          Apply
-        </Button>
-      </FlexBox> */}
-
-      <ListItem title={`Price (${cart?.length})`} value={priceDetails?.mrp} />
-      <ListItem title="Discount" value={priceDetails?.discount} />
-      <ListItem title="Total Amount" value={priceDetails?.totalPrice} />
-      <Button fullWidth color="primary"   variant="contained"  sx={{ mt: 2 }} onClick={checkOut}>
+      <Button
+        fullWidth
+        color="primary"
+        variant="contained"
+        sx={{ mt: 2 }}
+        onClick={checkOut}
+      >
         Checkout Now
       </Button>
     </Card>

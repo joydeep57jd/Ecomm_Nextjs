@@ -12,6 +12,8 @@ export interface CartProductItem {
   color: string
   material: string
   mrp: number
+  unitName: string
+  businessUnitId: number
   savePrice: number
   savePricePctg: number
   price_regular: number
@@ -80,7 +82,10 @@ export interface Cart {
   stockQty?: number
   mrp: number
   variantName: string
+  unitName?: string
+  businessUnitId?: number
   variantOptionDetails: VariantOptionDetails[]
+  
 }
 
 export interface RemoteCart {
@@ -96,6 +101,8 @@ export interface RemoteCart {
   material: string
   mrp: number
   savePrice: number
+  unitName: string
+  businessUnitId: number
   savePricePctg: number
   price_regular: number
   price_member: number

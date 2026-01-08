@@ -14,7 +14,7 @@ import {
   PlaceOrderResponse
 } from "@/models/Order.model"
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { getAddressList } from "@/utils/api/profile"
 import { UserAddressListResponse } from "@/models/User.model"
 import { getDeliveryCharge, getOrderSummary, placeOrder } from "@/utils/api/order"
@@ -23,9 +23,10 @@ import { DelivaryAddressData } from "@/models/Address.model"
 import { OrderConfirmationPageView } from "@/pages-sections/order-confirmation"
 import { UserData } from "@/models/Auth.model"
 import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
-import { Cart } from "@/models/CartProductItem.models"
+import { Cart, RemoteCart } from "@/models/CartProductItem.models"
 
 export default function CheckoutAlternativePageView() {
+  const params = useSearchParams()
   const [addressListResponse, setAddressListResponse] = useState<UserAddressListResponse | null>(
     null
   )
@@ -39,6 +40,7 @@ export default function CheckoutAlternativePageView() {
     useState<DelivaryAddressData | null>(null)
   const [orderResponse, setOrderResponse] = useState<PlaceOrderResponse | null>(null)
   const [placingOrder, setPlacingOrder] = useState(false)
+  const [product, setProduct] = useState<RemoteCart[]>([])
 
   const router = useRouter()
   const { user } = useUser()
@@ -56,13 +58,23 @@ export default function CheckoutAlternativePageView() {
     if (user?.customerId) {
       getInitialData()
     }
-  }, [remoteCarts, user])
+  }, [product, user])
 
   useEffect(() => {
     if (!cart.length && !orderResponse) {
       router.push("/")
     }
   }, [cart])
+
+  useEffect(() => {
+    if (remoteCarts) {
+      const businessUnitId = params.get("businessUnitId")
+      const filteredProduct = remoteCarts.filter(
+        (rc) => rc.businessUnitId.toString() === businessUnitId
+      )
+      setProduct(filteredProduct)
+    }
+  }, [remoteCarts])
 
   const syncUser = async (user: UserData) => {
     const remoteCarts = await getCart(+user.customerId)
@@ -99,7 +111,7 @@ export default function CheckoutAlternativePageView() {
     const checkoutOrderRequest: CheckoutOrderRequest = {
       discoutcode: "",
       ordered: {
-        items: remoteCarts!?.map((c) => ({
+        items: product!?.map((c) => ({
           batchId: c.batchId,
           id: c.id,
           quantity: c.quantity,
@@ -187,14 +199,8 @@ export default function CheckoutAlternativePageView() {
         data: checkoutOrderResponse!.item
       }
     })
-    dispatch({
-      type: "SET_CART",
-      carts: [],
-      remoteCarts: [],
-      isSyncRequired: false,
-      isLoggedIn: true,
-      user: user!
-    })
+    syncUser(user!)
+    
     setOrderResponse(response)
   }
 
@@ -223,6 +229,7 @@ export default function CheckoutAlternativePageView() {
             <CheckoutSummery
               checkoutOrderResponse={checkoutOrderResponse!}
               deliveryCharge={deliveryCharge}
+              Product={product}
             />
           </Grid>
         </Grid>
