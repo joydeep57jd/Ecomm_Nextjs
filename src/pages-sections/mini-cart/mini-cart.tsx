@@ -10,8 +10,6 @@ import Button from "@mui/material/Button"
 import Divider from "@mui/material/Divider"
 import IconButton from "@mui/material/IconButton"
 import Typography from "@mui/material/Typography"
-import Tabs from "@mui/material/Tabs"
-import Tab from "@mui/material/Tab"
 import Clear from "@mui/icons-material/Clear"
 
 // Hooks & Context
