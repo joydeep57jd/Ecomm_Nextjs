@@ -23,12 +23,16 @@ export const syncGuestCart = async (items: Cart[], user?: UserData) => {
 
   const payload: AddToCartRequest = {
     customerid: +user.customerId,
-    userId: user.id,
-    carttItemVariant: items.map((item) => ({
-      itemId: item.productId,
-      itemVariantId: item.itemVariantId,
-      itemQty: item.qty,
-      itemPrice: item.productPrice
+    userId: user?.id,
+    carttItemVariant: items?.map((item) => ({
+      itemId: item?.productId,
+      itemVariantId: item?.itemVariantId,
+      itemQty: item?.qty,
+      itemPrice: item?.productPrice,
+      unitName: item?.unitName,
+      businessUnitId: item?.businessUnitId,
+      backgroundColor: item?.backgroundColor,
+      fontFontColor: item?.fontFontColor
     }))
   }
 

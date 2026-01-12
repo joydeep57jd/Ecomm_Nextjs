@@ -84,6 +84,8 @@ export interface Cart {
   variantName: string
   unitName?: string
   businessUnitId?: number
+  backgroundColor?: string
+  fontFontColor?: string
   variantOptionDetails: VariantOptionDetails[]
   
 }
@@ -103,6 +105,8 @@ export interface RemoteCart {
   savePrice: number
   unitName: string
   businessUnitId: number
+  backgroundColor: string
+  fontFontColor: string
   savePricePctg: number
   price_regular: number
   price_member: number

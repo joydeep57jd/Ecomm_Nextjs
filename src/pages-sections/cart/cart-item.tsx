@@ -23,6 +23,8 @@ export default function CartItem({ item }: Props) {
   const { dispatch } = useCart()
   const { user } = useUser()
 
+  console.warn("cart item background color", item.backgroundColor, item.fontFontColor)
+
   const handleCartAmountChange = (amount: number) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
@@ -49,7 +51,7 @@ export default function CartItem({ item }: Props) {
               {item.variantName}
             </Typography>
             <Typography noWrap variant="body2" fontSize={12}>
-              {item.variantOptionDetails.map(variant => `${variant.optionName} - ${variant.optionValue}`).join(" / ")}
+              {item.variantOptionDetails.map(variant => `${variant.optionName} - ${variant.optionValue}`).join(" / ")} 
             </Typography>
           </Link>
 

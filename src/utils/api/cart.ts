@@ -25,7 +25,9 @@ export const getLocalCartFromRemoteCart = (remoteCarts: RemoteCart[]) => {
     mrp: cart?.mrp,
     variantOptionDetails: cart?.variantOptionDetails,
     unitName: cart?.unitName,
-    businessUnitId: cart?.businessUnitId
+    businessUnitId: cart?.businessUnitId,
+    backgroundColor: cart?.backgroundColor,
+    fontFontColor: cart?.fontFontColor
   }))
   return finalCarts
 }
