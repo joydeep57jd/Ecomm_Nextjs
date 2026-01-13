@@ -40,6 +40,10 @@ export interface VariantDetails {
   itemCode: string
   itemRating: number
   reviewCount:number
+  businessUnitId?:string
+  unitName?:string
+  fontColor?: string
+  backgroundColor?: string
 
 }
 

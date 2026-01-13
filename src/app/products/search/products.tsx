@@ -145,11 +145,17 @@ function Products({
           savePrice: data.batchInfos?.[0]?.savePrice,
           savePricePctg: data.batchInfos?.[0]?.savePricePctg,
           subCategoryId: data.subCategoryId,
-          itemVariantId: data.itemVariantId
+          itemVariantId: data.itemVariantId,
+          bisnessUnitId: data.businessUnitId,
+          unitName: data?.unitName,
+          fontColor: data.fontColor,
+          backgroundColor: data.backgroundColor
         })) ?? []
       productsResponse.dataList = dataList
       setVariantOptions((productsResponse as CategoryWiseFilterResponse).variantOptionDetails)
     }
+
+    console.warn(productsResponse, "productsResponsefthrth")
 
     const size = productsResponse.pagination.pageSize
     const pageCount = Math.ceil(productsResponse.pagination.totalRecords / size)

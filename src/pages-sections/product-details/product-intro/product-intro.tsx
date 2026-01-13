@@ -16,7 +16,6 @@ import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.mod
 import ProductAction from "../../../components/product-action"
 import Loading from "@/app/loading"
 
-
 // ================================================================
 type Props = {
   product: SingleProductResponse
@@ -24,31 +23,36 @@ type Props = {
   selectedVariant: string
   isLoading: boolean
   onShowReviews?: () => void
-
 }
 // ================================================================
 
-export default function ProductIntro({ product, variantMap, selectedVariant, isLoading, onShowReviews }: Props) {
+export default function ProductIntro({
+  product,
+  variantMap,
+  selectedVariant,
+  isLoading,
+  onShowReviews
+}: Props) {
   return (
-    <StyledRoot style={{ position: 'relative' }}>
-      {
-        isLoading && <div
+    <StyledRoot style={{ position: "relative" }}>
+      {isLoading && (
+        <div
           style={{
             position: "absolute",
             zIndex: 9,
             width: "100%",
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             top: 0,
             left: 0,
-            background: '#0000001f'
+            background: "#0000001f"
           }}
         >
           <Loading isSmallLoader={true} />
         </div>
-      }
+      )}
       <Grid container spacing={3} justifyContent="space-around">
         {/* IMAGE GALLERY AREA */}
         <Grid size={{ lg: 6, md: 7, xs: 12 }}>
@@ -95,13 +99,24 @@ export default function ProductIntro({ product, variantMap, selectedVariant, isL
           {/* PRODUCT RATING */}
           <div className="rating">
             <span>Rated:</span>
-            <Rating readOnly color="warn" size="small" value={product?.variantDetails?.itemRating} />
+            <Rating
+              readOnly
+              color="warn"
+              size="small"
+              value={product?.variantDetails?.itemRating}
+            />
             {/* <Typography variant="h6">({product.reviews?.length || 0})</Typography> */}
-            <Typography variant="h6" style={{ cursor: "pointer" }} onClick={onShowReviews}>({product.variantDetails?.reviewCount})</Typography>
+            <Typography variant="h6" style={{ cursor: "pointer" }} onClick={onShowReviews}>
+              ({product.variantDetails?.reviewCount})
+            </Typography>
           </div>
 
           {/* PRODUCT VARIANTS */}
-          <ProductVariantSelector product={product} variantMap={variantMap} selectedVariant={selectedVariant} />
+          <ProductVariantSelector
+            product={product}
+            variantMap={variantMap}
+            selectedVariant={selectedVariant}
+          />
 
           {/* PRICE & STOCK */}
           <div className="price">
@@ -113,30 +128,32 @@ export default function ProductIntro({ product, variantMap, selectedVariant, isL
           </div>
 
           {/* ADD TO CART BUTTON */}
-          {
-            product.imageList?.length > 0 && product.priceAndStock &&
-            <ProductAction product={{
-              productId: product.variantDetails?.itemId,
-              itemVariantId: product.variantDetails?.itemVariantId,
-              productPrice: product.priceAndStock?.salePrice,
-              productName: product.variantDetails?.itemName,
-              productImage: product.imageList[0].fullImagepath,
-              qty: 1,
-              stockQty: product.priceAndStock?.stockQty,
-              variantName: product.variantDetails.variantName,
-              mrp: product.priceAndStock.mrp,
-              variantOptionDetails: product.variantOptionList.map(variant => ({
-                itemVariantId: 0,
-                optionName: variant.optionName,
-                optionValue: variant.optionValue,
-                variantOptionId: 0,
-                variantOptionValueId: variant.variantOptionValueId
-              }))
-
-            }} />
-          }
-
-         
+          {product.imageList?.length > 0 && product.priceAndStock && (
+            <ProductAction
+              product={{
+                productId: product.variantDetails?.itemId,
+                itemVariantId: product.variantDetails?.itemVariantId,
+                productPrice: product.priceAndStock?.salePrice,
+                productName: product.variantDetails?.itemName,
+                productImage: product.imageList[0]?.fullImagepath,
+                qty: 1,
+                stockQty: product.priceAndStock?.stockQty,
+                variantName: product.variantDetails?.variantName,
+                mrp: product.priceAndStock?.mrp,
+                unitName: product.variantDetails?.unitName,
+                businessUnitId: +(product.variantDetails?.businessUnitId || 0),
+                backgroundColor: product.variantDetails?.backgroundColor,
+                fontFontColor: product.variantDetails?.fontColor,
+                variantOptionDetails: product.variantOptionList?.map((variant) => ({
+                  itemVariantId: 0,
+                  optionName: variant?.optionName,
+                  optionValue: variant?.optionValue,
+                  variantOptionId: 0,
+                  variantOptionValueId: variant?.variantOptionValueId
+                }))
+              }}
+            />
+          )}
 
           {/* SHOP NAME */}
         </Grid>

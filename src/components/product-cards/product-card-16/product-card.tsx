@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import Link from "next/link"
 import Rating from "@mui/material/Rating"
 import Typography from "@mui/material/Typography"
@@ -16,21 +16,21 @@ import { VariantOptionDetails } from "@/models/Filters"
 import { Box, Chip } from "@mui/material"
 
 // ==============================================================
-type Props = { product: DataList, variantOptions: VariantOptionDetails[], badges: string[] };
+type Props = { product: DataList; variantOptions: VariantOptionDetails[]; badges: string[] }
 // ==============================================================
 
 export default function ProductCard16({ product, variantOptions, badges }: Props) {
+  console.warn(product, "product in product card 16")
 
   const imageAltTag = product.imageList?.[0]?.alt || "Product Image"
   const thumbnail = product.imageList?.[0]?.fullImagepath || "/assets/images/products/no-photo.png"
   const discount = product.savePricePctg || 0
-  const price = +(product.mrp).toFixed(2)
+  const price = +product.mrp.toFixed(2)
   const formattedFinalPrice = calculateDiscount(price, discount)
-
 
   return (
     <StyledRoot>
-      <Link href={`/products/${product.itemId}?variantId=${product.itemVariantId || ''}`}>
+      <Link href={`/products/${product.itemId}?variantId=${product.itemVariantId || ""}`}>
         <div className="img-wrapper">
           <LazyImage unoptimized alt={imageAltTag} width={380} height={379} src={thumbnail} />
           {discount ? <DiscountChip discount={discount} sx={{ left: 20, top: 20 }} /> : null}
@@ -38,40 +38,52 @@ export default function ProductCard16({ product, variantOptions, badges }: Props
       </Link>
 
       <div className="content">
-        <div>
-          <Link href={`/products/${product.itemId}`}>
-            <Typography variant="h6" sx={{ mb: 1 }}>
-              {product.itemName}
-            </Typography>
-            <Box sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 1,
-              mb: 2
-            }}>
-              {
-                variantOptions?.map(option => <Box key={`${option.itemVariantId}-${option.optionName}`}>
-                  {badges.includes(option.optionName) &&
-                    <Chip
-                      label={`${option.optionName} - ${option.optionValue}`}
-                      size="small"
-                      color="primary"
-                      variant="filled"
-                    />
-                  }
-                </Box>)
-              }
-            </Box>
-          </Link>
+  <div className="content-inner">
+    {/* TITLE + UNIT */}
+    <div className="title-row">
+      <Typography variant="h6" className="title">
+        {product.itemName}
+      </Typography>
 
-          <Rating readOnly value={0} size="small" precision={0.5} />
+      {product.id && product.id!==0 && (
+        <span
+          className="unit-badge"
+          style={{
+            backgroundColor: product.backgroundColor || "#1967d2",
+            color: product.fontColor || "#ffffff",
+          }}
+        >
+          {product.unitName} 
+        </span>
+      )}
+    </div>
 
-          <PriceText>
-            {formattedFinalPrice}
-            {discount > 0 && <span className="base-price">{currency(price)}</span>}
-          </PriceText>
-        </div>
-      </div>
+    {/* VARIANT BADGES */}
+    <Box className="variant-row">
+    
+      {variantOptions?.map(option =>
+        badges.includes(option.optionName) ? (
+          <Chip
+            key={`${option.itemVariantId}-${option.optionName}`}
+            label={`${option.optionName} - ${option.optionValue}`}
+            size="small"
+            color="primary"
+          />
+        ) : null
+      )}
+    </Box>
+
+    {/* RATING */}
+    <Rating readOnly value={0} size="small" precision={0.5} />
+
+    {/* PRICE */}
+    <PriceText>
+      {formattedFinalPrice}
+      {discount > 0 && <span className="base-price">{currency(price)}</span>}
+    </PriceText>
+  </div>
+</div>
+
     </StyledRoot>
   )
 }

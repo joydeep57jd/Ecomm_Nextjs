@@ -57,6 +57,10 @@ export interface VariantDetail {
   subCategoryId: number
   brandLogoFileName: string
   isSoldOut: boolean
+  businessUnitId:string
+  unitName:string
+  fontColor: string
+  backgroundColor: string
   itemCode: string
   itemRating: number
   batchInfos: BatchInfos[]

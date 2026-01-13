@@ -1,4 +1,3 @@
-
 "use client"
 
 import { Cart, RemoteCart } from "@/models/CartProductItem.models"
@@ -14,7 +13,7 @@ type InitialState = {
   orderSummaryFetchCount: number
   isSyncRequired: boolean
   user?: UserData
-  deleteItem?: Cart,
+  deleteItem?: Cart
   remoteCarts?: RemoteCart[]
   isLoading: boolean
 }
@@ -28,7 +27,6 @@ interface CartActionType {
   isSyncRequired?: boolean
   remoteCarts?: RemoteCart[]
 }
-
 
 // Load initial cart from localStorage if available
 const INITIAL_CART = getCartProducts()
@@ -47,7 +45,6 @@ interface ContextProps {
   dispatch: (args: CartActionType) => void
 }
 
-
 export const CartContext = createContext<ContextProps>({} as ContextProps)
 const reducer = (state: InitialState, action: CartActionType) => {
   switch (action.type) {
@@ -58,7 +55,10 @@ const reducer = (state: InitialState, action: CartActionType) => {
       if (!cartItem) return state
       let deleteItem
 
-      const existIndex = cartList.findIndex((item) => item.itemVariantId === cartItem.itemVariantId && item.productId === cartItem.productId)
+      const existIndex = cartList.findIndex(
+        (item) =>
+          item.itemVariantId === cartItem.itemVariantId && item.productId === cartItem.productId
+      )
       if (cartItem.qty < 1) {
         updatedCart = [...cartList]
         deleteItem = { ...cartList[existIndex] }
@@ -71,21 +71,57 @@ const reducer = (state: InitialState, action: CartActionType) => {
       }
 
       setCart(updatedCart)
-      return { ...state, cart: updatedCart, isSyncRequired: true, user: action.user, deleteItem, isLoading: !!action.isSyncRequired }
+      return {
+        ...state,
+        cart: updatedCart,
+        isSyncRequired: true,
+        user: action.user,
+        deleteItem,
+        isLoading: !!action.isSyncRequired
+      }
 
     case "CLEAR_CART":
       clearCart()
-      return { ...state, cart: [], isSyncRequired: true, user: action.user, isLoading: !!action.isSyncRequired }
+      return {
+        ...state,
+        cart: [],
+        isSyncRequired: true,
+        user: action.user,
+        isLoading: !!action.isSyncRequired
+      }
 
     case "SET_CART":
       setCart(action.carts ?? [])
-      return { ...state, cart: action.carts ?? [], isLoggedIn: action.isLoggedIn ?? true, isSyncRequired: action.isSyncRequired ?? true, user: action.user, remoteCarts: action.remoteCarts ?? undefined, isLoading: !!action.isSyncRequired }
+      return {
+        ...state,
+        cart: action.carts ?? [],
+        isLoggedIn: action.isLoggedIn ?? true,
+        isSyncRequired: action.isSyncRequired ?? true,
+        user: action.user,
+        remoteCarts: action.remoteCarts ?? undefined,
+        isLoading: !!action.isSyncRequired
+      }
 
     case "UPDATE_FETCH_COUNT":
-      return { ...state, orderSummaryFetchCount: state.orderSummaryFetchCount + 1, isOrderSummaryFetchCountUpDateRequired: false, isSyncRequired: false, deleteItem: undefined, cart: action.carts!, isLoading: false }
+      return {
+        ...state,
+        orderSummaryFetchCount: state.orderSummaryFetchCount + 1,
+        isOrderSummaryFetchCountUpDateRequired: false,
+        isSyncRequired: false,
+        deleteItem: undefined,
+        cart: action.carts!,
+        isLoading: false
+      }
 
     case "SYNC_SUCCESS":
-      return { ...state, isSyncRequired: false, deleteItem: undefined, cart: action.carts!, isLoading: false, remoteCarts: action.remoteCarts ?? undefined }
+      return {
+        ...state,
+        isSyncRequired: false,
+        deleteItem: undefined,
+        cart: action.carts!,
+        isLoading: false,
+        remoteCarts: action.remoteCarts ?? undefined
+      }
 
     default: {
       return state
@@ -108,7 +144,11 @@ export default function CartProvider({ children }: PropsWithChildren) {
 
     if (state.deleteItem) {
       finalCartItems.push({ ...state.deleteItem, qty: 0 })
-      const index = updatedCart.findIndex(c => c.itemVariantId === state.deleteItem?.itemVariantId && c.productId === state.deleteItem?.productId)
+      const index = updatedCart.findIndex(
+        (c) =>
+          c.itemVariantId === state.deleteItem?.itemVariantId &&
+          c.productId === state.deleteItem?.productId
+      )
       if (index != -1) {
         updatedCart.splice(index, 1)
       }
@@ -122,11 +162,9 @@ export default function CartProvider({ children }: PropsWithChildren) {
     } else {
       dispatch({ type: "SYNC_SUCCESS", carts: updatedCart })
     }
-
   }
 
   const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch])
 
   return <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>
 }
-

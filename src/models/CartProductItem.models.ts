@@ -81,7 +81,7 @@ export interface Cart {
   itemVariantId: number
   stockQty?: number
   mrp: number
-  variantName: string
+  variantName?: string
   unitName?: string
   businessUnitId?: number
   backgroundColor?: string

@@ -14,6 +14,10 @@ export interface DataList {
   memberPrice: number
   categoryId: number
   subCategoryId: number
+  businessUnitId?:string
+  unitName?:string
+  fontColor?: string
+  backgroundColor?: string
   isSoldOut: boolean
   itemCode: string
   imageList: ImageList[]

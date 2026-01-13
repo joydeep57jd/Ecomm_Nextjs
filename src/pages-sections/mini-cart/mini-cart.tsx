@@ -32,6 +32,8 @@ export default function MiniCart() {
   const { state, dispatch } = useCart()
   const { setOpen } = useCartDrawer()
 
+  console.warn(state.cart)
+
   const CART_LENGTH = state.cart.length
 
   const tabsData = useMemo(() => {
