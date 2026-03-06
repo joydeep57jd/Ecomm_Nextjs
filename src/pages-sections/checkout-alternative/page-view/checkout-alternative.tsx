@@ -42,8 +42,8 @@ export default function CheckoutAlternativePageView() {
   const [placingOrder, setPlacingOrder] = useState(false)
   const [product, setProduct] = useState<RemoteCart[]>([])
   const [location, setLocation] = useState({
-    latitude: "0.000",
-    longitude: "0.000"
+    latitude: 0.000,
+    longitude: 0.000
   })
 
   const router = useRouter()
@@ -94,15 +94,15 @@ export default function CheckoutAlternativePageView() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLocation({
-            latitude: position.coords.latitude.toString(),
-            longitude: position.coords.longitude.toString()
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
           })
-          console.warn(
-            "Latitude: ",
-            position.coords.latitude,
-            "Longitude: ",
-            position.coords.longitude
-          )
+          // console.warn(
+          //   "Latitude: ",
+          //   position.coords.latitude,
+          //   "Longitude: ",
+          //   position.coords.longitude
+          // )
         },
         (error) => {
           console.error("Location error:", error)
@@ -172,7 +172,7 @@ export default function CheckoutAlternativePageView() {
   }, [selectedPinCode])
 
   const order = async (paymentMethod: string) => {
-    console.warn(checkoutOrderResponse, selectedDelivaryAddressData)
+    
 
     if (!selectedDelivaryAddressData || !checkoutOrderResponse) {
       return

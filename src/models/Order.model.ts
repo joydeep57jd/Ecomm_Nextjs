@@ -110,8 +110,8 @@ export interface Customer {
   spclrequest: string
   paymentmode: string
   deliveryslot: string
-  latitude:string
-  longitude:string
+  latitude:number,
+  longitude:number
 }
 
 export interface OrderData {

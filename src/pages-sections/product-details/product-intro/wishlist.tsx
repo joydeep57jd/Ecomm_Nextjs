@@ -208,7 +208,7 @@ function Wishlist({ product }: Props) {
   const addToDefaultCollection = async () => {
     try {
       const collections = await GetWishListCategory(+user!.customerId)
-      console.warn(collections)
+    
 
       const defaultCollection = collections?.getWishListCategory?.[0] || {
         wishListCategoryId: 0,

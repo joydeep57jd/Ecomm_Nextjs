@@ -23,7 +23,7 @@ export default function CartItem({ item }: Props) {
   const { dispatch } = useCart()
   const { user } = useUser()
 
-  console.warn("cart item background color", item.backgroundColor, item.fontFontColor)
+
 
   const handleCartAmountChange = (amount: number) => () => {
     dispatch({

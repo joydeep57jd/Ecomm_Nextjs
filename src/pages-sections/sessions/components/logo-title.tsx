@@ -9,7 +9,7 @@ import { getItem } from "@/utils/services/local-storage.service"
 export default function LogoWithTitle() {
    const getLogo = ()=>{
         const layout = getItem("layout" )
-        // console.warn(layout);
+        
         return layout?.header?.logo
       }
   return (

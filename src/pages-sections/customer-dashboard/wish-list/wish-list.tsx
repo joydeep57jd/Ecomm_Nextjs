@@ -290,7 +290,7 @@ export default function WishListPageView({
         onClose={() => setIsModalOpen(false)}
         category={editingCategory}
         onUpdated={(updated) => {
-          console.warn(updated)
+         
           setCategories(updated)
           setIsModalOpen(false)
         }}

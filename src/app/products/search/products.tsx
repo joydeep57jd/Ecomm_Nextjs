@@ -155,7 +155,7 @@ function Products({
       setVariantOptions((productsResponse as CategoryWiseFilterResponse).variantOptionDetails)
     }
 
-    console.warn(productsResponse, "productsResponsefthrth")
+   
 
     const size = productsResponse.pagination.pageSize
     const pageCount = Math.ceil(productsResponse.pagination.totalRecords / size)

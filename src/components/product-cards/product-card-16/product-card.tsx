@@ -20,7 +20,7 @@ type Props = { product: DataList; variantOptions: VariantOptionDetails[]; badges
 // ==============================================================
 
 export default function ProductCard16({ product, variantOptions, badges }: Props) {
-  console.warn(product, "product in product card 16")
+  
 
   const imageAltTag = product.imageList?.[0]?.alt || "Product Image"
   const thumbnail = product.imageList?.[0]?.fullImagepath || "/assets/images/products/no-photo.png"

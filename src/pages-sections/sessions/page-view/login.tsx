@@ -84,11 +84,12 @@ export default function LoginPageView() {
   const handleSendOTP = async (values: LoginSchemaType) => {
     try {
       setisApiCallInprogress(true)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const payload = {
         PhoneCode: "+91",
         PhoneNo: values.phoneNo
       }
-      console.warn("payload", payload)
+      
       enqueueSnackbar("OTP sent successfully.", { variant: "success" })
       setRecaptchaToken(null) // reset recaptcha
       setIsInitialStep(false)
