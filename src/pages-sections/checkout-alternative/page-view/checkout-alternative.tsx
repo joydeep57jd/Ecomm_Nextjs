@@ -41,6 +41,10 @@ export default function CheckoutAlternativePageView() {
   const [orderResponse, setOrderResponse] = useState<PlaceOrderResponse | null>(null)
   const [placingOrder, setPlacingOrder] = useState(false)
   const [product, setProduct] = useState<RemoteCart[]>([])
+  const [location, setLocation] = useState({
+    latitude: "0.000",
+    longitude: "0.000"
+  })
 
   const router = useRouter()
   const { user } = useUser()
@@ -54,11 +58,20 @@ export default function CheckoutAlternativePageView() {
     if (user && !remoteCarts) {
       syncUser(user)
     }
+  }, [user])
 
-    if (user?.customerId) {
-      getInitialData()
+  useEffect(() => {
+    if (product.length > 0 && user?.customerId) {
+      getCheckoutOrder()
+      getAddresses()
     }
-  }, [product, user])
+  }, [product])
+
+  useEffect(() => {
+    if (product.length > 0 && checkoutOrderResponse) {
+      setIsInitialDataLoaded(true)
+    }
+  }, [product, checkoutOrderResponse])
 
   useEffect(() => {
     if (!cart.length && !orderResponse) {
@@ -75,6 +88,28 @@ export default function CheckoutAlternativePageView() {
       setProduct(filteredProduct)
     }
   }, [remoteCarts])
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude.toString(),
+            longitude: position.coords.longitude.toString()
+          })
+          console.warn(
+            "Latitude: ",
+            position.coords.latitude,
+            "Longitude: ",
+            position.coords.longitude
+          )
+        },
+        (error) => {
+          console.error("Location error:", error)
+        }
+      )
+    }
+  }, [])
 
   const syncUser = async (user: UserData) => {
     const remoteCarts = await getCart(+user.customerId)
@@ -95,29 +130,24 @@ export default function CheckoutAlternativePageView() {
     }
   }, [user])
 
-  const getInitialData = async () => {
-    await Promise.all([getAddresses(), getCheckoutOrder()])
-    setTimeout(() => {
-      setIsInitialDataLoaded(true)
-    }, 0)
-  }
-
   const getAddresses = async () => {
     const response = await getAddressList(+user?.customerId!)
     setAddressListResponse(response)
   }
 
   const getCheckoutOrder = async () => {
+    if (!product || product.length === 0) return
+
     const checkoutOrderRequest: CheckoutOrderRequest = {
       discoutcode: "",
       ordered: {
-        items: product!?.map((c) => ({
-          batchId: c.batchId,
-          id: c.id,
-          quantity: c.quantity,
-          rate: c.price_regular,
+        items: product.map((c) => ({
+          batchId: c?.batchId,
+          id: c?.id,
+          quantity: c?.quantity,
+          rate: c?.price_regular,
           status: "order placed",
-          variantid: c.variantid
+          variantid: c?.variantid
         }))
       }
     }
@@ -186,7 +216,9 @@ export default function CheckoutAlternativePageView() {
         paymentmode: paymentMethod,
         spclrequest: spclrequest || "",
         state,
-        type
+        type,
+        latitude: location.latitude,
+        longitude: location.longitude
       },
       order: {
         orderdate: new Date().toLocaleString(),
@@ -200,7 +232,7 @@ export default function CheckoutAlternativePageView() {
       }
     })
     syncUser(user!)
-    
+
     setOrderResponse(response)
   }
 
