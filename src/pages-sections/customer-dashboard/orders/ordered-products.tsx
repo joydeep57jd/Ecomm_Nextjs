@@ -6,7 +6,7 @@ import Card from "@mui/material/Card"
 import Button from "@mui/material/Button"
 import Avatar from "@mui/material/Avatar"
 import Typography from "@mui/material/Typography"
-import { CircularProgress } from "@mui/material"
+import { CircularProgress, Chip, Box } from "@mui/material"
 // GLOBAL CUSTOM COMPONENTS
 import { FlexBetween, FlexBox } from "components/flex-box"
 // CUSTOM UTILS LIBRARY FUNCTION
@@ -291,9 +291,26 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                   Cancel Item
                 </Button>
               ) : (
-                <Typography variant="body2" color="text.secondary">
-                  {item.status}
-                </Typography>
+                <FlexBox gap={1} alignItems="center" flexWrap="wrap">
+                  {order?.otpHash && order.otpHash.trim() !== "" && (
+                    <Box
+                      sx={{
+                        px: 1.5,
+                        py: 0.75,
+                        bgcolor: "success.50",
+                        border: "1.5px dashed",
+                        borderColor: "success.main",
+                        borderRadius: 1.5
+                      }}
+                    >
+                      <Typography variant="caption" color="success.dark" fontWeight={600}>
+                        OTP: {order.otpHash}
+                      </Typography>
+                    </Box>
+                  )}
+
+                  <Chip label={item.status} size="small" color="info" sx={{ fontWeight: 500 }} />
+                </FlexBox>
               )}
             </FlexBox>
           </FlexBetween>

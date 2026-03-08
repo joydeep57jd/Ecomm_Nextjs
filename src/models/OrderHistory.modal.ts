@@ -25,6 +25,8 @@ export interface OrderListCustomer {
   orderDetailId: number
   invoiceId: number
   isInvoiced: boolean
+  assignmentId: string
+  otpHash: string
 }
 
 export interface Item {
@@ -53,7 +55,7 @@ export interface Item {
   isDelivered: boolean
   isCancelled: boolean
   refundAmount: number
-  pickupDate:string
+  pickupDate: string
 
   deliveryDate: string
 }

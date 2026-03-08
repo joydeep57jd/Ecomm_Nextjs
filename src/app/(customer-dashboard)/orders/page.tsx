@@ -47,13 +47,14 @@ export default function Orders() {
   }
 
   return (
-    <Box sx={{ position: 'relative' }}>
-      {
-        isLoading && <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-
+    <Box sx={{ position: "relative" }}>
+      {isLoading && (
+        <Box
+          sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
+        >
           <Loading isTiny={true} />
         </Box>
-      }
+      )}
       <OrdersPageView
         orders={orderResponse!.orderListCustomer}
         totalPages={Math.ceil(orderResponse!.count / pageSize)}
