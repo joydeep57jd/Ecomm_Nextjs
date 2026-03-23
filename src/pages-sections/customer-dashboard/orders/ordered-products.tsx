@@ -14,9 +14,9 @@ import { currency } from "lib"
 // CUSTOM DATA MODEL
 import { OrderListCustomer, Item as Product } from "@/models/OrderHistory.modal"
 import OrderItemRating from "./page-view/order-item-rating"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useUser } from "@/contexts/UserContenxt"
-import { customerCancelRequest, GetStatementInvoice } from "@/utils/api/order"
+import { customerCancelRequest, GetStatementInvoice, orderReturnPickupOtp } from "@/utils/api/order"
 import { CustCancelRequest } from "@/models/Order.model"
 import Link from "next/link"
 import OrderItemReturn from "./page-view/order-item-return"
@@ -34,9 +34,10 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
   const { user } = useUser()
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [loadingInvoiceId, setLoadingInvoiceId] = useState<number | null>(null)
-
   const [loadingCancelId, setLoadingCancelId] = useState<number | null>(null)
   const [modalType, setModalType] = useState<"rating" | "return" | "cancel" | null>(null)
+  const [returnPickupOtps, setReturnPickupOtps] = useState<{ [key: number]: string }>({})
+  const [render, setRender] = useState<Record<number, boolean>>({})
 
   const handleCloseModal = (isReloadRequired: boolean) => {
     setSelectedProduct(null)
@@ -93,6 +94,41 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
       setLoadingInvoiceId(null)
     }
   }
+
+  const fetchReturnPickupOtp = async (item: Product) => {
+    try {
+      // Check if item has invoiceNumber and orderDetailId
+      if (!item.invoiceId || !item.orderDetailId) return
+
+      if (render[item.orderDetailId]) return
+      setRender((prev) => ({ ...prev, [item.orderDetailId]: true }))
+      // Only fetch if we haven't already fetched for this item
+      if (returnPickupOtps[item.orderDetailId]) return
+
+      const response = await orderReturnPickupOtp({
+        invoiceId: item.invoiceId.toString(),
+        orderDetailId: item.orderDetailId.toString()
+      })
+
+      if (response?.otp) {
+        setReturnPickupOtps((prev) => ({
+          ...prev,
+          [item.orderDetailId]: response.otp
+        }))
+      }
+    } catch (error) {
+      console.error("Error fetching return pickup OTP:", error)
+    }
+  }
+
+  // Fetch OTPs for return items when component mounts or order changes
+  useEffect(() => {
+    if (order?.items) {
+      order.items.forEach((item) => {
+        fetchReturnPickupOtp(item)
+      })
+    }
+  }, [order])
 
   const formatDeliveryDate = (date?: string) => {
     if (!date) return "--"
@@ -292,6 +328,24 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                 </Button>
               ) : (
                 <FlexBox gap={1} alignItems="center" flexWrap="wrap">
+                  {/* Display Return Pickup OTP if available */}
+                  {returnPickupOtps[item.orderDetailId] && (
+                    <Box
+                      sx={{
+                        px: 1.5,
+                        py: 0.75,
+                        bgcolor: "warning.50",
+                        border: "1.5px dashed",
+                        borderColor: "warning.main",
+                        borderRadius: 1.5
+                      }}
+                    >
+                      <Typography variant="caption" color="warning.dark" fontWeight={600}>
+                        Return OTP: {returnPickupOtps[item.orderDetailId]}
+                      </Typography>
+                    </Box>
+                  )}
+
                   {order?.otpHash && order.otpHash.trim() !== "" && (
                     <Box
                       sx={{

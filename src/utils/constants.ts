@@ -41,9 +41,10 @@ export const API_URL = {
     CREATE_CANCEL_REQUEST: "/frontend/CreateCancelRequest",
     GET_CANCEL_MASTER_REASON: "/frontend/GetCancellationMasterFront",
     GET_CANCEL_REASON: "/frontend/GetCancellationMasterFront",
-    CUST_CANCEL_REQUEST:"/ProductManagement/CreateCancelRequest",
-    CUST_RETURN_ORDER:"/FrontEnd/SaveExchangeReturnItemsForInvoice",
-    CUST_RETURN_ORDERIMAGE:"/Frontend/AddReturnProductImage"
+    CUST_CANCEL_REQUEST: "/ProductManagement/CreateCancelRequest",
+    CUST_RETURN_ORDER: "/FrontEnd/SaveExchangeReturnItemsForInvoice",
+    CUST_RETURN_ORDERIMAGE: "/Frontend/AddReturnProductImage",
+    GET_RETURN_PICKUP_OTP: "/Frontend/GetReturnPickupOtp"
   },
 
   CART: {
@@ -77,8 +78,7 @@ export const API_URL = {
     GET_ADDITIONAL_INFO: "/frontend/GetAdditionalInfoByItem",
     P_ALLPRODUCT: "/frontend/GetCompanyDefaultTemplateUI",
     GET_CATEGORY_OPTIONS: "/frontend/GetVariantOptionsByCategory",
-    GET_FILTER_CATEGORY_SECTION:"/Frontend/GetCategoryWiseFilter"
-
+    GET_FILTER_CATEGORY_SECTION: "/Frontend/GetCategoryWiseFilter"
   },
 
   RATING: {

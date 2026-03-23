@@ -19,14 +19,23 @@ export interface OrderReturnPayload {
   IsSerialized: boolean
   InvoiceNumber: string
   storeId: number
-  ImageIds?:string
-  ReturnReason:string
+  ImageIds?: string
+  ReturnReason: string
 }
 
 export interface ReturnWithImagePayload {
   Name: string
   Title: string
   AlterText: string
-  FilePath: string| null
+  FilePath: string | null
   ImageData: string
+}
+
+export interface OrderReturnOtpPayload {
+  invoiceId: string
+  orderDetailId: string
+}
+
+export interface OrderReturnOtpResponse {
+  otp: string
 }
