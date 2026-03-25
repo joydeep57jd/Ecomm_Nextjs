@@ -217,8 +217,8 @@ export default function CheckoutAlternativePageView() {
         spclrequest: spclrequest || "",
         state,
         type,
-        latitude: location.latitude,
-        longitude: location.longitude
+        latitude: selectedDelivaryAddressData.customer.latitude ?? location.latitude,
+        longitude: selectedDelivaryAddressData.customer.longitude ?? location.longitude
       },
       order: {
         orderdate: new Date().toLocaleString(),

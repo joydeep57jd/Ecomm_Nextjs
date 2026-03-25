@@ -33,5 +33,8 @@ export const validationSchema = yup.object({
   pin: yup
     .string()
     .matches(/^\d{6}$/, "Zip must be exactly 6 digits")
-    .required("Zip is required")
+    .required("Zip is required"),
+
+  latitude: yup.number().optional(),
+  longitude: yup.number().optional()
 })

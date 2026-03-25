@@ -25,7 +25,7 @@ type Props = {
   Product:RemoteCart[]
 }
 
-export default function CheckoutSummary({ checkoutOrderResponse,  Product }: Props) {
+export default function CheckoutSummary({ checkoutOrderResponse, deliveryCharge, Product }: Props) {
   const { state } = useCart()
 
 
@@ -50,7 +50,7 @@ export default function CheckoutSummary({ checkoutOrderResponse,  Product }: Pro
       <Divider sx={{ my: 3 }} />
 
       <ListItem title="Subtotal" value={checkoutOrderResponse?.totalamt} />
-      <ListItem title="Shipping" value={checkoutOrderResponse?.deliverychargeamt} />
+      <ListItem title="Shipping" value={deliveryCharge || checkoutOrderResponse?.deliverychargeamt} />
       {/* <ListItem title="Tax" value={checkoutOrderResponse?.totaltaxamt} /> */}
       <ListItem title="Voucher" value={0} mb={3} />
 

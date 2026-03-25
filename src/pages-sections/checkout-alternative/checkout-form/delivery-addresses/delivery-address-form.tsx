@@ -13,6 +13,7 @@ import DialogContent from "@mui/material/DialogContent"
 import { FormProvider, TextField } from "components/form-hook"
 
 
+import { useEffect } from "react"
 import { validationSchema } from "@/schema/profile/address.schema"
 import { DelivaryAddressData } from "@/models/Address.model"
 import { SaveAddress } from "@/utils/api/profile"
@@ -49,6 +50,8 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
       dist: deliveryAddress?.customer?.dist || "",
       state: deliveryAddress?.customer?.state || "",
       country: deliveryAddress?.customer?.country || "",
+      latitude: deliveryAddress?.customer?.latitude ?? undefined,
+      longitude: deliveryAddress?.customer?.longitude ?? undefined,
     }),
     [deliveryAddress]
   )
@@ -57,7 +60,16 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
     resolver: yupResolver(validationSchema) as Resolver<FormValues>
   })
 
-  const { reset, getValues, handleSubmit } = methods
+  const { reset, getValues, handleSubmit, setValue: setFormValue } = methods
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        setFormValue("latitude", pos.coords.latitude)
+        setFormValue("longitude", pos.coords.longitude)
+      })
+    }
+  }, [])
 
   const formSubmit = handleSubmit(() => {
     save()
@@ -76,7 +88,9 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
         deliveryslot: null,
         UserPhoneCountryCode: "IN",
         PhoneCode: "+91",
-        ...getValues()
+        ...getValues(),
+        latitude: getValues("latitude") ?? 0,
+        longitude: getValues("longitude") ?? 0
       }
     }
 

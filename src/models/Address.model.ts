@@ -27,5 +27,7 @@ export interface Customer {
   UserPhoneCountryCode?: string
   PhoneCode?: string
   isDefault?: boolean
+  latitude?: number
+  longitude?: number
 
 }
