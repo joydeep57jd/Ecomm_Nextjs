@@ -79,11 +79,17 @@ export interface Taxdetail {
   taxType: null
 }
 
+// export interface DeliveryChargeRequest {
+//   totalAmount: number
+//   taxAmount: number
+//   netAmount: number
+//   zipCode: string
+// }
+
 export interface DeliveryChargeRequest {
-  totalAmount: number
-  taxAmount: number
-  netAmount: number
-  zipCode: string
+  CustomerLatitude: number
+  CustomerLongitude: number
+  VariantIdList: string
 }
 
 export interface PlaceOrderRequest {
@@ -110,8 +116,8 @@ export interface Customer {
   spclrequest: string
   paymentmode: string
   deliveryslot: string
-  latitude:number,
-  longitude:number
+  latitude: number
+  longitude: number
 }
 
 export interface OrderData {
@@ -139,9 +145,9 @@ export interface PlaceOrderResponse {
 
 export interface CustCancelRequest {
   OrderId: number
-  InvoiceId?: number|null
+  InvoiceId?: number | null
   OrderDetailId: number
-  InvoiceDetailId?: number|null
+  InvoiceDetailId?: number | null
   Timestamp: Date
   CancelReasonId: number
   Explanation: string
@@ -149,11 +155,8 @@ export interface CustCancelRequest {
   UserName: string
 }
 
-
-
 export interface StatmentInvoiceResponse {
-  html: string;
-  htmlc: string;
-  id:   null;
+  html: string
+  htmlc: string
+  id: null
 }
-

@@ -33,11 +33,11 @@ export const getOrderSummary = async (paylaod: CheckoutOrderRequest) => {
 }
 
 export const getDeliveryCharge = async (payload: DeliveryChargeRequest) => {
-  const { data } = await axiosInstance.post<{ data: string }>(
+  const { data } = await axiosInstance.post<{ data: { deliveryCharge: number } }>(
     API_URL.ORDER.GET_DELIVEY_CHARGE,
     payload
   )
-  return data.data
+  return data.data.deliveryCharge
 }
 
 export const placeOrder = async (payload: PlaceOrderRequest) => {

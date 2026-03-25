@@ -2,10 +2,8 @@
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
 import Container from "@mui/material/Container"
-// LOCAL CUSTOM COMPONENTS
 import CheckoutForm from "../checkout-form"
 import CheckoutSummery from "../checkout-summery"
-// API FUNCTIONS
 import { useUser } from "@/contexts/UserContenxt"
 import useCart from "@/hooks/useCart"
 import {
@@ -34,17 +32,14 @@ export default function CheckoutAlternativePageView() {
     null
   )
   const [isInitialDataLoaded, setIsInitialDataLoaded] = useState(false)
-  const [selectedPinCode, setSelectedPinCode] = useState("")
+  const [, setSelectedPinCode] = useState("")
   const [deliveryCharge, setDeliveryCharge] = useState(0)
   const [selectedDelivaryAddressData, setSelectedDelivaryAddressData] =
     useState<DelivaryAddressData | null>(null)
   const [orderResponse, setOrderResponse] = useState<PlaceOrderResponse | null>(null)
   const [placingOrder, setPlacingOrder] = useState(false)
   const [product, setProduct] = useState<RemoteCart[]>([])
-  const [location, setLocation] = useState({
-    latitude: 0.000,
-    longitude: 0.000
-  })
+  const [location, setLocation] = useState({ latitude: 0.0, longitude: 0.0 })
 
   const router = useRouter()
   const { user } = useUser()
@@ -55,9 +50,7 @@ export default function CheckoutAlternativePageView() {
   } = useCart()
 
   useEffect(() => {
-    if (user && !remoteCarts) {
-      syncUser(user)
-    }
+    if (user && !remoteCarts) syncUser(user)
   }, [user])
 
   useEffect(() => {
@@ -68,15 +61,11 @@ export default function CheckoutAlternativePageView() {
   }, [product])
 
   useEffect(() => {
-    if (product.length > 0 && checkoutOrderResponse) {
-      setIsInitialDataLoaded(true)
-    }
+    if (product.length > 0 && checkoutOrderResponse) setIsInitialDataLoaded(true)
   }, [product, checkoutOrderResponse])
 
   useEffect(() => {
-    if (!cart.length && !orderResponse) {
-      router.push("/")
-    }
+    if (!cart.length && !orderResponse) router.push("/")
   }, [cart])
 
   useEffect(() => {
@@ -97,16 +86,8 @@ export default function CheckoutAlternativePageView() {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           })
-          // console.warn(
-          //   "Latitude: ",
-          //   position.coords.latitude,
-          //   "Longitude: ",
-          //   position.coords.longitude
-          // )
         },
-        (error) => {
-          console.error("Location error:", error)
-        }
+        (error) => console.error("Location error:", error)
       )
     }
   }, [])
@@ -125,9 +106,7 @@ export default function CheckoutAlternativePageView() {
   }
 
   useEffect(() => {
-    if (!user?.id) {
-      router.push("/login")
-    }
+    if (!user?.id) router.push("/login")
   }, [user])
 
   const getAddresses = async () => {
@@ -137,7 +116,6 @@ export default function CheckoutAlternativePageView() {
 
   const getCheckoutOrder = async () => {
     if (!product || product.length === 0) return
-
     const checkoutOrderRequest: CheckoutOrderRequest = {
       discoutcode: "",
       ordered: {
@@ -155,28 +133,25 @@ export default function CheckoutAlternativePageView() {
     setCheckoutOrderResponse(response)
   }
 
-  const getDeliveryChargeDetails = async () => {
+  const getDeliveryChargeDetails = async (addressData: DelivaryAddressData) => {
+    const variantIdList = product.map((p) => p.variantid).join(",")
     const charge = await getDeliveryCharge({
-      netAmount: checkoutOrderResponse!.totalamt,
-      taxAmount: checkoutOrderResponse!.totaltaxamt,
-      totalAmount: checkoutOrderResponse!.grandtotalamt,
-      zipCode: selectedPinCode
+      CustomerLatitude: addressData.customer.latitude ?? location.latitude,
+      CustomerLongitude: addressData.customer.longitude ?? location.longitude,
+      VariantIdList: variantIdList
     })
-    setDeliveryCharge(+charge)
+    setDeliveryCharge(charge)
   }
 
-  useEffect(() => {
-    if (selectedPinCode && checkoutOrderResponse) {
-      getDeliveryChargeDetails()
-    }
-  }, [selectedPinCode])
+  const handleAddressSelect = (addressData: DelivaryAddressData) => {
+    setSelectedDelivaryAddressData(addressData)
+    setSelectedPinCode(addressData.customer.pin)
+    getDeliveryChargeDetails(addressData)
+  }
+  const totalAmount = deliveryCharge + checkoutOrderResponse?.grandtotalamt!
 
   const order = async (paymentMethod: string) => {
-    
-
-    if (!selectedDelivaryAddressData || !checkoutOrderResponse) {
-      return
-    }
+    if (!selectedDelivaryAddressData || !checkoutOrderResponse) return
     setPlacingOrder(true)
     const {
       address1,
@@ -225,14 +200,13 @@ export default function CheckoutAlternativePageView() {
         deliverychargeamt: deliveryCharge,
         discount_code: "",
         discount_total: "0",
-        grandtotalamt: checkoutOrderResponse!.grandtotalamt,
+        grandtotalamt: totalAmount,
         totalamt: checkoutOrderResponse!.totalamt,
         totaltaxamt: checkoutOrderResponse!.totaltaxamt,
         data: checkoutOrderResponse!.item
       }
     })
     syncUser(user!)
-
     setOrderResponse(response)
   }
 
@@ -251,7 +225,7 @@ export default function CheckoutAlternativePageView() {
               deliveryAddresses={addressListResponse?.data! || []}
               getAddresses={getAddresses}
               setSelectedPinCode={setSelectedPinCode}
-              setSelectedDelivaryAddressData={setSelectedDelivaryAddressData}
+              setSelectedDelivaryAddressData={handleAddressSelect}
               order={order}
               placingOrder={placingOrder}
             />
@@ -262,6 +236,7 @@ export default function CheckoutAlternativePageView() {
               checkoutOrderResponse={checkoutOrderResponse!}
               deliveryCharge={deliveryCharge}
               Product={product}
+              totalAmount={totalAmount}
             />
           </Grid>
         </Grid>

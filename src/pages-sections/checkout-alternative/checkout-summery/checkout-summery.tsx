@@ -23,11 +23,11 @@ type Props = {
   checkoutOrderResponse: CheckoutOrderResponse
   deliveryCharge: number
   Product:RemoteCart[]
+  totalAmount:number
 }
 
-export default function CheckoutSummary({ checkoutOrderResponse, deliveryCharge, Product }: Props) {
+export default function CheckoutSummary({ checkoutOrderResponse, deliveryCharge, Product,totalAmount }: Props) {
   const { state } = useCart()
-
 
   if (!state || !state.cart.length) return null
 
@@ -49,14 +49,14 @@ export default function CheckoutSummary({ checkoutOrderResponse, deliveryCharge,
 
       <Divider sx={{ my: 3 }} />
 
-      <ListItem title="Subtotal" value={checkoutOrderResponse?.totalamt} />
+      <ListItem title="Subtotal" value={checkoutOrderResponse?.grandtotalamt} />
       <ListItem title="Shipping" value={deliveryCharge || checkoutOrderResponse?.deliverychargeamt} />
       {/* <ListItem title="Tax" value={checkoutOrderResponse?.totaltaxamt} /> */}
       <ListItem title="Voucher" value={0} mb={3} />
 
       <Divider sx={{ mb: 1 }} />
 
-      <ListItem title="Total" value={(checkoutOrderResponse?.grandtotalamt)} />
+      <ListItem title="Total" value={totalAmount} />
     </Card>
   )
 }
