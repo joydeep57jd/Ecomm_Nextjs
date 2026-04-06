@@ -12,23 +12,22 @@ import DialogContent from "@mui/material/DialogContent"
 
 import { FormProvider, TextField } from "components/form-hook"
 
-
 import { useEffect } from "react"
 import { validationSchema } from "@/schema/profile/address.schema"
 import { DelivaryAddressData } from "@/models/Address.model"
 import { SaveAddress } from "@/utils/api/profile"
 import { useUser } from "@/contexts/UserContenxt"
 import { DialogActions, DialogTitle, Divider } from "@mui/material"
+import AddressAutocomplete from "@/components/AddressAutocomplete"
+import type { PlaceDetails } from "@/hooks/useGooglePlacesAutocomplete"
 
-
-
-type FormValues = yup.InferType<typeof validationSchema>;
+type FormValues = yup.InferType<typeof validationSchema>
 
 // ==================================================================
 interface Props {
-  handleCloseModal: (isReloadRequired: boolean) => void;
-  deliveryAddress?: DelivaryAddressData;
-  onSave?: (address: DelivaryAddressData) => void;
+  handleCloseModal: (isReloadRequired: boolean) => void
+  deliveryAddress?: DelivaryAddressData
+  onSave?: (address: DelivaryAddressData) => void
 }
 
 // ==================================================================
@@ -51,7 +50,7 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
       state: deliveryAddress?.customer?.state || "",
       country: deliveryAddress?.customer?.country || "",
       latitude: deliveryAddress?.customer?.latitude ?? undefined,
-      longitude: deliveryAddress?.customer?.longitude ?? undefined,
+      longitude: deliveryAddress?.customer?.longitude ?? undefined
     }),
     [deliveryAddress]
   )
@@ -61,6 +60,17 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
   })
 
   const { reset, getValues, handleSubmit, setValue: setFormValue } = methods
+
+  const handleAddressSelect = (details: PlaceDetails) => {
+    setFormValue("address1", details.formattedAddress, { shouldValidate: true })
+    setFormValue("pin", details.pincode, { shouldValidate: true })
+    setFormValue("city", details.city, { shouldValidate: true })
+    // setFormValue("dist", details.district)
+    setFormValue("state", details.state, { shouldValidate: true })
+    setFormValue("country", details.country, { shouldValidate: true })
+    setFormValue("latitude", details.lat)
+    setFormValue("longitude", details.lng)
+  }
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -98,21 +108,18 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
     setIsSaving(false)
     reset()
     handleCloseModal(true)
-
   }
-
 
   return (
     <Dialog open onClose={handleCloseModal}>
       <FormProvider methods={methods} onSubmit={formSubmit}>
         <DialogTitle>
           <Typography variant="h4">
-            {deliveryAddress ? 'Edit' : 'Add New'} Address Information
+            {deliveryAddress ? "Edit" : "Add New"} Address Information
           </Typography>
         </DialogTitle>
         <Divider />
         <DialogContent>
-
           <Grid container spacing={3}>
             <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="fname" label="Enter Your First Name" />
@@ -124,14 +131,21 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
               <TextField fullWidth name="lname" label="Enter Your Last Name" />
             </Grid>
 
+            <Grid size={{ xs: 12 }}>
+              <AddressAutocomplete
+                onAddressSelect={handleAddressSelect}
+                defaultValue={deliveryAddress?.customer?.address1 || ""}
+                label="Address"
+              />
+            </Grid>
 
-            <Grid size={{ sm: 6, xs: 12 }}>
+            {/* <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="address1" label="Address line 1" />
-            </Grid>
+            </Grid> */}
 
-            <Grid size={{ sm: 6, xs: 12 }}>
+            {/* <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="address2" label="Address line 2" />
-            </Grid>
+            </Grid> */}
             <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="email" label="Email" />
             </Grid>
@@ -147,7 +161,6 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
             <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="country" label="Country" />
             </Grid>
-
           </Grid>
         </DialogContent>
         <Divider />
@@ -158,7 +171,6 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
           <Button type="submit" color="primary" variant="contained" loading={isSaving}>
             Save
           </Button>
-
         </DialogActions>
       </FormProvider>
     </Dialog>

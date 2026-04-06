@@ -1,5 +1,6 @@
 import { Suspense, type ReactNode } from "react"
 import { Geist } from "next/font/google"
+import Script from "next/script"
 
 export const geist = Geist({
   subsets: ["latin"]
@@ -73,6 +74,10 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
             </CartDrawerProvider>
           </SnackbarProvider>
         </Suspense>
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   )
