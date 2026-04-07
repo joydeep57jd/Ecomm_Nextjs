@@ -128,6 +128,7 @@ export interface OrderData {
   grandtotalamt: number
   discount_code: string
   discount_total: string
+  DeliveryDistance: number
   data: CheckoutOrderItemResponse[]
 }
 
@@ -159,4 +160,17 @@ export interface StatmentInvoiceResponse {
   html: string
   htmlc: string
   id: null
+}
+
+export interface DeliveryChargeStoreDetail {
+  storeId: number
+  businessUnitId: number
+  distanceKm: number
+  deliveryCharge: number
+  message: string
+}
+
+export interface DeliveryChargeResponse {
+  deliveryCharge: number
+  stores: DeliveryChargeStoreDetail[]
 }

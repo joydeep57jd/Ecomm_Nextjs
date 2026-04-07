@@ -9,6 +9,7 @@ import useCart from "@/hooks/useCart"
 import {
   CheckoutOrderRequest,
   CheckoutOrderResponse,
+  DeliveryChargeResponse,
   PlaceOrderResponse
 } from "@/models/Order.model"
 import { useEffect, useState } from "react"
@@ -22,6 +23,7 @@ import { OrderConfirmationPageView } from "@/pages-sections/order-confirmation"
 import { UserData } from "@/models/Auth.model"
 import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
 import { Cart, RemoteCart } from "@/models/CartProductItem.models"
+import { de } from "date-fns/locale"
 
 export default function CheckoutAlternativePageView() {
   const params = useSearchParams()
@@ -33,7 +35,8 @@ export default function CheckoutAlternativePageView() {
   )
   const [isInitialDataLoaded, setIsInitialDataLoaded] = useState(false)
   const [, setSelectedPinCode] = useState("")
-  const [deliveryCharge, setDeliveryCharge] = useState(0)
+  const [deliveryChargeResponse, setDeliveryChargeResponse] =
+    useState<DeliveryChargeResponse | null>(null)
   const [selectedDelivaryAddressData, setSelectedDelivaryAddressData] =
     useState<DelivaryAddressData | null>(null)
   const [orderResponse, setOrderResponse] = useState<PlaceOrderResponse | null>(null)
@@ -140,7 +143,8 @@ export default function CheckoutAlternativePageView() {
       CustomerLongitude: addressData.customer.longitude ?? location.longitude,
       VariantIdList: variantIdList
     })
-    setDeliveryCharge(charge)
+
+    setDeliveryChargeResponse(charge)
   }
 
   const handleAddressSelect = (addressData: DelivaryAddressData) => {
@@ -148,7 +152,8 @@ export default function CheckoutAlternativePageView() {
     setSelectedPinCode(addressData.customer.pin)
     getDeliveryChargeDetails(addressData)
   }
-  const totalAmount = deliveryCharge + checkoutOrderResponse?.grandtotalamt!
+  const totalAmount =
+    deliveryChargeResponse?.deliveryCharge! + checkoutOrderResponse?.grandtotalamt!
 
   const order = async (paymentMethod: string) => {
     if (!selectedDelivaryAddressData || !checkoutOrderResponse) return
@@ -197,8 +202,9 @@ export default function CheckoutAlternativePageView() {
       },
       order: {
         orderdate: new Date().toLocaleString(),
-        deliverychargeamt: deliveryCharge,
+        deliverychargeamt: deliveryChargeResponse?.deliveryCharge ?? 0,
         discount_code: "",
+        DeliveryDistance: deliveryChargeResponse?.stores?.[0]?.distanceKm ?? 0,
         discount_total: "0",
         grandtotalamt: totalAmount,
         totalamt: checkoutOrderResponse!.totalamt,
@@ -234,7 +240,7 @@ export default function CheckoutAlternativePageView() {
           <Grid size={{ md: 4, xs: 12 }} order={{ xs: 1, md: 2 }}>
             <CheckoutSummery
               checkoutOrderResponse={checkoutOrderResponse!}
-              deliveryCharge={deliveryCharge}
+              deliveryCharge={deliveryChargeResponse?.deliveryCharge ?? 0}
               Product={product}
               totalAmount={totalAmount}
             />
