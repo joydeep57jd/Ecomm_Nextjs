@@ -23,7 +23,7 @@ import { OrderConfirmationPageView } from "@/pages-sections/order-confirmation"
 import { UserData } from "@/models/Auth.model"
 import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
 import { Cart, RemoteCart } from "@/models/CartProductItem.models"
-import { de } from "date-fns/locale"
+
 
 export default function CheckoutAlternativePageView() {
   const params = useSearchParams()
