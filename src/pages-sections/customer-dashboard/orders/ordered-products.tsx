@@ -368,14 +368,21 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                           </Box>
                         )}
 
-                        {showOtp && order?.orderStatus && (
+                        {/* {showOtp && order?.orderStatus && (
                           <Chip
                             label={order.orderStatus}
                             size="small"
                             color="info"
                             sx={{ fontWeight: 500 }}
                           />
-                        )}
+                        )} */}
+
+                        <Chip
+                          label={item.status}
+                          size="small"
+                          color="info"
+                          sx={{ fontWeight: 500 }}
+                        />
                       </FlexBox>
                     )
                   })()
