@@ -209,166 +209,181 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
           <Item title="Placed on:" value={format(new Date(order.orderDate), "dd MMM, yyyy")} />
         </FlexBetween>
 
-        {order?.items?.map((item, ind) => (
-          <FlexBetween key={ind} px={2} py={1} flexWrap="wrap" gap={1}>
-            <Link
-              href={`/products/${item.itemId}${item.itemId ? `?variantId=${item.itemVariantId}` : ""}`}
-            >
-              <FlexBox gap={2} alignItems="center">
-                <Avatar
-                  variant="rounded"
-                  sx={{
-                    height: 60,
-                    width: 60,
-                    backgroundColor: "grey.50"
-                  }}
-                >
-                  <Image
-                    alt={item.imageAlt}
-                    src={item.imageName}
-                    width={60}
-                    height={60}
-                    style={{
+        {(() => {
+          let otpShown = false
+          return order?.items?.map((item, ind) => (
+            <FlexBetween key={ind} px={2} py={1} flexWrap="wrap" gap={1}>
+              <Link
+                href={`/products/${item.itemId}${item.itemId ? `?variantId=${item.itemVariantId}` : ""}`}
+              >
+                <FlexBox gap={2} alignItems="center">
+                  <Avatar
+                    variant="rounded"
+                    sx={{
                       height: 60,
                       width: 60,
-                      borderRadius: "100%",
-                      objectFit: "contain",
-                      border: "1px solid #ead7d7"
+                      backgroundColor: "grey.50"
                     }}
-                  />
-                </Avatar>
+                  >
+                    <Image
+                      alt={item.imageAlt}
+                      src={item.imageName}
+                      width={60}
+                      height={60}
+                      style={{
+                        height: 60,
+                        width: 60,
+                        borderRadius: "100%",
+                        objectFit: "contain",
+                        border: "1px solid #ead7d7"
+                      }}
+                    />
+                  </Avatar>
 
-                <div>
-                  <Typography noWrap variant="h6">
-                    {item.name}
-                  </Typography>
-                  <Typography lineHeight={2} variant="body1" color="text.secondary">
-                    {currency(item.price + item.tax)} x {item.qty}
-                  </Typography>
-                </div>
-              </FlexBox>
-            </Link>
-
-            <FlexBox gap={1.5} flexWrap="wrap" alignItems="center">
-              {isDelivered(item) ? (
-                <>
-                  <FlexBox flexDirection="column" gap={0.2}>
-                    <Typography variant="caption" color="text.secondary">
-                      Delivered on {formatDeliveryDate(item.deliveryDate)}
+                  <div>
+                    <Typography noWrap variant="h6">
+                      {item.name}
                     </Typography>
-                  </FlexBox>
+                    <Typography lineHeight={2} variant="body1" color="text.secondary">
+                      {currency(item.price + item.tax)} x {item.qty}
+                    </Typography>
+                  </div>
+                </FlexBox>
+              </Link>
 
-                  <FlexBox gap={1} flexWrap="wrap">
-                    <Button
-                      variant="contained"
-                      size="small"
-                      onClick={() => handleOpenInvoice(item)}
-                      disabled={loadingInvoiceId === item.orderDetailId}
-                    >
-                      {loadingInvoiceId === item.orderDetailId ? (
-                        <CircularProgress size={16} color="inherit" />
-                      ) : (
-                        "Invoice"
+              <FlexBox gap={1.5} flexWrap="wrap" alignItems="center">
+                {isDelivered(item) ? (
+                  <>
+                    <FlexBox flexDirection="column" gap={0.2}>
+                      <Typography variant="caption" color="text.secondary">
+                        Delivered on {formatDeliveryDate(item.deliveryDate)}
+                      </Typography>
+                    </FlexBox>
+
+                    <FlexBox gap={1} flexWrap="wrap">
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => handleOpenInvoice(item)}
+                        disabled={loadingInvoiceId === item.orderDetailId}
+                      >
+                        {loadingInvoiceId === item.orderDetailId ? (
+                          <CircularProgress size={16} color="inherit" />
+                        ) : (
+                          "Invoice"
+                        )}
+                      </Button>
+
+                      {getDaysLeftToReturn(item) > 0 && (
+                        <Button
+                          onClick={() => {
+                            setSelectedProduct(item)
+                            setModalType("return")
+                          }}
+                          variant="outlined"
+                          size="small"
+                        >
+                          Return
+                          <Typography
+                            component="span"
+                            variant="caption"
+                            color="error"
+                            sx={{ ml: 0.5 }}
+                          >
+                            ({getDaysLeftToReturn(item)} days left)
+                          </Typography>
+                        </Button>
                       )}
-                    </Button>
 
-                    {getDaysLeftToReturn(item) > 0 && (
                       <Button
                         onClick={() => {
                           setSelectedProduct(item)
-                          setModalType("return")
+                          setModalType("rating")
                         }}
-                        variant="outlined"
+                        variant="text"
                         size="small"
                       >
-                        Return
-                        <Typography
-                          component="span"
-                          variant="caption"
-                          color="error"
-                          sx={{ ml: 0.5 }}
-                        >
-                          ({getDaysLeftToReturn(item)} days left)
-                        </Typography>
+                        Review
                       </Button>
+                    </FlexBox>
+                  </>
+                ) : isCancelled(item) ? (
+                  <Typography variant="body2" color="error" fontWeight={500}>
+                    {item.status}
+                    {item.refundAmount > 0 && (
+                      <Typography variant="caption" display="block">
+                        Refund: {currency(Number(item.refundAmount.toFixed(2)))}
+                      </Typography>
                     )}
+                  </Typography>
+                ) : !item.invDate ? (
+                  <Button
+                    onClick={() => {
+                      setSelectedProduct(item)
+                      setModalType("cancel")
+                    }}
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                  >
+                    Cancel Item
+                  </Button>
+                ) : (
+                  (() => {
+                    const showOtp = !otpShown
+                    if (showOtp) otpShown = true
+                    return (
+                      <FlexBox gap={1.5} flexWrap="wrap" alignItems="center">
+                        {showOtp && returnPickupOtps[item.orderDetailId] && (
+                          <Box
+                            sx={{
+                              px: 1.5,
+                              py: 0.75,
+                              bgcolor: "warning.50",
+                              border: "1.5px dashed",
+                              borderColor: "warning.main",
+                              borderRadius: 1.5
+                            }}
+                          >
+                            <Typography variant="caption" color="warning.dark" fontWeight={600}>
+                              Return OTP: {returnPickupOtps[item.orderDetailId]}
+                            </Typography>
+                          </Box>
+                        )}
 
-                    <Button
-                      onClick={() => {
-                        setSelectedProduct(item)
-                        setModalType("rating")
-                      }}
-                      variant="text"
-                      size="small"
-                    >
-                      Review
-                    </Button>
-                  </FlexBox>
-                </>
-              ) : isCancelled(item) ? (
-                <Typography variant="body2" color="error" fontWeight={500}>
-                  {item.status}
-                  {item.refundAmount > 0 && (
-                    <Typography variant="caption" display="block">
-                      Refund: {currency(Number(item.refundAmount.toFixed(2)))}
-                    </Typography>
-                  )}
-                </Typography>
-              ) : !item.invDate ? (
-                <Button
-                  onClick={() => {
-                    setSelectedProduct(item)
-                    setModalType("cancel")
-                  }}
-                  variant="outlined"
-                  color="error"
-                  size="small"
-                >
-                  Cancel Item
-                </Button>
-              ) : (
-                <FlexBox gap={1} alignItems="center" flexWrap="wrap">
-                  {/* Display Return Pickup OTP if available */}
-                  {returnPickupOtps[item.orderDetailId] && (
-                    <Box
-                      sx={{
-                        px: 1.5,
-                        py: 0.75,
-                        bgcolor: "warning.50",
-                        border: "1.5px dashed",
-                        borderColor: "warning.main",
-                        borderRadius: 1.5
-                      }}
-                    >
-                      <Typography variant="caption" color="warning.dark" fontWeight={600}>
-                        Return OTP: {returnPickupOtps[item.orderDetailId]}
-                      </Typography>
-                    </Box>
-                  )}
+                        {showOtp && order?.otpHash && order.otpHash.trim() !== "" && (
+                          <Box
+                            sx={{
+                              px: 1.5,
+                              py: 0.75,
+                              bgcolor: "success.50",
+                              border: "1.5px dashed",
+                              borderColor: "success.main",
+                              borderRadius: 1.5
+                            }}
+                          >
+                            <Typography variant="caption" color="success.dark" fontWeight={600}>
+                              OTP: {order.otpHash}
+                            </Typography>
+                          </Box>
+                        )}
 
-                  {order?.otpHash && order.otpHash.trim() !== "" && (
-                    <Box
-                      sx={{
-                        px: 1.5,
-                        py: 0.75,
-                        bgcolor: "success.50",
-                        border: "1.5px dashed",
-                        borderColor: "success.main",
-                        borderRadius: 1.5
-                      }}
-                    >
-                      <Typography variant="caption" color="success.dark" fontWeight={600}>
-                        OTP: {order.otpHash}
-                      </Typography>
-                    </Box>
-                  )}
-
-                  <Chip label={item.status} size="small" color="info" sx={{ fontWeight: 500 }} />
-                </FlexBox>
-              )}
-            </FlexBox>
-          </FlexBetween>
-        ))}
+                        {showOtp && order?.orderStatus && (
+                          <Chip
+                            label={order.orderStatus}
+                            size="small"
+                            color="info"
+                            sx={{ fontWeight: 500 }}
+                          />
+                        )}
+                      </FlexBox>
+                    )
+                  })()
+                )}
+              </FlexBox>
+            </FlexBetween>
+          ))
+        })()}
       </Card>
 
       {selectedProduct && getModal(selectedProduct)}
