@@ -162,7 +162,7 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
         ...(imageIdsString && { ImageIds: imageIdsString })
       }
 
-      // console.log("✅ Final Payload Sent:", payload)
+      
 
       await orderReturn(payload)
 

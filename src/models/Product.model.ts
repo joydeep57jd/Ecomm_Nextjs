@@ -4,7 +4,7 @@ import { VariantOptionDetails } from "./Filters"
 
 export default interface Product {
   unit?: string
-  slug: string | number
+  slug: string
   price: number
   title: string
   rating?: number

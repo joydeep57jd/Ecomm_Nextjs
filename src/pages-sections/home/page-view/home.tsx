@@ -5,6 +5,8 @@ import { Fragment, useEffect, useState } from "react"
 
 import { Section } from "@/models/Home.model"
 import { HomeAPI } from "@/utils/api"
+import { getOfferData } from "@/utils/api/offer"
+import { BannerOfferResponse } from "@/models/Offer.model"
 import ProductSection from "../product-section"
 import Section9 from "../section-9"
 import HeroSection from "../hero-section"
@@ -13,11 +15,21 @@ import Loading from "@/app/loading"
 export default function HomePageView() {
   const [productSections, setProductSections] = useState<Section[]>([])
   const [bannerSections, setBannerSections] = useState<Section[]>([])
+  const [offerData, setOfferData] = useState<BannerOfferResponse[] | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    getSections()
+    Promise.all([getSections(), fetchOfferData()])
   }, [])
+
+  const fetchOfferData = async () => {
+    try {
+      const res = await getOfferData()
+      setOfferData(res)
+    } catch {
+      setOfferData(null)
+    }
+  }
 
   const getSections = async () => {
     try {
@@ -43,7 +55,7 @@ export default function HomePageView() {
   return (
     isLoading ? <Loading isSmallLoader={true} /> :
       <Fragment>
-        <HeroSection bannerSection={bannerSections} />
+        <HeroSection bannerSection={bannerSections} offerData={offerData} />
         <ProductSection sections={productSections} />
         <Section9 />
 

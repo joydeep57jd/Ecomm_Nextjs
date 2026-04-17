@@ -47,6 +47,11 @@ export const API_URL = {
     CUST_RETURN_ORDERIMAGE: "/Frontend/AddReturnProductImage",
     GET_RETURN_PICKUP_OTP: "/Frontend/GetReturnPickupOtp"
   },
+  OFFER:{
+    GET_BANNER_OFFER:'/productmanagement/GetActiveOffersList',
+    GET_OFFER_PRODUCTS:'/productmanagement/GetItemsByOfferId'
+
+  },
 
   CART: {
     GET: "/frontend/GetCustomerCartItem",

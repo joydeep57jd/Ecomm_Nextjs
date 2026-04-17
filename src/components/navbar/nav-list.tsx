@@ -19,31 +19,34 @@ import LayoutModel from "@/models/Layout.model"
 import { setItem } from "@/utils/services/local-storage.service"
 
 // ==============================================================
-type Props = { navigation: Category[]
-  layoutModel: LayoutModel
- };
+type Props = { navigation: Category[]; layoutModel: LayoutModel }
 // ==============================================================
 
-export function NavigationList({ navigation,layoutModel }: Props) {
-
-  useEffect(()=>{
-    setItem("layout",layoutModel)
-
-  },[layoutModel])
+export function NavigationList({ navigation, layoutModel }: Props) {
+  useEffect(() => {
+    setItem("layout", layoutModel)
+  }, [layoutModel])
 
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const navigateTo = useCallback((e: any, paramKeyName: string, paramValue: string) => {
-    e.preventDefault()
-    const params = new URLSearchParams()
-    params.set(paramKeyName, paramValue)
-    router.push(`/products/search?${params.toString()}`)
-  }, [router, searchParams])
+  const navigateTo = useCallback(
+    (e: any, paramKeyName: string, paramValue: string) => {
+      e.preventDefault()
+      const params = new URLSearchParams()
+      params.set(paramKeyName, paramValue)
+      router.push(`/products/search?${params.toString()}`)
+    },
+    [router, searchParams]
+  )
 
   const renderSubSubCategory = (children: SubSubCategory[]) => {
     return children?.map((nav) => (
-      <NavLink onClick={(e) => navigateTo(e, "subSubCategory", nav.id)} href={`/products/search?subSubCategory=${nav.id}`} key={nav.name}>
+      <NavLink
+        onClick={(e) => navigateTo(e, "subSubCategory", nav.id)}
+        href={`/products/search?subSubCategory=${nav.id}`}
+        key={nav.name}
+      >
         <MenuItem>{nav.name}</MenuItem>
       </NavLink>
     ))
@@ -53,24 +56,30 @@ export function NavigationList({ navigation,layoutModel }: Props) {
     return children?.map((nav) => {
       if (nav.sub_sub_category.length) {
         return (
-          <NavItemChild nav={{
-            title: nav.name,
-            child: nav.sub_sub_category.map((sub) => ({
-              title: sub.name,
-              url: `/products/search?subCategory=${sub.id}`,
-            })),
-          }}
+          <NavItemChild
+            nav={{
+              title: nav.name,
+              child: nav.sub_sub_category.map((sub) => ({
+                title: sub.name,
+                url: `/products/search?subCategory=${sub.id}`
+              }))
+            }}
             navigateTo={navigateTo}
             paramKeyName="subCategory"
             paramValue={nav.id}
-            key={nav.name}>
+            key={nav.name}
+          >
             {renderSubSubCategory(nav.sub_sub_category)}
           </NavItemChild>
         )
       }
 
       return (
-        <NavLink onClick={(e) => navigateTo(e, "subCategory", nav.id)} href={`/products/search?subCategory=${nav.id}`} key={nav.name}>
+        <NavLink
+          onClick={(e) => navigateTo(e, "subCategory", nav.id)}
+          href={`/products/search?subCategory=${nav.id}`}
+          key={nav.name}
+        >
           <MenuItem>{nav.name}</MenuItem>
         </NavLink>
       )
@@ -92,7 +101,11 @@ export function NavigationList({ navigation,layoutModel }: Props) {
           }
         }}
       >
-        <NavLink onClick={(e) => navigateTo(e, "category", nav.id)} href={`/products/search?category=${nav.id}`} key={nav.name}>
+        <NavLink
+          onClick={(e) => navigateTo(e, "category", nav.id)}
+          href={`/products/search?category=${nav.id}`}
+          key={nav.name}
+        >
           <FlexBox alignItems="flex-end" gap={0.3} sx={NAV_LINK_STYLES}>
             {nav.name}
             <KeyboardArrowDown
