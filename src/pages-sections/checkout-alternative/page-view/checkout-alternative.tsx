@@ -41,6 +41,7 @@ export default function CheckoutAlternativePageView() {
     useState<DelivaryAddressData | null>(null)
   const [orderResponse, setOrderResponse] = useState<PlaceOrderResponse | null>(null)
   const [placingOrder, setPlacingOrder] = useState(false)
+  const [fetchingDeliveryCharge, setFetchingDeliveryCharge] = useState(false)
   const [product, setProduct] = useState<RemoteCart[]>([])
   const [location, setLocation] = useState({ latitude: 0.0, longitude: 0.0 })
 
@@ -137,14 +138,15 @@ export default function CheckoutAlternativePageView() {
   }
 
   const getDeliveryChargeDetails = async (addressData: DelivaryAddressData) => {
+    setFetchingDeliveryCharge(true)
     const variantIdList = product.map((p) => p.variantid).join(",")
     const charge = await getDeliveryCharge({
       CustomerLatitude: addressData.customer.latitude ?? location.latitude,
       CustomerLongitude: addressData.customer.longitude ?? location.longitude,
       VariantIdList: variantIdList
     })
-
     setDeliveryChargeResponse(charge)
+    setFetchingDeliveryCharge(false)
   }
 
   const handleAddressSelect = (addressData: DelivaryAddressData) => {
@@ -234,6 +236,7 @@ export default function CheckoutAlternativePageView() {
               setSelectedDelivaryAddressData={handleAddressSelect}
               order={order}
               placingOrder={placingOrder}
+              fetchingDeliveryCharge={fetchingDeliveryCharge}
             />
           </Grid>
 

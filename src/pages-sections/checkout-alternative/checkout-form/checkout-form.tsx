@@ -53,6 +53,7 @@ interface Props {
   setSelectedDelivaryAddressData(data: DelivaryAddressData): void
   order(paymentMethod: string): Promise<void>
   placingOrder: boolean
+  fetchingDeliveryCharge: boolean
 }
 
 export default function CheckoutForm({
@@ -61,7 +62,8 @@ export default function CheckoutForm({
   setSelectedPinCode,
   order,
   setSelectedDelivaryAddressData,
-  placingOrder
+  placingOrder,
+  fetchingDeliveryCharge
 }: Props) {
   const [paymentMethod, setPaymentMethod] = useState<"online" | "cod" | "">("")
   const [paymentError, setPaymentError] = useState(false)
@@ -166,7 +168,7 @@ export default function CheckoutForm({
           type="submit"
           color="primary"
           variant="contained"
-          loading={isSubmitting || placingOrder}
+          loading={isSubmitting || placingOrder || fetchingDeliveryCharge}
           onClick={handlePlaceOrder}
         >
           Place Order

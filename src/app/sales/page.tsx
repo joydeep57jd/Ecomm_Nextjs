@@ -1,7 +1,7 @@
+import OfferProductsPageView from "@/pages-sections/sales/page-view/offer-products"
+import { getOfferData } from "@/utils/api/offer"
 import type { Metadata } from "next"
-import { SalesOnePageView } from "pages-sections/sales/page-view"
-// SALES API FUNCTIONS
-import api from "utils/__api__/sales"
+
 
 export const metadata: Metadata = {
   title: "Sales 1 - Bazaar Next.js E-commerce Template",
@@ -13,34 +13,22 @@ export const metadata: Metadata = {
 
 // ==============================================================
 interface Props {
-  searchParams: Promise<{ page: string }>
+  params: Promise<{ slug: string }>
 }
 // ==============================================================
 
-export default async function SalesOne({ searchParams }: Props) {
-  const { page } = await searchParams
+export default async function SalesOne({ params }: Props) {
+  const { slug } = await params
+  const decoded = Buffer.from(decodeURIComponent(slug), "base64").toString("utf-8")
+  const offerId = +decoded
 
-  const currentPage = +page || 1
-
-  const categories = await api.getCategories()
-  const data = await api.getProducts(currentPage)
-  if (!categories || !data) {
-    return <div>Failed to load</div>
+  if (!offerId || isNaN(offerId)) {
+    return <div>Invalid offer</div>
   }
 
-  if (!data.products) {
-    return <div>No products found</div>
-  }
+  // get offer name from offer list
+  const offers = await getOfferData()
+  const offer = offers?.find((o) => o.offerId === offerId)
 
-  return (
-    <SalesOnePageView
-      page={currentPage}
-      categories={categories}
-      products={data.products}
-      pageSize={data.pageSize}
-      totalProducts={data.totalProducts}
-      discount="Enjoy Upto 80% discounts"
-      offer="Flash Deals,"
-    />
-  )
+  return <OfferProductsPageView offerId={offerId} offerName={offer?.offerName ?? "Offer Products"} />
 }

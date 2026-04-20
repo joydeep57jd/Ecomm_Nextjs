@@ -53,7 +53,7 @@ export default function ProductCard17({
 
       <ContentWrapper>
         <Typography noWrap variant="body2" className="category">
-          {categories?.length > 0 ? categories[0] : "N/A"}
+          {categories?.length > 0 ? categories[0] : ""}
         </Typography>
 
         <Link href={`/products/${slug}`} aria-label={`View ${title}`}>
