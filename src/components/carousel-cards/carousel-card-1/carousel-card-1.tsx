@@ -38,6 +38,7 @@ const FullBannerWrapper = styled("div")(({ theme }) => ({
 }))
 
 export default function CarouselCard1({ title, imgUrl }: Props) {
+  if (!imgUrl) return null
   return (
     <FullBannerWrapper>
       <LazyImage
