@@ -1,7 +1,7 @@
 import OfferProductsPageView from "@/pages-sections/sales/page-view/offer-products"
+import InvalidOfferView from "@/pages-sections/sales/page-view/eampty-offer"
 import { getOfferData } from "@/utils/api/offer"
 import type { Metadata } from "next"
-
 
 export const metadata: Metadata = {
   title: "Sales 1 - Bazaar Next.js E-commerce Template",
@@ -22,13 +22,13 @@ export default async function SalesOne({ params }: Props) {
   const decoded = Buffer.from(decodeURIComponent(slug), "base64").toString("utf-8")
   const offerId = +decoded
 
-  if (!offerId || isNaN(offerId)) {
-    return <div>Invalid offer</div>
-  }
+  if (!offerId || isNaN(offerId)) return <InvalidOfferView />
 
   // get offer name from offer list
   const offers = await getOfferData()
   const offer = offers?.find((o) => o.offerId === offerId)
 
-  return <OfferProductsPageView offerId={offerId} offerName={offer?.offerName ?? "Offer Products"} />
+  return (
+    <OfferProductsPageView offerId={offerId} offerName={offer?.offerName ?? "Offer Products"} />
+  )
 }
