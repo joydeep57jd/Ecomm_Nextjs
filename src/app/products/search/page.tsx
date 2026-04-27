@@ -24,7 +24,7 @@ interface Props {
     sort: sortField
     category: string
     subCategory: string
-    subSubCategory: string
+    SubCategory: string
     filter: string
     variantFilter: string
     price: string
@@ -33,7 +33,7 @@ interface Props {
 // ==============================================================
 
 export default async function ProductSearch({ searchParams }: Props) {
-  const { search, category, subCategory, subSubCategory, filter, variantFilter, sort, price } =
+  const { search, category, subCategory, SubCategory, filter, variantFilter, sort, price } =
     await searchParams
 
   const sortFieldValue = {
@@ -95,7 +95,7 @@ export default async function ProductSearch({ searchParams }: Props) {
       filters={filters.value}
       search={search ?? ""}
       subCategory={subCategory ?? ""}
-      subSubCategory={subSubCategory ?? ""}
+      SubCategory={SubCategory ?? ""}
       categoryId={category ?? ""}
       variantFilters={variantFilters.value}
       sortFilters={sortFilters}

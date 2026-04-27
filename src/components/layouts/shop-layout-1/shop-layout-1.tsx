@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography"
 // GLOBAL CUSTOM COMPONENTS
 import {
   Footer1,
-  FooterApps,
+  // FooterApps,
   FooterContact,
   FooterLinksWidget,
   FooterSocialLinks
@@ -19,7 +19,7 @@ import { NavigationList } from "components/navbar"
 // import { CategoryList } from "components/categories"
 import { MobileMenu } from "components/mobile-navbar"
 import { SecondaryHeader } from "components/secondary-header"
-import { MobileNavigationBar } from "components/mobile-navigation"
+// import { MobileNavigationBar } from "components/mobile-navigation"
 import { SearchInput1, SearchInput2 } from "components/search-box"
 import { Topbar, TopbarSocialLinks } from "components/topbar"
 import { Header, HeaderCart, HeaderLogin, MobileHeader, HeaderSearch } from "components/header"

@@ -12,7 +12,7 @@ type Props = {
   filters: string
   search: string
   subCategory: string
-  subSubCategory: string
+  SubCategory: string
   categoryId: string
   variantFilters: string
   badges: string[]
@@ -24,7 +24,7 @@ function Products({
   filters,
   search,
   subCategory,
-  subSubCategory,
+  SubCategory,
   categoryId,
   variantFilters,
   badges,
@@ -46,7 +46,7 @@ function Products({
   useEffect(() => {
     if (loadingCriteria === getLoadingCriteria()) return
     fetchData()
-  }, [search, page, subCategory, subSubCategory, categoryId])
+  }, [search, page, subCategory, SubCategory, categoryId])
 
   useEffect(() => {
     if (!allProductResponse) return
@@ -101,32 +101,33 @@ function Products({
     setCategoryOptions(data)
   }
 
-  const getLoadingCriteria = () => `${search}-${categoryId}-${subCategory}-${subSubCategory}-${filters}-`
+  const getLoadingCriteria = () =>
+    `${search}-${categoryId}-${subCategory}-${SubCategory}-${filters}-`
 
   const fetchData = async () => {
     setIsLoading(true)
     loadingCriteria = getLoadingCriteria()
     const [productsResponse] = await Promise.all([
-      (filters || variantFilters)
+      filters || variantFilters
         ? getFilterCategorySection({
-          OptionValueIds: filters || "",
-          PageNo: page,
-          PageSize: 18,
-          ItemOptionValueIds: variantFilters || "",
-          ...sortFilters,
-          ...priceFilters
-        })
+            OptionValueIds: filters || "",
+            PageNo: page,
+            PageSize: 18,
+            ItemOptionValueIds: variantFilters || "",
+            ...sortFilters,
+            ...priceFilters
+          })
         : getAllProducts({
-          ...(search ? { searchCriteria: search } : {}),
-          ...(categoryId ? { categoryId: +categoryId } : {}),
-          ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
-          ...(subSubCategory && { subSubCategoryId: parseInt(subSubCategory) }),
-          ...(filters && { optionValueIds: filters }),
-          pageNo: page,
-          pageSize: 18,
-          ...sortFilters,
-          ...priceFilters
-        })
+            ...(search ? { searchCriteria: search } : {}),
+            ...(categoryId ? { categoryId: +categoryId } : {}),
+            ...(subCategory ? { subCategoryId: parseInt(subCategory) } : {}),
+            ...(SubCategory && { SubCategoryId: parseInt(SubCategory) }),
+            ...(filters && { optionValueIds: filters }),
+            pageNo: page,
+            pageSize: 18,
+            ...sortFilters,
+            ...priceFilters
+          })
     ])
 
     if (filters || variantFilters) {
@@ -155,17 +156,15 @@ function Products({
       setVariantOptions((productsResponse as CategoryWiseFilterResponse).variantOptionDetails)
     }
 
-   
-
     const size = productsResponse.pagination.pageSize
     const pageCount = Math.ceil(productsResponse.pagination.totalRecords / size)
     setAllProductResponse((prevValue) =>
       page === 1
         ? productsResponse
         : {
-          ...prevValue!,
-          dataList: [...(prevValue!.dataList ?? []), ...productsResponse.dataList]
-        }
+            ...prevValue!,
+            dataList: [...(prevValue!.dataList ?? []), ...productsResponse.dataList]
+          }
     )
 
     setPageCount(pageCount)
@@ -182,7 +181,7 @@ function Products({
           style={{
             position: "absolute",
             zIndex: 9,
-            width: "100%",
+            width: "100%"
           }}
         >
           <Loading isTiny={true} />
