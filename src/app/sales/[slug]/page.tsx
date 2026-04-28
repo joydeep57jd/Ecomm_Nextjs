@@ -18,7 +18,5 @@ export default async function SalesWithCategoryPage({ params }: Props) {
   const offers = await getOfferData()
   const offer = offers?.find((o) => o.offerId === offerId)
 
-  return (
-    <OfferProductsPageView offerId={offerId} offerName={offer?.offerName ?? "Offer Products"} />
-  )
+  return <OfferProductsPageView offerId={offerId} offerName={offer?.offerName!} />
 }

@@ -9,6 +9,7 @@ import { getOfferProducts } from "@/utils/api/offer"
 import Product from "models/Product.model"
 import { Item } from "@/models/Offer.model"
 import Loading from "@/app/loading"
+import InvalidOfferView from "./eampty-offer"
 
 const PAGE_SIZE = 12
 
@@ -32,9 +33,9 @@ const mapItem = (item: Item): Product => ({
 
 export default function OfferProductsPageView({ offerId, offerName }: Props) {
   const [products, setProducts] = useState<Product[]>([])
-  // const [totalRecords, setTotalRecords] = useState(0)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [initialLoaded, setInitialLoaded] = useState(false)
   const loader = useRef<HTMLDivElement | null>(null)
   const isFetching = useRef(false)
   const pageRef = useRef(1)
@@ -54,6 +55,7 @@ export default function OfferProductsPageView({ offerId, offerName }: Props) {
       } finally {
         setLoading(false)
         isFetching.current = false
+        if (pageNum === 1) setInitialLoaded(true)
       }
     },
     [offerId]
@@ -85,6 +87,8 @@ export default function OfferProductsPageView({ offerId, offerName }: Props) {
       </div>
     )
   }
+
+  if (initialLoaded && products.length === 0) return <InvalidOfferView />
 
   return (
     <Container sx={{ mt: 4 }}>

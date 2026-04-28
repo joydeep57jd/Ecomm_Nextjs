@@ -52,14 +52,15 @@ export default function HomePageView() {
     }
   }
 
-  return (
-    isLoading ? <Loading isSmallLoader={true} /> :
-      <Fragment>
-        <HeroSection bannerSection={bannerSections} offerData={offerData} />
-        <ProductSection sections={productSections} />
-        <Section9 />
+  return isLoading ? (
+    <Loading isSmallLoader={true} />
+  ) : (
+    <Fragment>
+      <HeroSection bannerSection={bannerSections} offerData={offerData} />
+      <ProductSection sections={productSections} />
+      <Section9 />
 
-        {/* <Newsletter /> */}
-      </Fragment>
+      {/* <Newsletter /> */}
+    </Fragment>
   )
 }
