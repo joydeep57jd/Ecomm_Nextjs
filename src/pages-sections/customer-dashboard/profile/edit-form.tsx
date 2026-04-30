@@ -8,19 +8,25 @@ import Button from "@mui/material/Button"
 // GLOBAL CUSTOM COMPONENTS
 import { FormProvider, TextField } from "components/form-hook"
 import { SaveUserProfilePayload, UserProfile } from "@/models/User.model"
-import { getProfileInitialValue, profileSchema, ProfileSchemaType } from "@/schema/profile/profile.schema"
+import {
+  getProfileInitialValue,
+  profileSchema,
+  ProfileSchemaType
+} from "@/schema/profile/profile.schema"
 import { saveUserProfile } from "@/utils/api/profile"
 import { useUser } from "@/contexts/UserContenxt"
 import { useState } from "react"
+import { useSnackbar } from "notistack"
 // CUSTOM DATA MODEL
 
 // ==============================================================
-type Props = { user: UserProfile };
+type Props = { user: UserProfile }
 // ==============================================================
 
 export default function ProfileEditForm({ user }: Props) {
-
   const userState = useUser()
+
+  const { enqueueSnackbar } = useSnackbar()
 
   const [isSaving, setIsSaving] = useState(false)
 
@@ -29,9 +35,7 @@ export default function ProfileEditForm({ user }: Props) {
     resolver: yupResolver(profileSchema)
   })
 
-  const {
-    handleSubmit,
-  } = methods
+  const { handleSubmit } = methods
 
   const handleSubmitForm = handleSubmit((values) => {
     save(values)
@@ -52,8 +56,12 @@ export default function ProfileEditForm({ user }: Props) {
     }
     try {
       await saveUserProfile(payload)
-    } catch {
-
+      enqueueSnackbar("Profile saved successfully!", { variant: "success" })
+    } catch (error) {
+      const err = error as { response?: { data?: { message?: string } }; message?: string }
+      const errorMessage =
+        err.response?.data?.message || err.message || "Failed to save profile. Please try again."
+      enqueueSnackbar(errorMessage, { variant: "error" })
     } finally {
       setIsSaving(false)
     }

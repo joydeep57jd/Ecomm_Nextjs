@@ -27,8 +27,7 @@ import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
 import useCart from "@/hooks/useCart"
 import { useSnackbar } from "notistack"
 
-const RECAPTCHA_SITE_KEY =
-  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY 
+const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
 
 export default function LoginPageView() {
   const otpLoginEnabled = process.env.NEXT_PUBLIC_OTP_LOGIN_ENABLED === "true"
@@ -89,7 +88,7 @@ export default function LoginPageView() {
         PhoneCode: "+91",
         PhoneNo: values.phoneNo
       }
-      
+
       enqueueSnackbar("OTP sent successfully.", { variant: "success" })
       setRecaptchaToken(null) // reset recaptcha
       setIsInitialStep(false)
@@ -212,7 +211,6 @@ export default function LoginPageView() {
     <FormProvider methods={methods} onSubmit={handleSubmitForm}>
       {isInitialStep ? (
         <>
-          
           <div className="mb-1">
             <Label>Phone Number</Label>
             <TextField
@@ -222,6 +220,7 @@ export default function LoginPageView() {
               type="number"
               size="medium"
               placeholder="1234567890"
+              slotProps={{ htmlInput: { maxLength: 10 } }}
             />
           </div>
 
@@ -248,7 +247,6 @@ export default function LoginPageView() {
         </>
       ) : (
         <>
-          
           <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
             <Box>
               Not you? <strong>{methods.getValues("phoneNo")}</strong>
@@ -291,7 +289,6 @@ export default function LoginPageView() {
             </div>
           )}
 
-        
           <Box my={2} display="flex" justifyContent="first">
             {RECAPTCHA_SITE_KEY ? (
               <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
@@ -300,7 +297,6 @@ export default function LoginPageView() {
         </>
       )}
 
-     
       <Box display="flex" gap={1}>
         <Button
           fullWidth
@@ -308,10 +304,7 @@ export default function LoginPageView() {
           type="submit"
           color="primary"
           variant="contained"
-          disabled={
-            isApiCallInprogress ||
-            (!isInitialStep && !recaptchaToken) 
-          }
+          disabled={isApiCallInprogress || (!isInitialStep && !recaptchaToken)}
           sx={{
             gap: 1,
             opacity: !isInitialStep && !recaptchaToken ? 0.7 : 1,
@@ -321,13 +314,7 @@ export default function LoginPageView() {
           {isApiCallInprogress ? (
             <CircularProgress size={20} />
           ) : (
-            <>
-              {isInitialStep
-                ? "Continue"
-                : loginType === "password"
-                ? "Login"
-                : "Send OTP"}
-            </>
+            <>{isInitialStep ? "Continue" : loginType === "password" ? "Login" : "Send OTP"}</>
           )}
         </Button>
       </Box>

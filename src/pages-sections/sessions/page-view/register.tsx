@@ -28,10 +28,19 @@ export default function RegisterPageView() {
   const passwordVisibility = usePasswordVisible()
   const confirmPasswordVisibility = usePasswordVisible()
 
-
   const inputProps = {
-    passwordEndAdornment: <EyeToggleButton show={passwordVisibility.visiblePassword} click={passwordVisibility.togglePasswordVisible} />,
-    confirmPasswordEndAdornment: <EyeToggleButton show={confirmPasswordVisibility.visiblePassword} click={confirmPasswordVisibility.togglePasswordVisible} />
+    passwordEndAdornment: (
+      <EyeToggleButton
+        show={passwordVisibility.visiblePassword}
+        click={passwordVisibility.togglePasswordVisible}
+      />
+    ),
+    confirmPasswordEndAdornment: (
+      <EyeToggleButton
+        show={confirmPasswordVisibility.visiblePassword}
+        click={confirmPasswordVisibility.togglePasswordVisible}
+      />
+    )
   }
 
   const methods = useForm({
@@ -55,7 +64,7 @@ export default function RegisterPageView() {
       }
       await signup(payload)
       enqueueSnackbar("Registration successful! Please login.", { variant: "success" })
-       localStorage.setItem('prevPath', '/register')
+      localStorage.setItem("prevPath", "/register")
       router.push("/login")
     } catch (error) {
       console.error("Error during registration:", error)
@@ -93,6 +102,7 @@ export default function RegisterPageView() {
             size="medium"
             placeholder="9876543210"
             type="tel"
+            slotProps={{ htmlInput: { maxLength: 10 } }}
           />
         </FlexBox>
       </div>
@@ -174,7 +184,6 @@ export default function RegisterPageView() {
   )
 }
 
-
 // "use client"
 
 // import Box from "@mui/material/Box"
@@ -242,13 +251,12 @@ export default function RegisterPageView() {
 
 //   const handleSubmitForm = handleSubmit(async (values) => {
 //     try {
-      
+
 //       await signup({
 //         ...values,
 //         phone: `${values.phoneNumber}`
 //       })
 
-      
 //       const loginPayload = {
 //         UserName: values.phoneNumber,
 //         Password: values.password
@@ -256,7 +264,6 @@ export default function RegisterPageView() {
 
 //       const userData = await loginWithCredentials(loginPayload)
 
-      
 //       const remoteCarts = await getCart(+userData.customerId)
 //       const localCarts = state.cart || []
 //       const finalCarts = getLocalCartFromRemoteCart(remoteCarts || [])
@@ -282,18 +289,15 @@ export default function RegisterPageView() {
 //         remoteCarts: remoteCarts || []
 //       })
 
-      
 //       setItem("userDetails", userData)
 //       setUser(userData)
 
-      
 //       sessionStorage.setItem("REGISTER_AUTO_LOGIN", "true")
 
 //       enqueueSnackbar("Account created & logged in successfully ", {
 //         variant: "success"
 //       })
 
-      
 //       router.replace("/")
 //     } catch (error) {
 //       console.error("Register/Login failed", error)
@@ -412,4 +416,3 @@ export default function RegisterPageView() {
 //     </FormProvider>
 //   )
 // }
-

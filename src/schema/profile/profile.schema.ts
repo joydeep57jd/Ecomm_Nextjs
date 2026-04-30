@@ -6,7 +6,10 @@ export const profileSchema = yup.object().shape({
   middleName: yup.string().default("").optional(),
   lastName: yup.string().required("Last name is required"),
   email: yup.string().email("invalid email").required("Email is required"),
-  contact: yup.string().required("Contact is required")
+  contact: yup
+    .string()
+    .required("Contact is required")
+    .matches(/^[0-9]{10}$/, "Enter a valid 10-digit mobile number")
 })
 
 export type ProfileSchemaType = yup.InferType<typeof profileSchema>
