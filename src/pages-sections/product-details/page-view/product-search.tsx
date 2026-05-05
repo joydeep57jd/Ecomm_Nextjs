@@ -15,7 +15,7 @@ import ProductsGridView from "components/products-view/products-grid-view"
 import { DataList } from "@/models/AllProduct.model"
 import ProductFilters from "@/components/products-view/filters"
 import { GetCategoryResponse } from "@/models/Category.modal"
-import { VariantOptionDetails } from "@/models/Filters"
+import { VariantOptionDetails } from "@/models/Filters.models"
 import SideNav from "@/components/side-nav"
 import { Box, IconButton } from "@mui/material"
 import { Tune } from "@mui/icons-material"
@@ -28,6 +28,8 @@ const SORT_OPTIONS = [
 ]
 
 // ==============================================================
+
+
 interface Props {
   products: DataList[]
   categoryOptions: GetCategoryResponse[]

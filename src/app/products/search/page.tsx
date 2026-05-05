@@ -28,12 +28,13 @@ interface Props {
     filter: string
     variantFilter: string
     price: string
+    brand: string
   }>
 }
 // ==============================================================
 
 export default async function ProductSearch({ searchParams }: Props) {
-  const { search, category, subCategory, SubCategory, filter, variantFilter, sort, price } =
+  const { search, category, subCategory, SubCategory, filter, variantFilter, sort, price, brand } =
     await searchParams
 
   const sortFieldValue = {
@@ -85,10 +86,16 @@ export default async function ProductSearch({ searchParams }: Props) {
   }
 
 
+  const getBrandFilter = (): string => {
+    if (!brand) return ""
+    try { return JSON.parse(atob(brand)).join(",") } catch { return "" }
+  }
+
   const filters = getFilterValues(filter)
   const variantFilters = getFilterValues(variantFilter)
   const sortFilters = getSortFilter()
   const priceFilters = getPriceFilter()
+  const brandFilters = getBrandFilter()
 
   return (
     <Products
@@ -100,6 +107,7 @@ export default async function ProductSearch({ searchParams }: Props) {
       variantFilters={variantFilters.value}
       sortFilters={sortFilters}
       priceFilters={priceFilters}
+      brandFilters={brandFilters}
       badges={[...filters.name, ...variantFilters.name]}
     />
   )

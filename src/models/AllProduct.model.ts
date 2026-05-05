@@ -69,9 +69,11 @@ export interface ProductRequestPayload {
   searchCriteria?: string | null
   categoryId?: number
   subCategoryId?: number | null
+  SubCategoryId?: number | null
   optionValueIds?: string | null
   pageNo?: number | null
   pageSize?: number | null
+  BrandIds?: string
   RelevanceFilter?: boolean
   DateFilter?: boolean
   PriceFilter?: boolean

@@ -33,6 +33,8 @@ export default function ProductFilters({ categoryOptions, priceFilters }: Props)
   const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>(Object.values(priceFilters).length > 1 ?Object.values(priceFilters): [0, 10000] )
   const [isFirstRangeChange, setIsFirstRangeChange] = useState(true)
  
+  const [selectedBrands, setSelectedBrands] = useState<number[]>([])
+
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -49,6 +51,11 @@ export default function ProductFilters({ categoryOptions, priceFilters }: Props)
       setSelectedVariant({ ...filter })
     } else {
       setSelectedVariant({})
+    }
+    if (searchParams.get("brand")) {
+      setSelectedBrands(JSON.parse(atob(searchParams.get("brand")!)))
+    } else {
+      setSelectedBrands([])
     }
   }, [router, searchParams])
 
@@ -110,6 +117,20 @@ export default function ProductFilters({ categoryOptions, priceFilters }: Props)
       params.set(paramsKeyName, btoa(JSON.stringify(filters)))
       router.push(`${pathname}?${params.toString()}`)
     } catch { }
+  }
+
+  const handleBrandChange = (brandId: number) => {
+    const params = new URLSearchParams(searchParams.toString())
+    const updated = selectedBrands.includes(brandId)
+      ? selectedBrands.filter((id) => id !== brandId)
+      : [...selectedBrands, brandId]
+    setSelectedBrands(updated)
+    if (updated.length) {
+      params.set("brand", btoa(JSON.stringify(updated)))
+    } else {
+      params.delete("brand")
+    }
+    router.push(`${pathname}?${params.toString()}`)
   }
 
   return (
@@ -208,6 +229,47 @@ export default function ProductFilters({ categoryOptions, priceFilters }: Props)
         categoryOptions.length &&
         <Box sx={{}}>
           <Box component={Divider} my={3} />
+
+          {/* BRAND FILTER */}
+          {categoryOptions[0]?.brands?.length > 0 && (
+            <>
+              <Accordion sx={{ boxShadow: "none", "&:before": { display: "none" } }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  sx={{
+                    padding: 0,
+                    minHeight: 48,
+                    "& .Mui-expanded": { color: "primary.main", margin: 0 },
+                    "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+                      margin: 0,
+                      "& .MuiSvgIcon-root": { color: "primary.main" }
+                    }
+                  }}
+                >
+                  <Typography fontWeight={600}>Brand</Typography>
+                </AccordionSummary>
+                <AccordionDetails sx={{ maxHeight: 350, overflowY: "auto", px: 0 }}>
+                  <FormGroup sx={{ pl: 2 }}>
+                    {categoryOptions[0].brands.map((brand) => (
+                      <FormControlLabel
+                        key={brand.brandId}
+                        control={
+                          <Checkbox
+                            size="small"
+                            checked={selectedBrands.includes(brand.brandId)}
+                            onChange={() => handleBrandChange(brand.brandId)}
+                          />
+                        }
+                        label={brand.brandName}
+                        sx={{ fontSize: 14, color: "grey.600" }}
+                      />
+                    ))}
+                  </FormGroup>
+                </AccordionDetails>
+              </Accordion>
+              <Box component={Divider} my={3} />
+            </>
+          )}
 
           <Typography variant="h6" sx={{ mb: 2 }}>
             Price Range - ({currency(selectedPriceRange[0],0,"0")} - {currency(selectedPriceRange[1],0,"0")})

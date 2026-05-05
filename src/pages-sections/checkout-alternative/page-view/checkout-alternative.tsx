@@ -68,19 +68,22 @@ export default function CheckoutAlternativePageView() {
     if (product.length > 0 && checkoutOrderResponse) setIsInitialDataLoaded(true)
   }, [product, checkoutOrderResponse])
 
-  useEffect(() => {
+   useEffect(() => {
     if (!cart.length && !orderResponse) router.push("/")
   }, [cart])
 
+  const businessUnitId = params.get("businessUnitId")
+
   useEffect(() => {
     if (remoteCarts) {
-      const businessUnitId = params.get("businessUnitId")
       const filteredProduct = remoteCarts.filter(
         (rc) => rc.businessUnitId.toString() === businessUnitId
       )
       setProduct(filteredProduct)
+      setCheckoutOrderResponse(null)
+      setIsInitialDataLoaded(false)
     }
-  }, [remoteCarts])
+  }, [remoteCarts, businessUnitId])
 
   useEffect(() => {
     if (navigator.geolocation) {

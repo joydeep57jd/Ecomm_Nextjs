@@ -1,6 +1,6 @@
 import Shop from "./Shop.model"
 import Review from "./Review.model"
-import { VariantOptionDetails } from "./Filters"
+import { VariantOptionDetails } from "./Filters.models"
 
 export default interface Product {
   unit?: string

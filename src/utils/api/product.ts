@@ -3,9 +3,9 @@ import axios from "../axiosInstance"
 import { AllProductResponse, ProductRequestPayload } from "@/models/AllProduct.model"
 import { AddInfoPayload, SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
 import { Cart } from "@/models/CartProductItem.models"
-import { GetCategoryResponse } from "@/models/Category.modal"
+import { GetCategoryResponse, Brand } from "@/models/Category.modal"
 import axiosInstance from "../axiosInstance"
-import { CategoryWiseFilter, CategoryWiseFilterResponse } from "@/models/Filters"
+import { CategoryWiseFilter, CategoryWiseFilterResponse } from "@/models/Filters.models"
 
 export const getAllProducts = async (body: ProductRequestPayload) => {
   const { data } = await axios.post<{ data: AllProductResponse }>(API_URL.ITEMS.GET_SEARCH, body)
@@ -39,10 +39,13 @@ export const getProduct = async ({
   return data.data
 }
 
-export const getOptionsByCategory = async (CategoryId: number) => {
-  const { data } = await axios.post<{ data: GetCategoryResponse[] }>(
+export const getOptionsByCategory = async (
+  CategoryId: number | null,
+  SubCategoryId: number | null
+) => {
+  const { data } = await axios.post<{ data: { variantOptions: GetCategoryResponse[], brands: Brand[] } }>(
     API_URL.ITEMS.GET_CATEGORY_OPTIONS,
-    { CategoryId }
+    { CategoryId, SubCategoryId }
   )
   return data.data
 }

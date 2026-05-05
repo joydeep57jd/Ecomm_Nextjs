@@ -18,10 +18,12 @@ export default interface Filters {
 }
 
 export interface CategoryWiseFilter {
+  SubCategoryId?: number | null
   OptionValueIds: string
   ItemOptionValueIds: string
   PageNo: number
   PageSize: number
+  BrandId?: string | null
   RelevanceFilter?: boolean
   DateFilter?: boolean
   PriceFilter?: boolean
@@ -36,6 +38,9 @@ export interface CategoryWiseFilterResponse {
 
   variantOptionDetails: VariantOptionDetails[]
 }
+
+
+
 
 export interface VariantOptionDetails {
   itemVariantId: number
@@ -57,8 +62,8 @@ export interface VariantDetail {
   subCategoryId: number
   brandLogoFileName: string
   isSoldOut: boolean
-  businessUnitId:string
-  unitName:string
+  businessUnitId: string
+  unitName: string
   fontColor: string
   backgroundColor: string
   itemCode: string

@@ -2,6 +2,8 @@
 import Grid from "@mui/material/Grid"
 import Rating from "@mui/material/Rating"
 import Typography from "@mui/material/Typography"
+import Box from "@mui/material/Box"
+// import ArrowDropDown from "@mui/icons-material/ArrowDropDown"
 // LOCAL CUSTOM COMPONENTS
 import ProductGallery from "./product-gallery"
 import ProductVariantSelector from "./product-variant-selector"
@@ -70,24 +72,45 @@ export default function ProductIntro({
             Product Code: <strong>{product.variantDetails?.itemCode}</strong>
           </Typography>
 
-          <Typography variant="body1" fontSize={30} fontWeight={700} sx={{ my: 1 }}>
-            {currency(product.priceAndStock?.salePrice)}
-
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap", my: 1 }}>
             {product.priceAndStock?.salePrice !== product.priceAndStock?.mrp && (
-              <Typography
-                component="span"
-                sx={{
-                  fontSize: 20,
-                  fontWeight: 600,
-                  color: "text.secondary",
-                  textDecoration: "line-through",
-                  ml: 1
-                }}
-              >
-                {currency(product.priceAndStock?.mrp)}
-              </Typography>
+              <>
+                {product.priceAndStock?.savePricePctg > 0 && (
+                  <Box
+                    sx={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 0.3,
+                      // background: "#388e3c",
+                      color: "green",
+                      fontWeight: 700,
+                      fontSize: "1.5rem",
+                      px: 1,
+                      py: 0.3,
+                      borderRadius: 1
+                    }}
+                  >
+                    {Math.round(product.priceAndStock?.savePricePctg)}% off
+                    {/* <ArrowDropDown sx={{ fontSize: 18 }} /> */}
+                  </Box>
+                )}
+                <Typography
+                  component="span"
+                  sx={{
+                    fontSize: 18,
+                    fontWeight: 500,
+                    color: "text.secondary",
+                    textDecoration: "line-through"
+                  }}
+                >
+                  {currency(product.priceAndStock?.mrp)}
+                </Typography>
+              </>
             )}
-          </Typography>
+            <Typography fontSize={30} fontWeight={700} color="text.primary">
+              {currency(product.priceAndStock?.salePrice)}
+            </Typography>
+          </Box>
 
           {/* PRODUCT BRAND */}
           {/* {product. && (

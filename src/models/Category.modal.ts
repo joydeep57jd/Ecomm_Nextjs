@@ -37,6 +37,7 @@ export interface GetCategoryResponse {
   optionName:      string;
   categoryId:      number;
   optionValues:    OptionValue[];
+  brands:         Brand[];
   appliedOnVariant:boolean
 }
 
@@ -44,3 +45,10 @@ export interface OptionValue {
   optionValueId:   number;
   optionValueName: string;
 }
+
+export interface Brand {
+  brandId:      number;
+  brandName:    string;
+  logoFileName: string;
+}
+

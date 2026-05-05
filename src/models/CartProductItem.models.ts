@@ -1,4 +1,4 @@
-import { VariantOptionDetails } from "./Filters"
+import { VariantOptionDetails } from "./Filters.models"
 
 export interface CartProductItem {
   quantity: number
@@ -87,7 +87,6 @@ export interface Cart {
   backgroundColor?: string
   fontFontColor?: string
   variantOptionDetails: VariantOptionDetails[]
-  
 }
 
 export interface RemoteCart {

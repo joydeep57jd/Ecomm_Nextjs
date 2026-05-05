@@ -2,7 +2,7 @@
 import Loading from "@/app/loading"
 import { AllProductResponse, DataList } from "@/models/AllProduct.model"
 import { GetCategoryResponse } from "@/models/Category.modal"
-import { CategoryWiseFilterResponse, VariantOptionDetails } from "@/models/Filters"
+import { CategoryWiseFilterResponse, VariantOptionDetails } from "@/models/Filters.models"
 import { ProductSearchPageView } from "@/pages-sections/product-details/page-view"
 import { getAllProducts, getFilterCategorySection, getOptionsByCategory } from "@/utils/api/product"
 import { Box } from "@mui/material"
@@ -18,6 +18,7 @@ type Props = {
   badges: string[]
   sortFilters: Record<string, boolean>
   priceFilters: Record<string, number>
+  brandFilters: string
 }
 
 function Products({
@@ -29,14 +30,15 @@ function Products({
   variantFilters,
   badges,
   sortFilters,
-  priceFilters
+  priceFilters,
+  brandFilters
 }: Props) {
   let loadingCriteria = ""
   let loadingCategory = ""
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState(1)
   const [allProductResponse, setAllProductResponse] = useState<AllProductResponse>()
-  const [categoryOptions, setCategoryOptions] = useState<GetCategoryResponse[]>()
+  const [categoryOptions, setCategoryOptions] = useState<GetCategoryResponse[]>([])
   const [pageCount, setPageCount] = useState(0)
   const [isLastDataLoaded, setIsLastDataLoaded] = useState(false)
   const [variantOptions, setVariantOptions] = useState<VariantOptionDetails[]>([])
@@ -56,19 +58,17 @@ function Products({
     } else {
       setPage(1)
     }
-  }, [filters, variantFilters, sortFilters, priceFilters])
+  }, [filters, variantFilters, JSON.stringify(sortFilters), JSON.stringify(priceFilters), brandFilters])
 
   useEffect(() => {
-    if (!categoryId && categoryOptions) {
+    const id = categoryId || subCategory || SubCategory
+    if (!id) {
       setCategoryOptions([])
+      return
     }
-    if (loadingCategory === categoryId) return
-    if (categoryId) {
-      fatchFilterOption()
-    } else {
-      setCategoryOptions([])
-    }
-  }, [categoryId])
+    if (loadingCategory === id) return
+    fatchFilterOption(id)
+  }, [categoryId, subCategory, SubCategory])
 
   useEffect(() => {
     if (!loader?.current) return
@@ -95,25 +95,28 @@ function Products({
     }
   }, [loader, page, pageCount, isLoading])
 
-  const fatchFilterOption = async () => {
-    loadingCategory = categoryId
-    const data = await getOptionsByCategory(+categoryId!)
-    setCategoryOptions(data)
+  const fatchFilterOption = async (id: string) => {
+    loadingCategory = id
+    const isCategoryId = !!categoryId
+    const data = await getOptionsByCategory(isCategoryId ? +id : null, isCategoryId ? null : +id)
+    setCategoryOptions(data?.variantOptions?.map((opt) => ({ ...opt, brands: data.brands })) ?? [])
   }
 
   const getLoadingCriteria = () =>
-    `${search}-${categoryId}-${subCategory}-${SubCategory}-${filters}-`
+    `${search}-${categoryId}-${subCategory}-${SubCategory}-${filters}-${brandFilters}`
 
   const fetchData = async () => {
     setIsLoading(true)
     loadingCriteria = getLoadingCriteria()
     const [productsResponse] = await Promise.all([
-      filters || variantFilters
+      filters || variantFilters || brandFilters
         ? getFilterCategorySection({
             OptionValueIds: filters || "",
             PageNo: page,
             PageSize: 18,
             ItemOptionValueIds: variantFilters || "",
+            SubCategoryId: +subCategory || +SubCategory || null,
+            ...(brandFilters ? { BrandId: brandFilters } : {}),
             ...sortFilters,
             ...priceFilters
           })
@@ -130,7 +133,7 @@ function Products({
           })
     ])
 
-    if (filters || variantFilters) {
+    if (filters || variantFilters || brandFilters) {
       const dataList: DataList[] =
         (productsResponse as CategoryWiseFilterResponse).variantDetails?.map((data) => ({
           categoryId: data.categoryId,
@@ -163,7 +166,7 @@ function Products({
         ? productsResponse
         : {
             ...prevValue!,
-            dataList: [...(prevValue!.dataList ?? []), ...productsResponse.dataList]
+            dataList: [...(prevValue!.dataList ?? []), ...(productsResponse.dataList ?? [])]
           }
     )
 
@@ -190,7 +193,7 @@ function Products({
       {allProductResponse && (
         <>
           <ProductSearchPageView
-            categoryOptions={categoryOptions ?? []}
+            categoryOptions={categoryOptions}
             products={allProductResponse.dataList}
             variantOptions={variantOptions}
             badges={currentBadges}
