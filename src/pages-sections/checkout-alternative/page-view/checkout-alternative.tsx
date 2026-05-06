@@ -53,37 +53,33 @@ export default function CheckoutAlternativePageView() {
     state: { remoteCarts, cart }
   } = useCart()
 
+  const businessUnitId = params.get("businessUnitId")
+
   useEffect(() => {
     if (user && !remoteCarts) syncUser(user)
   }, [user])
 
   useEffect(() => {
-    if (product.length > 0 && user?.customerId) {
-      getCheckoutOrder()
-      getAddresses()
-    }
-  }, [product])
+    if (!cart.length && !orderResponse) router.push("/")
+  }, [cart, orderResponse])
+
+  useEffect(() => {
+    if (!remoteCarts || !user?.customerId || orderResponse) return
+    const filteredProduct = remoteCarts.filter(
+      (rc) => rc.businessUnitId.toString() === businessUnitId
+    )
+    setProduct(filteredProduct)
+    setCheckoutOrderResponse(null)
+    setDeliveryChargeResponse(null)
+    setSelectedDelivaryAddressData(null)
+    setIsInitialDataLoaded(false)
+    getCheckoutOrder(filteredProduct)
+    getAddresses()
+  }, [remoteCarts, businessUnitId])
 
   useEffect(() => {
     if (product.length > 0 && checkoutOrderResponse) setIsInitialDataLoaded(true)
   }, [product, checkoutOrderResponse])
-
-   useEffect(() => {
-    if (!cart.length && !orderResponse) router.push("/")
-  }, [cart])
-
-  const businessUnitId = params.get("businessUnitId")
-
-  useEffect(() => {
-    if (remoteCarts) {
-      const filteredProduct = remoteCarts.filter(
-        (rc) => rc.businessUnitId.toString() === businessUnitId
-      )
-      setProduct(filteredProduct)
-      setCheckoutOrderResponse(null)
-      setIsInitialDataLoaded(false)
-    }
-  }, [remoteCarts, businessUnitId])
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -121,12 +117,12 @@ export default function CheckoutAlternativePageView() {
     setAddressListResponse(response)
   }
 
-  const getCheckoutOrder = async () => {
-    if (!product || product.length === 0) return
+  const getCheckoutOrder = async (items: RemoteCart[]) => {
+    if (!items || items.length === 0) return
     const checkoutOrderRequest: CheckoutOrderRequest = {
       discoutcode: "",
       ordered: {
-        items: product.map((c) => ({
+        items: items.map((c) => ({
           batchId: c?.batchId,
           id: c?.id,
           quantity: c?.quantity,
@@ -217,8 +213,8 @@ export default function CheckoutAlternativePageView() {
         data: checkoutOrderResponse!.item
       }
     })
-    syncUser(user!)
     setOrderResponse(response)
+    syncUser(user!)
   }
 
   if (!isInitialDataLoaded) {
