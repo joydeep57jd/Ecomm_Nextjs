@@ -30,7 +30,7 @@ export function calculateDiscount(price: number, discount: number, format = true
  * @returns - RETURN PRICE WITH CURRENCY
  */
 
-export function currency(price: number = 0, fraction: number = 2, defultValue = "--") {
+export function currency(price: number = 0, fraction: number = 2, defultValue = "0.00") {
   const numberFormat = process.env.NEXT_PUBLIC_NUMBER_FORMAT || "en-US"
   const currencyFormat = process.env.NEXT_PUBLIC_CURRENCY_FORMAT || "USD"
 

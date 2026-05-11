@@ -22,7 +22,7 @@ export default function OrderSummery({ order }: Props) {
             Shipping Address
           </Typography>
 
-          <Typography variant="body1">{order.shippingAddress}</Typography>
+          <Typography variant="body1">{order.assignmentId}</Typography>
         </Card>
       </Grid> */}
 
@@ -32,7 +32,8 @@ export default function OrderSummery({ order }: Props) {
             Total Summary
           </Typography>
 
-          <ListItem title="Subtotal:" value={currency(+order.total)} />
+          <ListItem title="Subtotal:" value={currency(+order.subTotal)} />
+          <ListItem title="Tax:" value={currency(+order.tax)} />
           <ListItem title="Shipping fee:" value={currency(+order.delvCharge)} />
           <ListItem title="Discount:" value={currency(+order.discount)} />
 

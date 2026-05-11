@@ -12,7 +12,7 @@ import { FormProvider } from "components/form-hook"
 import Card from "./card"
 import Heading from "./heading"
 // import DeliveryDate from "./delivery-date"
-import Voucher from "./payments/voucher"
+// import Voucher from "./payments/voucher"
 import FormLabel from "@/pages-sections/payment/form-label"
 import { Address } from "@/models/User.model"
 import DeliveryAddresses from "./delivery-addresses"
@@ -155,7 +155,7 @@ export default function CheckoutForm({
           </Card>
         </Fragment>
 
-        <Voucher />
+        {/* <Voucher /> */}
 
         {paymentError && (
           <Typography color="error" sx={{ mt: 1, mb: 2 }}>
