@@ -1,35 +1,24 @@
 "use client"
 import Image from "next/image"
+import Link from "next/link"
 import { format } from "date-fns"
-// MUI
 import Card from "@mui/material/Card"
-import Button from "@mui/material/Button"
 import Avatar from "@mui/material/Avatar"
 import Typography from "@mui/material/Typography"
-import { CircularProgress, Chip, Box } from "@mui/material"
-// GLOBAL CUSTOM COMPONENTS
 import { FlexBetween, FlexBox } from "components/flex-box"
-// CUSTOM UTILS LIBRARY FUNCTION
 import { currency } from "lib"
-// CUSTOM DATA MODEL
 import { OrderListCustomer, Item as Product } from "@/models/OrderHistory.modal"
-import OrderItemRating from "./page-view/order-item-rating"
 import { useState, useEffect } from "react"
 import { useUser } from "@/contexts/UserContenxt"
 import { customerCancelRequest, GetStatementInvoice, orderReturnPickupOtp } from "@/utils/api/order"
 import { CustCancelRequest } from "@/models/Order.model"
-import Link from "next/link"
+import OrderItemRating from "./page-view/order-item-rating"
 import OrderItemReturn from "./page-view/order-item-return"
 import CancelItem from "./page-view/cancel-item"
+import OrderItemActions from "./order-item-actions"
 
-// ==============================================================
-// PROPS
-// ==============================================================
 type Props = { order: OrderListCustomer; refreshOrder: () => void }
 
-// ==============================================================
-// MAIN COMPONENT
-// ==============================================================
 export default function OrderedProducts({ order, refreshOrder }: Props) {
   const { user } = useUser()
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -48,7 +37,6 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
   const handleCancelOrder = async (item: Product) => {
     try {
       setLoadingCancelId(item.orderDetailId)
-
       const payload: CustCancelRequest = {
         OrderId: order.orderId,
         InvoiceId: null,
@@ -60,9 +48,7 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
         UserId: user!.id,
         UserName: user!.firstName
       }
-
       await customerCancelRequest(payload)
-
       await refreshOrder()
       handleCloseModal(true)
     } catch (error) {
@@ -77,16 +63,11 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
       if (!item.invoiceNumber) return
       setLoadingInvoiceId(item.orderDetailId)
       const res = await GetStatementInvoice(item.invoiceNumber!)
-
-      const htmlc = res.html
-
       const newWindow = window.open("", "_blank")
       if (newWindow) {
-        newWindow.document.write(htmlc)
+        newWindow.document.write(res.html)
         newWindow.document.title = `Invoice - ${order.custOrdNo}`
         newWindow.document.close()
-      } else {
-        console.error("Unable to open new tab")
       }
     } catch (error) {
       console.error("Error fetching invoice:", error)
@@ -97,42 +78,28 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
 
   const fetchReturnPickupOtp = async (item: Product) => {
     try {
-      // Check if item has invoiceNumber and orderDetailId
       if (!item.invoiceId || !item.orderDetailId) return
-
       if (render[item.orderDetailId]) return
       setRender((prev) => ({ ...prev, [item.orderDetailId]: true }))
-      // Only fetch if we haven't already fetched for this item
       if (returnPickupOtps[item.orderDetailId]) return
-
       const response = await orderReturnPickupOtp({
         invoiceId: item.invoiceId.toString(),
         orderDetailId: item.orderDetailId.toString()
       })
-
       if (response?.otp) {
-        setReturnPickupOtps((prev) => ({
-          ...prev,
-          [item.orderDetailId]: response.otp
-        }))
+        setReturnPickupOtps((prev) => ({ ...prev, [item.orderDetailId]: response.otp }))
       }
     } catch (error) {
       console.error("Error fetching return pickup OTP:", error)
     }
   }
 
-  // Fetch OTPs for return items when component mounts or order changes
   useEffect(() => {
-    if (order?.items) {
-      order.items.forEach((item) => {
-        fetchReturnPickupOtp(item)
-      })
-    }
+    if (order?.items) order.items.forEach(fetchReturnPickupOtp)
   }, [order])
 
   const formatDeliveryDate = (date?: string) => {
     if (!date) return "--"
-
     return new Date(date).toLocaleDateString("en-IN", {
       weekday: "short",
       day: "2-digit",
@@ -143,38 +110,30 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
 
   const getDaysLeftToReturn = (item: Product) => {
     const now = new Date()
-
     const lastReturn = item.lastReturnDate
       ? new Date(item.lastReturnDate)
       : new Date(item.deliveryDate)
-
-    const diffMs = lastReturn.getTime() - now.getTime()
-    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
-
-    return diffDays
+    return Math.ceil((lastReturn.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
   }
-  const isDelivered = (item: Product) => item.isDelivered
 
-  const isCancelled = (item: Product) => item.isCancelled
-
-  const getModal = (selectedProduct: Product) => {
+  const getModal = (product: Product) => {
     switch (modalType) {
       case "rating":
         return (
           <OrderItemRating
             handleCloseModal={handleCloseModal}
-            itemId={selectedProduct.itemId}
-            variantId={selectedProduct.itemVariantId}
-            product={selectedProduct}
+            itemId={product.itemId}
+            variantId={product.itemVariantId}
+            product={product}
           />
         )
       case "return":
         return (
           <OrderItemReturn
             handleCloseModal={handleCloseModal}
-            itemId={selectedProduct.itemId}
-            variantId={selectedProduct.itemVariantId}
-            product={selectedProduct}
+            itemId={product.itemId}
+            variantId={product.itemVariantId}
+            product={product}
             order={order}
           />
         )
@@ -182,36 +141,35 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
         return (
           <CancelItem
             handleCloseModal={handleCloseModal}
-            item={selectedProduct}
-            onConfirm={() => handleCancelOrder(selectedProduct)}
-            loading={loadingCancelId === selectedProduct.orderDetailId}
+            item={product}
+            onConfirm={() => handleCancelOrder(product)}
+            loading={loadingCancelId === product.orderDetailId}
           />
         )
-
       default:
-        break
+        return null
     }
   }
 
+  const shownOtps = new Set<string>()
+
   return (
     <>
-      <Card
-        elevation={0}
-        sx={{
-          p: 0,
-          mb: 4,
-          border: "1px solid",
-          borderColor: "grey.100"
-        }}
-      >
+      <Card elevation={0} sx={{ p: 0, mb: 4, border: "1px solid", borderColor: "grey.100" }}>
         <FlexBetween px={3} py={2} flexWrap="wrap" gap={1} bgcolor="grey.50">
           <Item title="Order ID:" value={order?.custOrdNo} />
           <Item title="Placed on:" value={format(new Date(order.orderDate), "dd MMM, yyyy")} />
         </FlexBetween>
 
-        {(() => {
-          let otpShown = false
-          return order?.items?.map((item, ind) => (
+        {order?.items?.map((item, ind) => {
+          const otp = returnPickupOtps[item.orderDetailId]
+          const orderOtp = order?.otpHash?.trim()
+          const showReturnOtp = otp && !shownOtps.has(otp) ? otp : undefined
+          const showOrderOtp = orderOtp && !shownOtps.has(orderOtp) ? orderOtp : undefined
+          if (showReturnOtp) shownOtps.add(otp)
+          if (showOrderOtp) shownOtps.add(orderOtp)
+
+          return (
             <FlexBetween key={ind} px={2} py={1} flexWrap="wrap" gap={1}>
               <Link
                 href={`/products/${item.itemId}${item.itemId ? `?variantId=${item.itemVariantId}` : ""}`}
@@ -219,11 +177,7 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                 <FlexBox gap={2} alignItems="center">
                   <Avatar
                     variant="rounded"
-                    sx={{
-                      height: 60,
-                      width: 60,
-                      backgroundColor: "grey.50"
-                    }}
+                    sx={{ height: 60, width: 60, backgroundColor: "grey.50" }}
                   >
                     <Image
                       alt={item.imageAlt}
@@ -239,7 +193,6 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                       }}
                     />
                   </Avatar>
-
                   <div>
                     <Typography noWrap variant="h6">
                       {item.name}
@@ -251,146 +204,31 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                 </FlexBox>
               </Link>
 
-              <FlexBox gap={1.5} flexWrap="wrap" alignItems="center">
-                {isDelivered(item) ? (
-                  <>
-                    <FlexBox flexDirection="column" gap={0.2}>
-                      <Typography variant="caption" color="text.secondary">
-                        Delivered on {formatDeliveryDate(item.deliveryDate)}
-                      </Typography>
-                    </FlexBox>
-
-                    <FlexBox gap={1} flexWrap="wrap">
-                      <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() => handleOpenInvoice(item)}
-                        disabled={loadingInvoiceId === item.orderDetailId}
-                      >
-                        {loadingInvoiceId === item.orderDetailId ? (
-                          <CircularProgress size={16} color="inherit" />
-                        ) : (
-                          "Invoice"
-                        )}
-                      </Button>
-
-                      {getDaysLeftToReturn(item) > 0 && (
-                        <Button
-                          onClick={() => {
-                            setSelectedProduct(item)
-                            setModalType("return")
-                          }}
-                          variant="outlined"
-                          size="small"
-                        >
-                          Return
-                          <Typography
-                            component="span"
-                            variant="caption"
-                            color="error"
-                            sx={{ ml: 0.5 }}
-                          >
-                            ({getDaysLeftToReturn(item)} days left)
-                          </Typography>
-                        </Button>
-                      )}
-
-                      <Button
-                        onClick={() => {
-                          setSelectedProduct(item)
-                          setModalType("rating")
-                        }}
-                        variant="text"
-                        size="small"
-                      >
-                        Review
-                      </Button>
-                    </FlexBox>
-                  </>
-                ) : isCancelled(item) ? (
-                  <Typography variant="body2" color="error" fontWeight={500}>
-                    {item.status}
-                    {item.refundAmount > 0 && (
-                      <Typography variant="caption" display="block">
-                        Refund: {currency(Number(item.refundAmount.toFixed(2)))}
-                      </Typography>
-                    )}
-                  </Typography>
-                ) : !item.invDate ? (
-                  <Button
-                    onClick={() => {
-                      setSelectedProduct(item)
-                      setModalType("cancel")
-                    }}
-                    variant="outlined"
-                    color="error"
-                    size="small"
-                  >
-                    Cancel Item
-                  </Button>
-                ) : (
-                  (() => {
-                    const showOtp = !otpShown
-                    if (showOtp) otpShown = true
-                    return (
-                      <FlexBox gap={1.5} flexWrap="wrap" alignItems="center">
-                        {showOtp && returnPickupOtps[item.orderDetailId] && (
-                          <Box
-                            sx={{
-                              px: 1.5,
-                              py: 0.75,
-                              bgcolor: "warning.50",
-                              border: "1.5px dashed",
-                              borderColor: "warning.main",
-                              borderRadius: 1.5
-                            }}
-                          >
-                            <Typography variant="caption" color="warning.dark" fontWeight={600}>
-                              Return OTP: {returnPickupOtps[item.orderDetailId]}
-                            </Typography>
-                          </Box>
-                        )}
-
-                        {showOtp && order?.otpHash && order.otpHash.trim() !== "" && (
-                          <Box
-                            sx={{
-                              px: 1.5,
-                              py: 0.75,
-                              bgcolor: "success.50",
-                              border: "1.5px dashed",
-                              borderColor: "success.main",
-                              borderRadius: 1.5
-                            }}
-                          >
-                            <Typography variant="caption" color="success.dark" fontWeight={600}>
-                              OTP: {order.otpHash}
-                            </Typography>
-                          </Box>
-                        )}
-
-                        {/* {showOtp && order?.orderStatus && (
-                          <Chip
-                            label={order.orderStatus}
-                            size="small"
-                            color="info"
-                            sx={{ fontWeight: 500 }}
-                          />
-                        )} */}
-
-                        <Chip
-                          label={item.status}
-                          size="small"
-                          color="info"
-                          sx={{ fontWeight: 500 }}
-                        />
-                      </FlexBox>
-                    )
-                  })()
-                )}
-              </FlexBox>
+              <OrderItemActions
+                item={item}
+                order={order}
+                loadingInvoiceId={loadingInvoiceId}
+                returnOtp={showReturnOtp}
+                orderOtp={showOrderOtp}
+                getDaysLeftToReturn={getDaysLeftToReturn}
+                formatDeliveryDate={formatDeliveryDate}
+                onInvoice={handleOpenInvoice}
+                onReturn={(i) => {
+                  setSelectedProduct(i)
+                  setModalType("return")
+                }}
+                onRating={(i) => {
+                  setSelectedProduct(i)
+                  setModalType("rating")
+                }}
+                onCancel={(i) => {
+                  setSelectedProduct(i)
+                  setModalType("cancel")
+                }}
+              />
             </FlexBetween>
-          ))
-        })()}
+          )
+        })}
       </Card>
 
       {selectedProduct && getModal(selectedProduct)}
@@ -398,9 +236,6 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
   )
 }
 
-// ==============================================================
-// SMALL ITEM COMPONENT
-// ==============================================================
 function Item({ title, value }: { title: string; value: string }) {
   return (
     <FlexBox gap={1} alignItems="center">
