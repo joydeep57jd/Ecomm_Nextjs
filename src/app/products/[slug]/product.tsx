@@ -73,14 +73,39 @@ function SingleProduct({ slug, variantId, variant }: Props) {
     setFrequentlyBought(frequentlyBought)
   }
 
-  const getProductDetails = async () => {
+  const getProductDetails = async (overrideVariant?: string) => {
+    const variantToFetch = overrideVariant ?? selectedVariant
     setIsLoading(true)
     loadinVariantId = variantId
-    loadinVariant = selectedVariant
+    loadinVariant = variantToFetch
     const productDetails = await getProduct({
       itemVariantId: variantId ? Number(variantId) : undefined,
-      optionValues: variantId ? "" : selectedVariant
+      optionValues: variantId ? "" : variantToFetch
     })
+
+    if (!productDetails?.variantDetails) {
+      // Find first available variant combination from the master variant list
+      const fallbackIds: number[] = []
+      variantMap.forEach((options) => {
+        const first = options.find((o) => o.hasItem)
+        if (first) fallbackIds.push(first.variantOptionValueId)
+      })
+
+      if (fallbackIds.length > 0) {
+        const fallback = fallbackIds.join(",")
+        // Only retry once — if fallback itself is the same as what we tried, give up
+        if (fallback !== variantToFetch) {
+          setSelectedVariant(fallback)
+          setIsLoading(false)
+          return
+        }
+      }
+      // No valid fallback — let the page handle it
+      setProduct(productDetails)
+      setIsLoading(false)
+      return
+    }
+
     setProduct(productDetails)
 
     if (productDetails?.variantDetails?.itemVariantId) {

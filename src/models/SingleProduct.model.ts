@@ -8,6 +8,7 @@ export interface VariantOption {
   optionValue: string
   optionName: string
   appliedOnVariant: boolean
+  hasItem: boolean
 
 }
 
