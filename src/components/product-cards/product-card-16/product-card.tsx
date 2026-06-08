@@ -7,7 +7,8 @@ import LazyImage from "components/LazyImage"
 // LOCAL CUSTOM COMPONENTS
 import DiscountChip from "../discount-chip"
 // CUSTOM UTILS LIBRARY FUNCTIONS
-import { calculateDiscount, currency } from "lib"
+import {  currency } from "lib"
+// import {calculateDiscount} from "lib"
 // STYLED COMPONENTS
 import { PriceText, StyledRoot } from "./styles"
 // CUSTOM DATA MODEL
