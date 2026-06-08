@@ -25,7 +25,7 @@ export default function ProductCard16({ product, variantOptions, badges }: Props
   const discount = product.savePricePctg || 0
   const price = +product.mrp.toFixed(2)
   const discountedPrice = product.discountedPrice
-  const formattedFinalPrice = calculateDiscount(price, discount)
+  // const formattedFinalPrice = calculateDiscount(price, discount)
 
   return (
     <StyledRoot>
