@@ -24,6 +24,7 @@ export default function ProductCard16({ product, variantOptions, badges }: Props
   const thumbnail = product.imageList?.[0]?.fullImagepath || "/assets/images/products/no-photo.png"
   const discount = product.savePricePctg || 0
   const price = +product.mrp.toFixed(2)
+  const discountedPrice = product.discountedPrice
   const formattedFinalPrice = calculateDiscount(price, discount)
 
   return (
@@ -75,7 +76,9 @@ export default function ProductCard16({ product, variantOptions, badges }: Props
 
           {/* PRICE */}
           <PriceText>
-            {formattedFinalPrice}
+            {currency(discountedPrice)}
+
+            {/* {formattedFinalPrice} */}
             {discount > 0 && <span className="base-price">{currency(price)}</span>}
           </PriceText>
         </div>

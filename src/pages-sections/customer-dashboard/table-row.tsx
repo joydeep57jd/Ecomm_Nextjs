@@ -13,6 +13,9 @@ const TableRow = styled(Card)(({ theme }) => ({
   marginBottom: "1.25rem",
   gridTemplateColumns: "1.5fr 2fr 1.5fr auto",
   border: `1px solid ${theme.palette.grey[100]}`,
+  [theme.breakpoints.down("md")]: {
+    gridTemplateColumns: "1fr auto"
+  },
   [theme.breakpoints.down("sm")]: {
     gap: 8,
     gridTemplateColumns: "repeat(2, 1fr)"

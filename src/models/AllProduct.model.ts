@@ -19,6 +19,7 @@ export interface DataList {
   fontColor?: string
   backgroundColor?: string
   isSoldOut: boolean
+  discountedPrice?: number
   itemCode: string
   imageList: ImageList[]
   itemVariantId?: number

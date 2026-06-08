@@ -27,29 +27,26 @@ import { Header, HeaderCart, HeaderLogin, MobileHeader, HeaderSearch } from "com
 import LayoutModel from "models/Layout.model"
 import { Box } from "@mui/material"
 
-
 // ==============================================================
 interface Props extends PropsWithChildren {
   data: LayoutModel
-  
 }
 // ==============================================================
 
 export default function ShopLayout1({ children, data }: Props) {
   const { footer, header, topbar, mobileNavigation } = data
-    const footerDetails = footer!.about[0]
-    
+  const footerDetails = footer!.about[0]
 
- const aboutLinks = [
-  { title: footerDetails?.aboutUsDtl?.aboutUs, url: "#" },
-  { title: footerDetails?.contactUsDtl?.contactUs, url: "#" },
-  { title: footerDetails?.privacyPolicyDtl?.privacyPolicy, url: "#" },
-  { title: footerDetails?.termsAndConditionsDtl?.termsAndConditions, url: "#" },
-  { title: footerDetails?.cancellation_RefundPolicyDtl?.cancellation_RefundPolicy, url: "#" },
-  { title: footerDetails?.returnPolicyDtl?.returnPolicy, url: "#" },
-  { title: footerDetails?.tradeLicenseDtl?.tradeLicenseNo, url: "#" },
-  { title: footerDetails?.tinNoDtl?.tinNo, url: "#" }
-].filter(item => item.title)
+  const aboutLinks = [
+    { title: footerDetails?.aboutUsDtl?.aboutUs, url: "#" },
+    { title: footerDetails?.contactUsDtl?.contactUs, url: "#" },
+    { title: footerDetails?.privacyPolicyDtl?.privacyPolicy, url: "#" },
+    { title: footerDetails?.termsAndConditionsDtl?.termsAndConditions, url: "#" },
+    { title: footerDetails?.cancellation_RefundPolicyDtl?.cancellation_RefundPolicy, url: "#" },
+    { title: footerDetails?.returnPolicyDtl?.returnPolicy, url: "#" },
+    { title: footerDetails?.tradeLicenseDtl?.tradeLicenseNo, url: "#" },
+    { title: footerDetails?.tinNoDtl?.tinNo, url: "#" }
+  ].filter((item) => item.title)
 
   const MOBILE_VERSION_HEADER = (
     <MobileHeader>
@@ -80,7 +77,7 @@ export default function ShopLayout1({ children, data }: Props) {
       <Sticky fixedOn={0} scrollDistance={300}>
         {header && (
           <Header mobileHeader={MOBILE_VERSION_HEADER}>
-            <Header.Left>  
+            <Header.Left>
               <Header.Logo url={header.logo} />
             </Header.Left>
 
@@ -119,10 +116,7 @@ export default function ShopLayout1({ children, data }: Props) {
         mobileNavigation &&
         <MobileNavigationBar navigation={mobileNavigation.version1} />
       } */}
-      {
-        
-      }
-      
+      {}
 
       {footer && (
         <Footer1>

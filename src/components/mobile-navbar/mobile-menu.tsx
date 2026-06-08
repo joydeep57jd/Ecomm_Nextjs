@@ -21,9 +21,15 @@ type Props = { navigation: Category[] };
 
 export function MobileMenu({ navigation }: Props) {
   const [openDrawer, setOpenDrawer] = useState(false)
-  const [expanded, setExpanded] = useState<string | false>(false)
+  const [expanded, setExpanded] = useState<Record<string, string>>({})
   const handleClose = useCallback(() => setOpenDrawer(false), [])
   const handleOpen = useCallback(() => setOpenDrawer(true), [])
+  const toggleExpanded = useCallback((parentKey: string, panelKey: string) => {
+    setExpanded(prev => ({
+      ...prev,
+      [parentKey]: prev[parentKey] === panelKey ? "" : panelKey
+    }))
+  }, [])
 
   return (
     <Fragment>
@@ -57,7 +63,7 @@ export function MobileMenu({ navigation }: Props) {
                 <Clear fontSize="small" />
               </IconButton>
 
-              {renderLevels(navigation, handleClose, expanded, setExpanded)}
+              {renderLevels(navigation, handleClose, expanded, toggleExpanded)}
             </Box>
           </OverlayScrollbar>
         </Box>

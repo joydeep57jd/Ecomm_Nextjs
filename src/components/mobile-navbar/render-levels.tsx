@@ -23,43 +23,56 @@ const ACCORDION_SUMMARY_STYLES = {
   }
 }
 
-export const renderLevels = (data: any[], handleClose: () => void,expanded: string | false,
-  setExpanded: (val: string | false) => void, parentKey = "") => {
-  return data.map((item: any, index: number) => {
+export const renderLevels = (
+  data: any[],
+  handleClose: () => void,
+  expanded: Record<string, string>,
+  toggleExpanded: (parentKey: string, panelKey: string) => void,
+  parentKey = ""
+) => {
+  return data?.map((item: any, index: number) => {
     let children = []
-    let keyName = ''
+    let keyName = ""
 
     if (!!item.sub_category) {
-      keyName = 'category'
+      keyName = "category"
       children = item.sub_category
     } else if (!!item.sub_sub_category) {
-      keyName = 'subCategory'
+      keyName = "subCategory"
       children = item.sub_sub_category
     } else {
-      keyName = 'subSubCategory'
+      keyName = "subCategory"
     }
 
     const href = `/products/search?${keyName}=${item.id}`
     const panelKey = `${parentKey}-${index}`
     if (children?.length) {
       return (
-        <Accordion square key={panelKey} elevation={0} disableGutters sx={ACCORDION_STYLES}  expanded={expanded === panelKey}
-          onChange={() => setExpanded(expanded === panelKey ? false : panelKey)}>
+        <Accordion
+          square
+          key={panelKey}
+          elevation={0}
+          disableGutters
+          sx={ACCORDION_STYLES}
+          expanded={expanded[parentKey] === panelKey}
+          onChange={() => toggleExpanded(parentKey, panelKey)}
+        >
           <AccordionSummary expandIcon={<ExpandMore />} sx={ACCORDION_SUMMARY_STYLES}>
-            <NavLink href={href ?? ''} onClick={handleClose}>
+            <NavLink href={href ?? ""} onClick={handleClose}>
               <Typography variant="h6">{item.name}</Typography>
             </NavLink>
           </AccordionSummary>
 
-          <Box mx={2}>{renderLevels(children, handleClose,expanded, setExpanded, panelKey)}</Box>
+          <Box mx={2}>
+            {renderLevels(children, handleClose, expanded, toggleExpanded, panelKey)}
+          </Box>
         </Accordion>
       )
     }
 
-
     return (
       <Box key={index} py={1}>
-        <NavLink href={href ?? ''} onClick={handleClose}>
+        <NavLink href={href ?? ""} onClick={handleClose}>
           {item.name}
         </NavLink>
       </Box>
