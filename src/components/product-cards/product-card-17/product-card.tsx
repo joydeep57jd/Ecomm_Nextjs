@@ -3,6 +3,7 @@ import Image from "next/image"
 import Typography from "@mui/material/Typography"
 // LOCAL CUSTOM COMPONENTS
 import Discount from "./discount"
+import HoverActions from "./hover-actions"
 // STYLED COMPONENTS
 import { ImageWrapper, ContentWrapper, StyledCard } from "./styles"
 // CUSTOM UTILS FUNCTION
@@ -49,12 +50,14 @@ export default function ProductCard17({
             loading={isWishList ? "lazy" : "eager"}
           />
         </Link>
+
+        <HoverActions product={product} />
       </ImageWrapper>
 
       <ContentWrapper>
-        <Typography noWrap variant="body2" className="category">
+        {/* <Typography noWrap variant="body2" className="category">
           {categories?.length > 0 ? categories[0] : ""}
-        </Typography>
+        </Typography> */}
 
         <Link href={`/products/${slug}`} aria-label={`View ${title}`}>
           <Typography noWrap variant="h5" className="title">

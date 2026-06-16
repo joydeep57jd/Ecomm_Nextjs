@@ -1,11 +1,9 @@
 "use client"
 import Link from "next/link"
-import { useCallback, useState } from "react"
 import Button from "@mui/material/Button"
 // STYLED COMPONENTS
 import { HoverWrapper } from "./styles"
 import Product from "@/models/Product.model"
-import { useRouter } from "next/navigation"
 import ProductAction from "@/components/product-action"
 
 // ========================================================
@@ -15,17 +13,6 @@ interface Props {
 // ========================================================
 
 export default function HoverActions({ product }: Props) {
-  const router = useRouter()
-  const [isQuickViewLoading, setQuickViewLoading] = useState(false)
-
-  const handleNavigate = useCallback(() => {
-    setQuickViewLoading(false)
-  }, [])
-
-  const handleGoToCart = useCallback(() => {
-    router.push("/cart")
-  }, [])
-
   return (
     <HoverWrapper className="hover-box">
       <ProductAction
@@ -45,16 +32,17 @@ export default function HoverActions({ product }: Props) {
         }}
       />
 
-      <Link scroll={false} href={`/products/${product.id}`} onNavigate={handleNavigate}>
+      <Link
+        scroll={false}
+        href={`/products/${product.id}${product.variantId ? `?variantId=${product.variantId}` : ""}`}
+      >
         <Button
           fullWidth
           disableElevation
           color="inherit"
           variant="contained"
           className="view-btn"
-          onClick={handleGoToCart}
-          loading={isQuickViewLoading}
-          aria-label="Quick view"
+          aria-label="View product"
         >
           View
         </Button>

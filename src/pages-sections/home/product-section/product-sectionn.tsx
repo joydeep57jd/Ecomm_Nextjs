@@ -49,8 +49,10 @@ export default function ProductSection({ sections }: ProductSectionProps) {
                         )
                       : 0,
                     categories: [section.sectionName || "Products"],
-                    variantId: 0,
-                    stockQty: product.stockQty
+                    variantId: product.variantId,
+                    stockQty: product.stockQty,
+                    businessUnitId: product.businessUnitId,
+                    businessUnitName: product.businessUnitName
                   }}
                 />
               </Box>

@@ -8,12 +8,15 @@ export interface ProductImage {
 export interface SectionItem {
   itemId: number
   name: string
+  variantId: number
   mrp: number
   price: number
   salePrice: number
   imagePath: string
   images?: ProductImage[]
   offer?: string
+  businessUnitId: number
+  businessUnitName: string
   stockQty: number
 }
 
@@ -48,7 +51,8 @@ export interface Product {
   rating?: number
   offer?: string
   itemVariantId?: number
-  variantId?:number
-  stockQty?:number
-  
+  variantId?: number
+  stockQty?: number
+  businessUnitId?: number
+  businessUnitName?: string
 }

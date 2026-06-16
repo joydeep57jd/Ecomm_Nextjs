@@ -16,16 +16,10 @@ export const StyledCard = styled(Card, {
   transition: "all 250ms ease-in-out",
   backgroundColor: theme.palette.grey[50],
   ":hover": {
-    ".thumbnail": {
-      display: "none"
-    },
     ".hover-box": {
       opacity: 1,
-      bottom: 5
-    },
-    ".hover-thumbnail": {
-      display: "flex",
-      transition: "all 0.3s ease-in-out"
+      visibility: "visible",
+      transform: "translateY(0)"
     }
   },
   ...(bgWhite && {
@@ -42,19 +36,11 @@ export const ImageWrapper = styled("div")(({ theme }) => ({
   textAlign: "center",
   position: "relative",
   placeItems: "center",
-  // [theme.breakpoints.down("md")]: {
-  //   height: 370
-  // },
   [theme.breakpoints.down("sm")]: {
-    // display: "block",
     height: "100%"
   },
-  ".hover-thumbnail": {
-    // scale: 1,
-    display: "none",
-    transition: "all 0.3s ease-in-out"
-  },
-  ".thumbnail, .hover-thumbnail": {
+  ".thumbnail": {
+    gridArea: "1 / 1",
     width: "100%",
     height: "100%",
     objectFit: "cover"
@@ -63,19 +49,24 @@ export const ImageWrapper = styled("div")(({ theme }) => ({
 
 export const HoverWrapper = styled("div")(() => ({
   zIndex: 2,
-  bottom: 0,
+  left: 0,
+  right: 0,
+  bottom: 16,
   opacity: 0,
-  width: "100%",
+  visibility: "hidden",
   cursor: "pointer",
   position: "absolute",
+  transform: "translateY(12px)",
   transition: "all 0.3s ease-in-out",
   gap: ".75rem",
   display: "flex",
   alignItems: "center",
-  padding: "1rem 2rem",
+  justifyContent: "center",
+  padding: "0 1rem",
+  "& > *": { flex: "1 1 0", minWidth: 0, maxWidth: 150 },
+  a: { display: "block" },
   ".view-btn": { backgroundColor: "white" },
-  ".MuiButton-root": { padding: ".75rem" },
-  a: { width: "100%" }
+  ".MuiButton-root": { whiteSpace: "nowrap" }
 }))
 
 export const ContentWrapper = styled("div")(({ theme }) => ({

@@ -12,9 +12,17 @@ type Props = {
   cart: Cart
   fullWidth?: boolean
   variantType?: "button" | "icon"
+  label?: string
+  size?: "small" | "medium" | "large"
 }
 
-export default function AddToCart({ cart, fullWidth, variantType = "button" }: Props) {
+export default function AddToCart({
+  cart,
+  fullWidth,
+  variantType = "button",
+  label = "Add to Cart",
+  size = "medium"
+}: Props) {
   const { user } = useUser()
   const { dispatch } = useCart()
   const { setOpen } = useCartDrawer()
@@ -50,10 +58,11 @@ export default function AddToCart({ cart, fullWidth, variantType = "button" }: P
       fullWidth={fullWidth}
       color="primary"
       variant="contained"
+      size={size}
       disabled={!cart.stockQty}
       onClick={handleAddToCart}
     >
-      Add to Cart
+      {label}
     </Button>
   )
 }
