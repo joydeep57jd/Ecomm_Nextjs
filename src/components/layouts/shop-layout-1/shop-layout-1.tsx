@@ -26,6 +26,8 @@ import { Header, HeaderCart, HeaderLogin, MobileHeader, HeaderSearch } from "com
 // CUSTOM DATA MODEL
 import LayoutModel from "models/Layout.model"
 import { Box } from "@mui/material"
+// REDESIGNED (Super Shopping) HEADER
+import { SuperHeader } from "@/components/super/SuperHeader"
 
 // ==============================================================
 interface Props extends PropsWithChildren {
@@ -66,44 +68,15 @@ export default function ShopLayout1({ children, data }: Props) {
 
   return (
     <Fragment>
-      <Topbar>
-        <Topbar.Left label={topbar?.label ?? ""} title={topbar?.title ?? ""} />
-
-        <Topbar.Right>
-          <TopbarSocialLinks links={topbar?.socials ?? {}} />
-        </Topbar.Right>
-      </Topbar>
-
-      <Sticky fixedOn={0} scrollDistance={300}>
-        {header && (
-          <Header mobileHeader={MOBILE_VERSION_HEADER}>
-            <Header.Left>
-              <Header.Logo url={header.logo} />
-            </Header.Left>
-
-            <Header.Mid>
-              <NavigationList navigation={header.navigation} layoutModel={data} />
-            </Header.Mid>
-
-            <Header.Right>
-              <Box display="flex" alignItems="center">
-                <HeaderLogin />
-                <HeaderCart />
-              </Box>
-            </Header.Right>
-          </Header>
-        )}
-      </Sticky>
-
-      <SecondaryHeader elevation={0}>
-        {/* <SecondaryHeader.Left>
-          <CategoryList categories={header.categoryMenus} />
-        </SecondaryHeader.Left> */}
-
-        <SecondaryHeader.Right>
-          <SearchInput1 categories={header!.categories} />
-        </SecondaryHeader.Right>
-      </SecondaryHeader>
+      {header && (
+        <SuperHeader
+          categories={header.navigation}
+          logo={header.logo}
+          topbarTitle={topbar?.title}
+          topbarLabel={topbar?.label}
+          layoutModel={data}
+        />
+      )}
       <div
         style={{
           minHeight: "calc(100vh - 539px)"

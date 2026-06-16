@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import HomePageView from "pages-sections/home/page-view"
+import SuperHomeView from "@/components/super/SuperHomeView"
 
 export const metadata: Metadata = {
   title: "Super Shop",
@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 }
 
 export default function Home() {
-  return <HomePageView />
+  return <SuperHomeView />
 }

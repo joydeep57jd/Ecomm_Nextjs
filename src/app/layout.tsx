@@ -8,6 +8,9 @@ export const geist = Geist({
 
 import "overlayscrollbars/overlayscrollbars.css"
 
+// TAILWIND (scoped to .tw-scope — see globals.css / tailwind.config.ts)
+import "./globals.css"
+
 // THEME PROVIDER
 import ThemeProvider from "theme/theme-provider"
 

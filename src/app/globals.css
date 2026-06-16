@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Preflight is disabled (see tailwind.config.ts) so MUI is untouched. These rules give the
+ * redesigned "Super Shopping" surfaces the small slice of reset Tailwind utilities assume —
+ * but ONLY inside `.tw-scope`, and via :where() so every utility class still wins the cascade.
+ */
+@layer base {
+  :where(.tw-scope) {
+    color: #0f172a;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  :where(.tw-scope),
+  :where(.tw-scope) *,
+  :where(.tw-scope) *::before,
+  :where(.tw-scope) *::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: #e5e7eb;
+  }
+  :where(.tw-scope) button {
+    background-color: transparent;
+    background-image: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+  :where(.tw-scope) input {
+    font: inherit;
+    color: inherit;
+  }
+  :where(.tw-scope) input::placeholder {
+    color: #94a3b8;
+  }
+  :where(.tw-scope) h1,
+  :where(.tw-scope) h2,
+  :where(.tw-scope) h3,
+  :where(.tw-scope) h4 {
+    font-weight: inherit;
+    margin: 0;
+  }
+  :where(.tw-scope) p,
+  :where(.tw-scope) ul,
+  :where(.tw-scope) figure {
+    margin: 0;
+  }
+  :where(.tw-scope) ul {
+    list-style: none;
+    padding: 0;
+  }
+  :where(.tw-scope) a {
+    color: inherit;
+    text-decoration: none;
+  }
+  :where(.tw-scope) img {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+@layer components {
+  .tw-scope .container-page {
+    @apply mx-auto w-full max-w-[1280px] px-4 lg:px-6;
+  }
+
+  /* Price/numeric runs — stop layout shift as digits change */
+  .tw-scope .nums {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  /* Loading shimmer (CLS-safe skeletons) */
+  .tw-scope .skeleton {
+    @apply relative overflow-hidden bg-slate-200/70;
+  }
+  .tw-scope .skeleton::after {
+    content: "";
+    @apply absolute inset-0 -translate-x-full animate-shimmer;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  }
+
+  /* Horizontal product rails */
+  .tw-scope .rail {
+    @apply flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] snap-x snap-mandatory;
+  }
+  .tw-scope .rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tw-scope .clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
