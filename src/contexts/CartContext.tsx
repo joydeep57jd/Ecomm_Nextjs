@@ -43,6 +43,7 @@ const INITIAL_STATE: InitialState = {
 interface ContextProps {
   state: InitialState
   dispatch: (args: CartActionType) => void
+  refreshCart: () => Promise<void>
 }
 
 export const CartContext = createContext<ContextProps>({} as ContextProps)
@@ -164,7 +165,18 @@ export default function CartProvider({ children }: PropsWithChildren) {
     }
   }
 
-  const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch])
+  const refreshCart = async () => {
+    if (!state.user?.customerId) return
+    const remoteCarts = await getCart(+state.user.customerId)
+    const finalCarts = getLocalCartFromRemoteCart(remoteCarts || [])
+    dispatch({ type: "SYNC_SUCCESS", carts: finalCarts, remoteCarts: remoteCarts || [] })
+  }
+
+  const contextValue = useMemo(
+    () => ({ state, dispatch, refreshCart }),
+
+    [state, dispatch]
+  )
 
   return <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>
 }

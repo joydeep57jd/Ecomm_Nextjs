@@ -257,7 +257,8 @@ export default function WishListPageView({
                             variantOptionId: 0,
                             variantOptionValueId: variant.variantOptionValueId
                           })
-                        )
+                        ),
+                        isOutOfStock: products[product.variantid].priceAndStock?.stockQty === 0
                       }}
                     />
                   </>

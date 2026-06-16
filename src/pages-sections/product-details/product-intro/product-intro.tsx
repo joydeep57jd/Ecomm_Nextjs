@@ -173,7 +173,8 @@ export default function ProductIntro({
                   optionValue: variant?.optionValue,
                   variantOptionId: 0,
                   variantOptionValueId: variant?.variantOptionValueId
-                }))
+                })),
+                isOutOfStock: product.priceAndStock?.stockQty === 0
               }}
             />
           )}

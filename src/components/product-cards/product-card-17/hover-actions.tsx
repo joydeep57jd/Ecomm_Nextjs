@@ -10,7 +10,7 @@ import ProductAction from "@/components/product-action"
 
 // ========================================================
 interface Props {
-  product: Product;
+  product: Product
 }
 // ========================================================
 
@@ -28,23 +28,22 @@ export default function HoverActions({ product }: Props) {
 
   return (
     <HoverWrapper className="hover-box">
-
-
-      <ProductAction fullWidth={true} product={{
-        itemVariantId: product.variantId ?? 0,
-        productId: +product.id,
-        productImage: product.images[0],
-        productName: product.title,
-        productPrice: product.price,
-        qty: 1,
-        stockQty: product.stockQty,
-        variantName:product.title,
-        mrp:product.price,
-        variantOptionDetails: product.variantOptionDetails ?? []
-        
-        
-
-      }} />
+      <ProductAction
+        fullWidth={true}
+        product={{
+          itemVariantId: product.variantId ?? 0,
+          productId: +product.id,
+          productImage: product.images[0],
+          productName: product.title,
+          productPrice: product.price,
+          qty: 1,
+          stockQty: product.stockQty,
+          variantName: product.title,
+          mrp: product.price,
+          variantOptionDetails: product.variantOptionDetails ?? [],
+          isOutOfStock: product.isOutOfStock ?? false
+        }}
+      />
 
       <Link scroll={false} href={`/products/${product.id}`} onNavigate={handleNavigate}>
         <Button

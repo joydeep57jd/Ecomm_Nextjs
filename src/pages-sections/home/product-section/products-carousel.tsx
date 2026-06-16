@@ -19,7 +19,7 @@ const Heading = styled("div")(() => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  marginBottom: "1.5rem",
+  marginTop: "1.5rem",
   ".buttons-container": {
     gap: 8,
     display: "flex",

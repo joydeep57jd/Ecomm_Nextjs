@@ -9,12 +9,17 @@ import useCart from "hooks/useCart"
 import { useCartDrawer } from "@/contexts/CartDrawerContext"
 
 export function HeaderCart() {
-  const { state } = useCart()
+  const { state, refreshCart } = useCart()
   const { setOpen } = useCartDrawer()
+
+  const handleOpen = () => {
+    refreshCart()
+    setOpen(true)
+  }
 
   return (
     <Badge badgeContent={state.cart.length} color="primary">
-      <IconButton onClick={() => setOpen(true)}>
+      <IconButton onClick={handleOpen}>
         <SvgIcon fontSize="small">
           <svg viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" strokeWidth="1.5">

@@ -135,7 +135,7 @@ export default function HeroSection({ bannerSection, offerData }: bannerSectionP
   if (!hasOffer && !hasBanner) return null
 
   return (
-    <Container>
+    <Container sx={{ mb: { xs: 2, sm: 3 } }}>
       <Box display="flex" flexDirection="column" gap={3}>
 
        

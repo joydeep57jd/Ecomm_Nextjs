@@ -6,6 +6,7 @@ export interface CartProductItem {
   id: number
   name: string
   variantid: number
+  isOutOfStock: boolean
   variantName: string
   size: string
   weight: string
@@ -75,6 +76,7 @@ export interface AddToCartRequest {
 export interface Cart {
   productId: number
   productName: string
+  isOutOfStock: boolean
   productPrice: number
   qty: number
   productImage: string
@@ -94,6 +96,7 @@ export interface RemoteCart {
   batchId: number
   id: number
   name: string
+  isOutOfStock: boolean
   variantid: number
   variantName: string
   size: string

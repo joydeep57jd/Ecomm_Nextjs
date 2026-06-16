@@ -3,6 +3,7 @@ import Image from "next/image"
 // MUI
 import Button from "@mui/material/Button"
 import Avatar from "@mui/material/Avatar"
+import Chip from "@mui/material/Chip"
 import IconButton from "@mui/material/IconButton"
 import Typography from "@mui/material/Typography"
 import { styled } from "@mui/material/styles"
@@ -77,9 +78,18 @@ export default function MiniCartItem({ item, onCart }: Props) {
           {item.variantOptionDetails.map(variant => `${variant.optionName} - ${variant.optionValue}`).join(" / ")}
         </Typography>
 
-        <Typography variant="body1" fontWeight={500} sx={{ mt: 0.25, mb: 1.5 }}>
-          {currency(item.productPrice * item.qty)}
-        </Typography>
+        {item.isOutOfStock ? (
+          <Chip
+            label="Out of Stock"
+            color="error"
+            size="small"
+            sx={{ mt: 0.25, mb: 1.5, height: 20, fontSize: 11 }}
+          />
+        ) : (
+          <Typography variant="body1" fontWeight={500} sx={{ mt: 0.25, mb: 1.5 }}>
+            {currency(item.productPrice * item.qty)}
+          </Typography>
+        )}
 
         <FlexBox alignItems="center" justifyContent="space-between" gap={1}>
           <QuantityWrapper>
@@ -87,7 +97,7 @@ export default function MiniCartItem({ item, onCart }: Props) {
               size="small"
               color="primary"
               variant="text"
-              disabled={item.qty >= (item.stockQty ?? 0)}
+              disabled={item.qty >= (item.stockQty ?? 0) || !!item.isOutOfStock}
               onClick={onCart(item.qty + 1, item)}
             >
               <Add fontSize="small" />
@@ -101,7 +111,7 @@ export default function MiniCartItem({ item, onCart }: Props) {
               size="small"
               color="primary"
               variant="text"
-              disabled={item.qty === 1}
+              disabled={item.qty === 1 || !!item.isOutOfStock}
               onClick={onCart(item.qty - 1, item)}
             >
               <Remove fontSize="small" />

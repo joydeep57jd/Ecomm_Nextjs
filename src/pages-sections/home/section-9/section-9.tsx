@@ -1,15 +1,24 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
-// GLOBAL CUSTOM COMPONENTS
 import IconComponent from "components/IconComponent"
-// API FUNCTIONS
 import api from "utils/__api__/market-1"
+import Service from "@/models/Service.model"
 
-export default async function Section9() {
-  const services = await api.getServiceList()
-  if (!services || services.length === 0) return null
+export default function Section9() {
+  const [services, setServices] = useState<Service[]>([])
+
+  useEffect(() => {
+    api.getServiceList().then((data) => {
+      if (data) setServices(data)
+    })
+  }, [])
+
+  if (!services.length) return null
 
   return (
     <Box bgcolor="grey.50" py={5}>

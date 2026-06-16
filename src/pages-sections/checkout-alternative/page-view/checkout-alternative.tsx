@@ -66,7 +66,7 @@ export default function CheckoutAlternativePageView() {
   useEffect(() => {
     if (!remoteCarts || !user?.customerId || orderResponse) return
     const filteredProduct = remoteCarts.filter(
-      (rc) => rc.businessUnitId.toString() === businessUnitId
+      (rc) => rc.businessUnitId.toString() === businessUnitId && !rc.isOutOfStock
     )
     setProduct(filteredProduct)
     setCheckoutOrderResponse(null)
@@ -214,15 +214,20 @@ export default function CheckoutAlternativePageView() {
       }
     })
     setOrderResponse(response)
+    setPlacingOrder(false)
     syncUser(user!)
+  }
+
+  const retryOrder = () => {
+    setOrderResponse(null)
   }
 
   if (!isInitialDataLoaded) {
     return <Loading isSmallLoader={true} />
   }
 
-  return orderResponse?.orderNo ? (
-    <OrderConfirmationPageView orderResponse={orderResponse} />
+  return orderResponse ? (
+    <OrderConfirmationPageView orderResponse={orderResponse} onRetry={retryOrder} />
   ) : (
     <Box bgcolor="grey.50" sx={{ py: { xs: 3, sm: 4 } }}>
       <Container maxWidth="lg">

@@ -19,6 +19,7 @@ import { VariantOptionDetails } from "@/models/Filters.models"
 import SideNav from "@/components/side-nav"
 import { Box, IconButton } from "@mui/material"
 import { Tune } from "@mui/icons-material"
+import SearchOffIcon from "@mui/icons-material/SearchOff"
 
 const SORT_OPTIONS = [
   { label: "New Arrival ", value: "new arrival" },
@@ -164,7 +165,53 @@ export default function ProductSearchPageView({
               <ProductsListView products={products} />
             )} */}
 
-            <ProductsGridView products={products} variantOptions={variantOptions} badges={badges} />
+            {products?.length ? (
+              <ProductsGridView
+                products={products}
+                variantOptions={variantOptions}
+                badges={badges}
+              />
+            ) : (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  py: { xs: 8, md: 12 },
+                  px: 2
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 96,
+                    height: 96,
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "grey.100",
+                    mb: 3
+                  }}
+                >
+                  <SearchOffIcon sx={{ fontSize: 52, color: "grey.500" }} />
+                </Box>
+
+                <Typography variant="h5" fontWeight={600} sx={{ mb: 1 }}>
+                  No products found
+                </Typography>
+
+                <Typography
+                  variant="body1"
+                  sx={{ color: "grey.600", maxWidth: 420 }}
+                >
+                  Sorry, we couldn&apos;t find any products in this selection right now. Please try a
+                  different category or adjust your filters — new items are added regularly, so do
+                  check back soon.
+                </Typography>
+              </Box>
+            )}
           </Grid>
         </Grid>
       </Container>

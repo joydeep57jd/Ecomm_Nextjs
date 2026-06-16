@@ -51,6 +51,8 @@ export interface CheckoutOrderResponse {
   deliveryslot: string
   deliverytxt: string
   vouchers: null
+  outOfStockItems: CheckoutOrderItemResponse[]
+  hasOutOfStockItems: boolean
   item: CheckoutOrderItemResponse[]
 }
 

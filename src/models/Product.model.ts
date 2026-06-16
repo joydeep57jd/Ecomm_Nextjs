@@ -23,5 +23,6 @@ export default interface Product {
   published?: boolean
   variantId?: number
   stockQty?: number
+  isOutOfStock?: boolean
   variantOptionDetails?: VariantOptionDetails[]
 }

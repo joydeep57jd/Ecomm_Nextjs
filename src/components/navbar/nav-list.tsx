@@ -43,6 +43,7 @@ export function NavigationList({ navigation, layoutModel }: Props) {
   const renderSubSubCategory = (children: SubSubCategory[]) => {
     return children?.map((nav) => (
       <NavLink
+        key={nav.id}
         onClick={(e) => navigateTo(e, "SubCategory", nav.id)}
         href={`/products/search?SubCategory=${nav.id}`}
       >

@@ -74,6 +74,8 @@ export default function MiniCart() {
   const checkOut = () => {
     const selectedItems = tabsData[activeTab]
     if (!selectedItems?.length) return
+    const inStockItems = selectedItems.filter(item => !item.isOutOfStock)
+    if (!inStockItems.length) return
     const businessUnitId = selectedItems[0].businessUnitId
     setOpen(false)
     Router.push(user ? `/checkout?businessUnitId=${businessUnitId}` : "/login")

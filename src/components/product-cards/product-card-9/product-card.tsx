@@ -64,7 +64,8 @@ export default function ProductCard9({ product }: Props) {
             itemVariantId: product.variantId ?? 0,
             variantName:product.title,
             mrp:product.price,
-            variantOptionDetails: product.variantOptionDetails ?? []
+            variantOptionDetails: product.variantOptionDetails ?? [],
+            isOutOfStock: product.isOutOfStock ?? false
             
           }} />
         </div>

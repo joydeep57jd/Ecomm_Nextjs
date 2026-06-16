@@ -83,11 +83,8 @@ export default function ProductCard1({ product, showProductSize, showRating = tr
             variantName: product.title,
 
             mrp: product.price,
-            variantOptionDetails: product.variantOptionDetails ?? []
-            
-            
-            
-            
+            variantOptionDetails: product.variantOptionDetails ?? [],
+            isOutOfStock: product.isOutOfStock ?? false
           }}
         />
       </ContentWrapper>
