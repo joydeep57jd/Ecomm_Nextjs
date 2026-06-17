@@ -2,9 +2,25 @@
 
 import Link from "next/link"
 import SvgIcon from "@mui/material/SvgIcon"
-import IconButton from "@mui/material/IconButton"
+import Typography from "@mui/material/Typography"
 import { useUser } from "@/contexts/UserContenxt"
 import { Button } from "@mui/material"
+
+const PersonIcon = (
+  <SvgIcon fontSize="small">
+    <svg viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" strokeWidth="1.5">
+        <circle cx="12" cy="9" r="3" />
+        <circle cx="12" cy="12" r="10" />
+        <path
+          strokeLinecap="round"
+          d="M17.97 20c-.16-2.892-1.045-5-5.97-5s-5.81 2.108-5.97 5"
+        />
+      </g>
+    </svg>
+  </SvgIcon>
+)
+
 export function HeaderLogin() {
   const { user } = useUser()
 
@@ -44,19 +60,26 @@ export function HeaderLogin() {
       </Button>
     </>
   ) : (
-    <IconButton LinkComponent={Link} href={user ? "/profile" : "/login"}>
-      <SvgIcon fontSize="small">
-        <svg viewBox="0 0 24 24">
-          <g fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="12" cy="9" r="3" />
-            <circle cx="12" cy="12" r="10" />
-            <path
-              strokeLinecap="round"
-              d="M17.97 20c-.16-2.892-1.045-5-5.97-5s-5.81 2.108-5.97 5"
-            />
-          </g>
-        </svg>
-      </SvgIcon>
-    </IconButton>
+    <Button
+      LinkComponent={Link}
+      href="/login"
+      color="inherit"
+      startIcon={PersonIcon}
+      sx={{
+        gap: 0.5,
+        textTransform: "none",
+        minWidth: 0,
+        px: { xs: 1, sm: 1.5 },
+        "& .MuiButton-startIcon": { mr: { xs: 0, sm: 0.5 } }
+      }}
+    >
+      <Typography
+        variant="body2"
+        fontWeight={500}
+        sx={{ display: { xs: "none", sm: "block" } }}
+      >
+        Account
+      </Typography>
+    </Button>
   )
 }

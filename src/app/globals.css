@@ -1,0 +1,8 @@
+:root {
+  --font-stack-display: var(--font-jakarta), 'Inter', system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-stack-display);
+}

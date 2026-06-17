@@ -23,10 +23,11 @@ const DotList = styled("ul", {
     transition: "all 0.4s",
     backgroundColor: dotColor || theme.palette.grey[300],
     "&.active": {
-      width: 32,
-      borderRadius: 8,
+      width: 10,
+      borderRadius: "50%",
       overflow: "hidden",
       position: "relative",
+      backgroundColor: activeColor || theme.palette.primary.main,
       ":before": {
         content: '""',
         position: "absolute",
@@ -34,7 +35,7 @@ const DotList = styled("ul", {
         left: 0,
         width: "100%",
         height: "100%",
-        borderRadius: 8,
+        borderRadius: "50%",
         backgroundColor: activeColor || theme.palette.primary.main
       }
     }

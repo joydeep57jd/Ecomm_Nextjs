@@ -38,6 +38,7 @@ export default function ProductSection({ sections }: ProductSectionProps) {
                     slug: product.itemId.toString(),
                     title: product.name,
                     price: product.salePrice || product.price,
+                    mrp: product.mrp,
                     thumbnail: product.images?.[0]?.fullImagepath || product.imagePath,
                     images: [
                       product.images?.[0]?.fullImagepath,

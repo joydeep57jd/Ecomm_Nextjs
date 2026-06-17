@@ -195,7 +195,7 @@ export const components: ThemeComponents = {
   },
   MuiContainer: {
     defaultProps: {
-      maxWidth: "xl"
+      maxWidth: "lg"
     }
   },
   MuiBackdrop: {

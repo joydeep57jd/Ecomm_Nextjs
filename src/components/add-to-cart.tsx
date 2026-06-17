@@ -1,7 +1,9 @@
 "use client"
 
+import { ReactNode } from "react"
 import Button from "@mui/material/Button"
 import IconButton from "@mui/material/IconButton"
+import type { SxProps, Theme } from "@mui/material/styles"
 import { ShoppingCart } from "@mui/icons-material"
 import { useUser } from "@/contexts/UserContenxt"
 import { Cart } from "@/models/CartProductItem.models"
@@ -14,6 +16,8 @@ type Props = {
   variantType?: "button" | "icon"
   label?: string
   size?: "small" | "medium" | "large"
+  startIcon?: ReactNode
+  sx?: SxProps<Theme>
 }
 
 export default function AddToCart({
@@ -21,7 +25,9 @@ export default function AddToCart({
   fullWidth,
   variantType = "button",
   label = "Add to Cart",
-  size = "medium"
+  size = "medium",
+  startIcon,
+  sx
 }: Props) {
   const { user } = useUser()
   const { dispatch } = useCart()
@@ -59,6 +65,8 @@ export default function AddToCart({
       color="primary"
       variant="contained"
       size={size}
+      startIcon={startIcon}
+      sx={sx}
       disabled={!cart.stockQty}
       onClick={handleAddToCart}
     >

@@ -135,42 +135,38 @@ export default function HeroSection({ bannerSection, offerData }: bannerSectionP
   if (!hasOffer && !hasBanner) return null
 
   return (
-    <Container sx={{ mb: { xs: 2, sm: 3 } }}>
-      <Box display="flex" flexDirection="column" gap={3}>
-
-       
-
-        {hasBanner && (
-          <CarouselBanner>
-            {bannerSection[0].responseSectionItemAndImage?.sectionItems?.map((item, ind) => (
-              <CarouselCard1
-                key={ind}
-                title={item.name}
-                imgUrl={item.images?.[0]?.fullImagepath!}
-                buttonLink=""
-                buttonText=""
-                description=""
-              />
-            ))}
-          </CarouselBanner>
-        )}
-
-         {hasOffer && (
+    <Container sx={{ mb: { xs: 1, sm: 2 } }}>
+      <Box display="flex" flexDirection="column" gap={1.5}>
+        {hasOffer ? (
           <CarouselBanner>
             {offerData.map((offer) => (
               <Link key={offer.offerId} href={`/sales/${btoa(offer.offerId.toString())}`} style={{ display: "block" }}>
                 <CarouselCard1
                   imgUrl={offer.bannerImageUrl}
-                  title={offer.offerName}
+                  title=""
                   buttonLink=""
                   buttonText=""
-                  description={`${offer.discountPercentage}% Off`}
+                  description=""
                 />
               </Link>
             ))}
           </CarouselBanner>
+        ) : (
+          hasBanner && (
+            <CarouselBanner>
+              {bannerSection[0].responseSectionItemAndImage?.sectionItems?.map((item, ind) => (
+                <CarouselCard1
+                  key={ind}
+                  title=""
+                  imgUrl={item.images?.[0]?.fullImagepath!}
+                  buttonLink=""
+                  buttonText=""
+                  description=""
+                />
+              ))}
+            </CarouselBanner>
+          )
         )}
-
       </Box>
     </Container>
   )

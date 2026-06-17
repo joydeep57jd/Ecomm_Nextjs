@@ -76,7 +76,7 @@ export interface AddToCartRequest {
 export interface Cart {
   productId: number
   productName: string
-  isOutOfStock: boolean
+  isOutOfStock?: boolean
   productPrice: number
   qty: number
   productImage: string

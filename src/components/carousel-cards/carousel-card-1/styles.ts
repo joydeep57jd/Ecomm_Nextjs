@@ -1,65 +1,68 @@
-"use client"
 
 import { styled } from "@mui/material/styles"
+import Box from "@mui/material/Box"
 
-export const StyledRoot = styled("div")(({ theme }) => ({
-  ".title": {
-    fontSize: 48,
-    marginTop: 0,
-    fontWeight: 900,
-    lineHeight: 1.2,
-    marginBottom: "1rem",
-    maxWidth: "500px"
-  },
-  ".description": {
-    fontSize: 18,
-    marginBottom: theme.spacing(4),
-    color: theme.palette.grey[600]
-  },
-  ".button-link": {
-    height: 44,
-    borderRadius: 8
-  },
-  ".img-wrapper": {
-    height: 400,
-    display: "flex",
-    marginInline: "auto",
-    position: "relative",
-    img: { objectFit: "contain" }
+export const FullBannerWrapper = styled("div")(({ theme }) => ({
+  position: "relative",
+  width: "100%",
+  overflow: "hidden",
+  borderRadius: 20,
+  // Force a compositing layer + mask so the rounded corners stay clipped during
+  // the carousel's transform animation (otherwise the right edge corners flash square).
+  transform: "translateZ(0)",
+  WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+  isolation: "isolate",
+
+  height: "160px",
+
+  [theme.breakpoints.up("sm")]: {
+    height: "220px",
   },
   [theme.breakpoints.up("md")]: {
-    ".grid-item": {
-      minHeight: 424,
-      display: "flex",
-      alignItems: "baseline",
-      flexDirection: "column",
-      justifyContent: "center"
-    }
+    height: "290px",
   },
-  [theme.breakpoints.down("md")]: {
-    marginLeft: 0,
-    paddingLeft: 0,
-    textAlign: "center",
-    ".grid-item": { order: 2 },
-    ".description": { fontSize: 16 },
-    ".button-link": { marginBottom: "2rem" },
-    ".img-wrapper": { width: 300, height: 300 },
-    ".title": {
-      fontSize: 32,
-      marginInline: "auto",
-      marginBottom: ".75rem"
-    }
+  [theme.breakpoints.up("lg")]: {
+    height: "340px",
   },
-  [theme.breakpoints.down("xs")]: {
-    ".title + *": { fontSize: 13 },
-    ".title": {
-      fontSize: 16,
-      fontWeight: 700
-    },
-    ".button-link": {
-      height: 36,
-      fontSize: 13,
-      padding: "0 1.5rem"
-    }
-  }
+
+  "& img": {
+    objectFit: "cover",
+
+    objectPosition: "center",
+  },
+}))
+
+export const GradientOverlay = styled("div")({
+  position: "absolute",
+  inset: 0,
+  pointerEvents: "none",
+  background: `
+    linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.25) 40%, transparent 70%),
+    linear-gradient(to right, rgba(0,0,0,0.25) 0%, transparent 55%)
+  `,
+  zIndex: 1
+})
+
+export const ContentBox = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  bottom: 36,
+  left: 40,
+  zIndex: 2,
+  maxWidth: "60%",
+
+  [theme.breakpoints.down("md")]: { bottom: 24, left: 24, maxWidth: "75%" },
+  [theme.breakpoints.down("sm")]: { bottom: 16, left: 16, maxWidth: "88%" }
+}))
+
+export const Badge = styled("span")(({ theme }) => ({
+  display: "inline-block",
+  background: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
+  fontSize: "0.7rem",
+  fontWeight: 700,
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  padding: "4px 12px",
+  borderRadius: 20,
+  marginBottom: 10
 }))

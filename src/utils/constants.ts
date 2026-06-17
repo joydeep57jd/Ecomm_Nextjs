@@ -1,6 +1,6 @@
 export const layoutConstant = {
   topbarHeight: 40,
-  headerHeight: 80,
+  headerHeight: 62,
   mobileNavHeight: 64,
   containerWidth: 1200,
   mobileHeaderHeight: 64,

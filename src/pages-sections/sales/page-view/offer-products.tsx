@@ -6,7 +6,7 @@ import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
 import ProductCard17 from "components/product-cards/product-card-17"
 import { getOfferProducts } from "@/utils/api/offer"
-import Product from "models/Product.model"
+import { Product } from "@/models/Home.model"
 import { Item } from "@/models/Offer.model"
 import Loading from "@/app/loading"
 import InvalidOfferView from "./eampty-offer"
@@ -23,12 +23,15 @@ const mapItem = (item: Item): Product => ({
   slug: item.itemId.toString(),
   title: item.itemVariantName,
   price: item.finalSalePrice,
+  mrp: item.mrp,
   discount: item.appliedOfferDiscount,
   thumbnail: item.primaryImageUrl,
   images: [item.primaryImageUrl],
   categories: [],
-  stockQty: 0,
-  variantId: item.itemVariantId
+  rating: item.itemRating,
+  reviewCount: item.reviewCount,
+  stockQty: item.stockQty,
+  variantId: item.itemVariantId,
 })
 
 export default function OfferProductsPageView({ offerId, offerName }: Props) {
@@ -101,7 +104,7 @@ export default function OfferProductsPageView({ offerId, offerName }: Props) {
 
       <Grid container spacing={3}>
         {products.map((product) => (
-          <Grid size={{ lg: 3, md: 4, sm: 6, xs: 12 }} key={`${product.id}-${product.variantId}`}>
+          <Grid size={{ lg: 3, md: 5, sm: 6, xs: 12 }} key={`${product.id}-${product.variantId}`}>
             <ProductCard17 product={product} />
           </Grid>
         ))}

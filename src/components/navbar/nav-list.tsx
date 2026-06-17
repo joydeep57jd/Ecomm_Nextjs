@@ -18,6 +18,13 @@ import { useCallback, useEffect } from "react"
 import LayoutModel from "@/models/Layout.model"
 import { setItem } from "@/utils/services/local-storage.service"
 
+// Title-case a string ("GARMENT & FASHION" -> "Garment & Fashion").
+// CSS text-transform: capitalize can't lowercase the rest of an all-caps word, so do it in JS.
+const toTitleCase = (text: string) =>
+  text
+    ?.toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase()) ?? ""
+
 // ==============================================================
 type Props = { navigation: Category[]; layoutModel: LayoutModel }
 // ==============================================================
@@ -47,7 +54,7 @@ export function NavigationList({ navigation, layoutModel }: Props) {
         onClick={(e) => navigateTo(e, "SubCategory", nav.id)}
         href={`/products/search?SubCategory=${nav.id}`}
       >
-        <MenuItem>{nav.name}</MenuItem>
+        <MenuItem>{toTitleCase(nav.name)}</MenuItem>
       </NavLink>
     ))
   }
@@ -58,9 +65,9 @@ export function NavigationList({ navigation, layoutModel }: Props) {
         return (
           <NavItemChild
             nav={{
-              title: nav.name,
+              title: toTitleCase(nav.name),
               child: nav.sub_sub_category.map((sub) => ({
-                title: sub.name,
+                title: toTitleCase(sub.name),
                 url: `/products/search?subCategory=${sub.id}`
               }))
             }}
@@ -80,7 +87,7 @@ export function NavigationList({ navigation, layoutModel }: Props) {
           href={`/products/search?subCategory=${nav.id}`}
           key={nav.name}
         >
-          <MenuItem>{nav.name}</MenuItem>
+          <MenuItem>{toTitleCase(nav.name)}</MenuItem>
         </NavLink>
       )
     })
@@ -94,7 +101,10 @@ export function NavigationList({ navigation, layoutModel }: Props) {
         position="relative"
         flexDirection="column"
         sx={{
+          borderRadius: 1,
+          transition: "background-color 150ms ease-in-out",
           "&:hover": {
+            backgroundColor: "action.hover",
             "& > .child-nav-item": {
               display: "block"
             }
@@ -106,8 +116,8 @@ export function NavigationList({ navigation, layoutModel }: Props) {
           href={`/products/search?category=${nav.id}`}
           key={nav.name}
         >
-          <FlexBox alignItems="flex-end" gap={0.3} sx={NAV_LINK_STYLES}>
-            {nav.name}
+          <FlexBox alignItems="flex-end" gap={0.3} sx={{ ...NAV_LINK_STYLES, px: 1.5, py: 0.75, fontSize: 14 }}>
+            {toTitleCase(nav.name)}
             <KeyboardArrowDown
               sx={{
                 color: "grey.500",
@@ -134,5 +144,5 @@ export function NavigationList({ navigation, layoutModel }: Props) {
     ))
   }
 
-  return <FlexBox gap={4}>{renderRootLevel(navigation)}</FlexBox>
+  return <FlexBox gap={1}>{renderRootLevel(navigation)}</FlexBox>
 }

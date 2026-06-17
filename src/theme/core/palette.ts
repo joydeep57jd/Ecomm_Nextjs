@@ -55,7 +55,7 @@ export const getPalette = (color: COLORS): Palette => {
     primary: selectedPrimaryColor,
     background: {
       paper: "#fff",
-      default: "#fff"
+      default: orange[50]
     },
     text: {
       primary: grey[800],

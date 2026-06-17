@@ -5,7 +5,10 @@ import { styled } from "@mui/material/styles"
 // CONSTANT VARIABLES
 import { layoutConstant } from "utils/constants"
 
+const HEADER_FONT = "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+
 export const HeaderWrapper = styled("div")(({ theme }) => ({
+  fontFamily: HEADER_FONT,
   zIndex: 3,
   position: "relative",
   height: layoutConstant.headerHeight,

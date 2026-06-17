@@ -75,4 +75,9 @@ const getLayoutData = async (): Promise<LayoutModel> => {
   }
 }
 
-export default { getLayoutData }
+const getCategories = async (): Promise<Category[]> => {
+  const response = await axios.post<{ data: Category[] }>(`${API_URL.ITEMS.GET_CATEGORY}`, {})
+  return response.data.data
+}
+
+export default { getLayoutData, getCategories }

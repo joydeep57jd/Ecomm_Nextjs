@@ -1,12 +1,21 @@
 import { Suspense, type ReactNode } from "react"
-import { Geist } from "next/font/google"
+import { Plus_Jakarta_Sans, Inter } from "next/font/google"
 import Script from "next/script"
 
-export const geist = Geist({
-  subsets: ["latin"]
+export const geist = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-jakarta"
+})
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter"
 })
 
 import "overlayscrollbars/overlayscrollbars.css"
+import "./globals.css"
 
 // THEME PROVIDER
 import ThemeProvider from "theme/theme-provider"
@@ -41,7 +50,7 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body id="body" className={geist.className}>
+      <body id="body" className={`${geist.variable} ${inter.variable} ${geist.className}`}>
         <Suspense
           fallback={
             <FlexRowCenter minHeight="100vh">

@@ -2,11 +2,25 @@
 
 // MUI
 import Badge from "@mui/material/Badge"
+import Button from "@mui/material/Button"
 import SvgIcon from "@mui/material/SvgIcon"
-import IconButton from "@mui/material/IconButton"
+import Typography from "@mui/material/Typography"
 // GLOBAL CUSTOM HOOK
 import useCart from "hooks/useCart"
 import { useCartDrawer } from "@/contexts/CartDrawerContext"
+
+const CartIcon = (
+  <SvgIcon fontSize="small">
+    <svg viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" strokeWidth="1.5">
+        <path d="M3.864 16.455c-.858-3.432-1.287-5.147-.386-6.301S6.148 9 9.685 9h4.63c3.538 0 5.306 0 6.207 1.154s.472 2.87-.386 6.301c-.546 2.183-.818 3.274-1.632 3.91c-.814.635-1.939.635-4.189.635h-4.63c-2.25 0-3.375 0-4.189-.635c-.814-.636-1.087-1.727-1.632-3.91Z" />
+        <path d="m19.5 9.5l-.71-2.605c-.274-1.005-.411-1.507-.692-1.886A2.5 2.5 0 0 0 17 4.172C16.56 4 16.04 4 15 4M4.5 9.5l.71-2.605c.274-1.005.411-1.507.692-1.886A2.5 2.5 0 0 1 7 4.172C7.44 4 7.96 4 9 4" />
+        <path d="M9 4a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2h-4a1 1 0 0 1-1-1Z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8 13v4m8-4v4m-4-4v4" />
+      </g>
+    </svg>
+  </SvgIcon>
+)
 
 export function HeaderCart() {
   const { state, refreshCart } = useCart()
@@ -18,19 +32,34 @@ export function HeaderCart() {
   }
 
   return (
-    <Badge badgeContent={state.cart.length} color="primary">
-      <IconButton onClick={handleOpen}>
-        <SvgIcon fontSize="small">
-          <svg viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M3.864 16.455c-.858-3.432-1.287-5.147-.386-6.301S6.148 9 9.685 9h4.63c3.538 0 5.306 0 6.207 1.154s.472 2.87-.386 6.301c-.546 2.183-.818 3.274-1.632 3.91c-.814.635-1.939.635-4.189.635h-4.63c-2.25 0-3.375 0-4.189-.635c-.814-.636-1.087-1.727-1.632-3.91Z" />
-              <path d="m19.5 9.5l-.71-2.605c-.274-1.005-.411-1.507-.692-1.886A2.5 2.5 0 0 0 17 4.172C16.56 4 16.04 4 15 4M4.5 9.5l.71-2.605c.274-1.005.411-1.507.692-1.886A2.5 2.5 0 0 1 7 4.172C7.44 4 7.96 4 9 4" />
-              <path d="M9 4a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2h-4a1 1 0 0 1-1-1Z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 13v4m8-4v4m-4-4v4" />
-            </g>
-          </svg>
-        </SvgIcon>
-      </IconButton>
+    <Badge
+      badgeContent={state.cart.length}
+      color="error"
+      sx={{ "& .MuiBadge-badge": { right: { xs: 6, sm: 10 }, top: 4 } }}
+    >
+      <Button
+        variant="contained"
+        color="orange"
+        onClick={handleOpen}
+        startIcon={CartIcon}
+        sx={{
+          gap: 0.5,
+          borderRadius: 8,
+          textTransform: "none",
+          minWidth: 0,
+          px: { xs: 1.25, sm: 2 },
+          "& .MuiButton-startIcon": { mr: { xs: 0, sm: 0.5 } }
+        }}
+      >
+        <Typography
+          variant="body2"
+          fontWeight={600}
+          color="inherit"
+          sx={{ display: { xs: "none", sm: "block" } }}
+        >
+          Cart
+        </Typography>
+      </Button>
     </Badge>
   )
 }

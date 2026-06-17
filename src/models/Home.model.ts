@@ -44,11 +44,13 @@ export interface Product {
   slug: string
   title: string
   price: number
+  mrp?: number
   thumbnail: string
   images: string[]
   discount: number
   categories: string[]
   rating?: number
+  reviewCount?: number
   offer?: string
   itemVariantId?: number
   variantId?: number

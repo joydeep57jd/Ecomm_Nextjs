@@ -47,11 +47,12 @@ export const ParentNavItem = styled("div", {
 export const StyledRoot = styled(Card, {
   shouldForwardProp: (prop) => prop !== "border"
 })<{ border?: number }>(({ theme, border }) => ({
-  height: "60px",
+  height: "42px",
   display: "block",
   overflow: "unset",
   borderRadius: "0px",
   position: "relative",
+  borderTop: `1px solid ${theme.palette.grey[200]}`,
   ...(border && {
     borderBottom: `1px solid ${theme.palette.grey[100]}`
   }),

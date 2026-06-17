@@ -20,4 +20,7 @@ export interface Item {
   appliedOfferDiscount: number
   primaryImageUrl: string
   finalSalePrice: number
+  stockQty?: number
+  itemRating: number
+  reviewCount: number
 }

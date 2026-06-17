@@ -1,11 +1,13 @@
 "use client"
 
 import type { PropsWithChildren } from "react"
+import Link from "next/link"
 // MUI
 import Box from "@mui/material/Box"
 import SvgIcon from "@mui/material/SvgIcon"
 import Typography from "@mui/material/Typography"
 import ButtonBase from "@mui/material/ButtonBase"
+import ArrowForward from "@mui/icons-material/ArrowForward"
 import { styled } from "@mui/material/styles"
 // GLOBAL CUSTOM COMPONENTS
 import { Carousel, useCarousel } from "components/slider"
@@ -19,7 +21,7 @@ const Heading = styled("div")(() => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  marginTop: "1.5rem",
+  marginTop: "0.75rem",
   ".buttons-container": {
     gap: 8,
     display: "flex",
@@ -29,27 +31,22 @@ const Heading = styled("div")(() => ({
 
 const StyledButtonBase = styled(ButtonBase, {
   shouldForwardProp: (prop) => prop !== "active" && prop !== "disabled"
-})<{ active?: boolean; disabled?: boolean }>(({ theme, active, disabled }) => ({
-  width: 32,
-  height: 32,
-  borderRadius: 8,
-  transition: theme.transitions.create(["background-color", "color"], {
+})<{ active?: boolean; disabled?: boolean }>(({ theme, disabled }) => ({
+  width: 34,
+  height: 34,
+  borderRadius: "50%",
+  color: theme.palette.grey[700],
+  border: `1px solid ${theme.palette.grey[300]}`,
+  backgroundColor: theme.palette.common.white,
+  transition: theme.transitions.create(["background-color", "color", "border-color"], {
     duration: 200
   }),
-  ...(active && {
-    color: theme.palette.common.white,
-    backgroundColor: theme.palette.primary.main
-  }),
-  ...(!active && {
-      color: theme.palette.grey[600],
-    ":hover": {
-      backgroundColor: theme.palette.grey[100]
-    }
-  }),
+  ":hover": {
+    backgroundColor: theme.palette.grey[100]
+  },
   ...(disabled && {
     pointerEvents: "none",
-    opacity: 0.5,
-    backgroundColor: theme.palette.grey[200],
+    opacity: 0.4,
     color: theme.palette.grey[400]
   })
 }))
@@ -68,13 +65,34 @@ export default function ProductsCarousel({ children, title }: ProductsCarouselPr
   return (
     <Box position="relative">
       <Heading>
-        <Typography variant="h2" fontWeight={700} fontSize={{ sm: 32, xs: 27 }}>
+        <Typography variant="h2" fontWeight={800} fontSize={{ sm: 24, xs: 19 }}>
           {title}
         </Typography>
 
-      
+
         {hasSlides && (
           <div className="buttons-container">
+            <Typography
+              component={Link}
+              href="/products/search"
+              variant="body2"
+              fontWeight={600}
+              sx={{
+                mr: 0.5,
+                gap: 0.4,
+                display: "inline-flex",
+                alignItems: "center",
+                whiteSpace: "nowrap",
+                color: "orange.dark",
+                textDecoration: "none",
+                transition: "color 150ms ease-in-out",
+                ":hover": { color: "orange.main", textDecoration: "underline" }
+              }}
+            >
+              View all
+              <ArrowForward sx={{ fontSize: 16 }} />
+            </Typography>
+
             {/* Prev button */}
             <StyledButtonBase
               onClick={arrows.onClickPrev}
