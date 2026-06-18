@@ -23,6 +23,9 @@ export interface DataList {
   itemCode: string
   imageList: ImageList[]
   itemVariantId?: number
+  itemRating: number
+  reviewCount:number
+  stockQty:number
 }
 
 export interface HomePageProduct {

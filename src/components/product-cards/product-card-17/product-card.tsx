@@ -61,6 +61,8 @@ export default function ProductCard17({
   const rating = product.rating
   const reviewCount = product.reviewCount
   const brand = product.businessUnitName
+  const fontColor = product.fontColor
+  const backgroundColor = product.backgroundColor
 
   const hasMrp = typeof mrp === "number" && mrp > price
   const outOfStock = (product.stockQty ?? 0) <= 0
@@ -71,9 +73,10 @@ export default function ProductCard17({
       elevation={0}
       sx={{
         bgcolor: bgWhite ? "common.white" : "background.paper",
-        transition: "box-shadow 0.2s ease-in-out",
+        transition: "transform 0.25s ease-in-out, box-shadow 0.25s ease-in-out",
         "&:hover": {
-          boxShadow: 3
+          transform: "translateY(-2px)",
+          boxShadow: 2
         }
       }}
     >
@@ -100,7 +103,24 @@ export default function ProductCard17({
       </ImageWrapper>
 
       <ContentWrapper>
-        {brand && <span className="brand">{brand}</span>}
+        {brand && (
+          <span
+            className="brand"
+            style={
+              backgroundColor
+                ? {
+                    backgroundColor,
+                    color: fontColor || "#fff",
+                    padding: "2px 6px",
+                    borderRadius: 4,
+                    alignSelf: "flex-start"
+                  }
+                : undefined
+            }
+          >
+            {brand}
+          </span>
+        )}
 
         <Link href={`/products/${slug}`} aria-label={`View ${title}`}>
           <span className="title">{title}</span>

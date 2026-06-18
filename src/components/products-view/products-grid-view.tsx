@@ -1,39 +1,56 @@
 "use client"
-import Grid from "@mui/material/Grid"
+import Box from "@mui/material/Box"
 // GLOBAL CUSTOM COMPONENTS
-import ProductCard16 from "components/product-cards/product-card-16"
+import ProductCard17 from "components/product-cards/product-card-17"
 import { DataList } from "@/models/AllProduct.model"
 import { VariantOptionDetails } from "@/models/Filters.models"
+import { Product } from "@/models/Home.model"
 
 // ========================================================
 type Props = { products: DataList[]; variantOptions: VariantOptionDetails[]; badges: string[] }
 // ========================================================
 
-type VariantMap = Record<string, VariantOptionDetails[]>
+const FALLBACK_IMAGE = "/assets/images/products/no-photo.png"
 
-export default function ProductsGridView({ products, variantOptions, badges }: Props) {
-  const variantMap =
-    variantOptions?.reduce((acc: VariantMap, cur: VariantOptionDetails) => {
-      const itemVariantId = cur.itemVariantId?.toString()
-      if (!acc[itemVariantId]) {
-        acc[itemVariantId] = [cur]
-      } else {
-        acc[itemVariantId].push(cur)
-      }
-      return acc
-    }, {}) ?? {}
+const mapToProduct = (product: DataList): Product => {
+  const mrp = product.mrp
+  const price = product.discountedPrice ?? product.mrp
+  const thumbnail = product.imageList?.[0]?.fullImagepath || FALLBACK_IMAGE
 
+  return {
+    id: String(product.itemId),
+    slug: String(product.itemId),
+    title: product.itemName,
+    price,
+    mrp,
+    thumbnail,
+    images: product.imageList?.map((img) => img.fullImagepath).filter(Boolean) ?? [],
+    discount: product.savePricePctg || 0,
+    categories: [],
+    businessUnitName: product.unitName,
+    businessUnitId: product.businessUnitId ? +product.businessUnitId : undefined,
+    variantId: product.itemVariantId,
+    itemVariantId: product.itemVariantId,
+    stockQty: product.stockQty,
+    rating: product.itemRating,
+    reviewCount: product.reviewCount,
+    fontColor: product.fontColor,
+    backgroundColor: product.backgroundColor
+  }
+}
+
+export default function ProductsGridView({ products }: Props) {
   return (
-    <Grid container spacing={3}>
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(3, 1fr)", md: "repeat(4, 1fr)" },
+        gap: 1.5
+      }}
+    >
       {products?.map((product) => (
-        <Grid size={{ lg: 4, sm: 6, xs: 6, md: 4 }} key={product.id}>
-          <ProductCard16
-            product={product}
-            variantOptions={variantMap[product.itemVariantId ?? ""] ?? []}
-            badges={badges}
-          />
-        </Grid>
+        <ProductCard17 key={product.itemVariantId ?? product.id} product={mapToProduct(product)} />
       ))}
-    </Grid>
+    </Box>
   )
 }

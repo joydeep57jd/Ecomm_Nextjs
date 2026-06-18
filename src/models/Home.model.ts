@@ -57,4 +57,6 @@ export interface Product {
   stockQty?: number
   businessUnitId?: number
   businessUnitName?: string
+  fontColor?: string
+  backgroundColor?: string
 }

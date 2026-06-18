@@ -1,7 +1,7 @@
 /* eslint-disable unused-imports/no-unused-imports */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { Fragment, PropsWithChildren } from "react"
+import { PropsWithChildren } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import Divider from "@mui/material/Divider"
@@ -27,6 +27,7 @@ import { AllCategoriesMenu } from "components/header/all-categories-menu"
 // CUSTOM DATA MODEL
 import LayoutModel from "models/Layout.model"
 import { Box } from "@mui/material"
+import Section9 from "@/pages-sections/home/section-9"
 
 // ==============================================================
 interface Props extends PropsWithChildren {
@@ -69,7 +70,7 @@ export default function ShopLayout1({ children, data }: Props) {
   )
 
   return (
-    <Fragment>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Topbar>
         <Topbar.Left label={topbar?.label ?? ""} title={topbar?.title ?? ""} />
 
@@ -99,103 +100,96 @@ export default function ShopLayout1({ children, data }: Props) {
             </Header.Right>
           </Header>
         )}
-      </Sticky>
 
-      {header && (
-        <SecondaryHeader elevation={0}>
-          <Box display="flex" alignItems="center" gap={1.5} width="100%">
-            <AllCategoriesMenu categories={header.navigation} />
+        {header && (
+          <SecondaryHeader elevation={0}>
+            <Box display="flex" alignItems="center" gap={1.5} width="100%">
+              <AllCategoriesMenu categories={header.navigation} />
 
-            <NavigationList navigation={header.navigation} layoutModel={data} />
+              <NavigationList navigation={header.navigation} layoutModel={data} />
 
-            <Divider
-              orientation="vertical"
-              sx={{ height: 22, alignSelf: "center", borderColor: "grey.300" }}
-            />
+              <Divider
+                orientation="vertical"
+                sx={{ height: 22, alignSelf: "center", borderColor: "grey.300" }}
+              />
 
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <Box
-                component={Link}
-                href="/sales"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  px: 1.5,
-                  py: 0.75,
-                  borderRadius: 1,
-                  fontWeight: 500,
-                  fontSize: 14,
-                  color: "inherit",
-                  textDecoration: "none",
-                  transition: "background-color 150ms ease-in-out",
-                  "&:hover": { backgroundColor: "action.hover" }
-                }}
-              >
-                <LocalOfferOutlined sx={{ fontSize: 18, color: "warning.main" }} />
-                Today&apos;s Deals
-              </Box>
+              <Box display="flex" alignItems="center" gap={0.5}>
+                <Box
+                  component={Link}
+                  href="/sales"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    px: 1.5,
+                    py: 0.75,
+                    borderRadius: 1,
+                    fontWeight: 500,
+                    fontSize: 14,
+                    color: "inherit",
+                    textDecoration: "none",
+                    transition: "background-color 150ms ease-in-out",
+                    "&:hover": { backgroundColor: "action.hover" }
+                  }}
+                >
+                  <LocalOfferOutlined sx={{ fontSize: 18, color: "warning.main" }} />
+                  Today&apos;s Deals
+                </Box>
 
-              <Box
-                component={Link}
-                href="/products/search?sort=date"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  px: 1.5,
-                  py: 0.75,
-                  borderRadius: 1,
-                  fontWeight: 500,
-                  fontSize: 14,
-                  color: "inherit",
-                  textDecoration: "none",
-                  transition: "background-color 150ms ease-in-out",
-                  "&:hover": { backgroundColor: "action.hover" }
-                }}
-              >
-                <NewReleasesOutlined sx={{ fontSize: 18, color: "grey.500" }} />
-                New Arrivals
-              </Box>
+                <Box
+                  component={Link}
+                  href="/products/search?sort=date"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    px: 1.5,
+                    py: 0.75,
+                    borderRadius: 1,
+                    fontWeight: 500,
+                    fontSize: 14,
+                    color: "inherit",
+                    textDecoration: "none",
+                    transition: "background-color 150ms ease-in-out",
+                    "&:hover": { backgroundColor: "action.hover" }
+                  }}
+                >
+                  <NewReleasesOutlined sx={{ fontSize: 18, color: "grey.500" }} />
+                  New Arrivals
+                </Box>
 
-              <Box
-                component={Link}
-                href="/sales"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  px: 1.5,
-                  py: 0.75,
-                  borderRadius: 1,
-                  fontWeight: 600,
-                  fontSize: 14,
-                  color: "primary.main",
-                  textDecoration: "none",
-                  transition: "background-color 150ms ease-in-out",
-                  "&:hover": { backgroundColor: "action.hover" }
-                }}
-              >
-                <Celebration sx={{ fontSize: 18, color: "primary.main" }} />
-                Pujo &amp; Anniversary
+                <Box
+                  component={Link}
+                  href="/sales"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    px: 1.5,
+                    py: 0.75,
+                    borderRadius: 1,
+                    fontWeight: 600,
+                    fontSize: 14,
+                    color: "primary.main",
+                    textDecoration: "none",
+                    transition: "background-color 150ms ease-in-out",
+                    "&:hover": { backgroundColor: "action.hover" }
+                  }}
+                >
+                  <Celebration sx={{ fontSize: 18, color: "primary.main" }} />
+                  Pujo &amp; Anniversary
+                </Box>
               </Box>
             </Box>
-          </Box>
-        </SecondaryHeader>
-      )}
-      <div
-        style={{
-          minHeight: "calc(100vh - 539px)"
-        }}
-      >
-        {children}
-      </div>
+          </SecondaryHeader>
+        )}
+      </Sticky>
 
-      {/* {
-        mobileNavigation &&
-        <MobileNavigationBar navigation={mobileNavigation.version1} />
-      } */}
-      {}
+      <Box component="main" sx={{ flex: 1, bgcolor: "background.default" }}>
+        {children}
+      </Box>
+
+      <Section9 />
 
       {footer && (
         <Box
@@ -274,7 +268,7 @@ export default function ShopLayout1({ children, data }: Props) {
               </Grid>
 
               {/* Shop */}
-              <Grid size={{ lg: 2, sm: 2, xs: 4 }}>
+              <Grid size={{ lg: 2, sm: 4, xs: 6 }}>
                 <Typography fontWeight={600} fontSize={14} mb={2}>
                   Shop
                 </Typography>
@@ -292,7 +286,7 @@ export default function ShopLayout1({ children, data }: Props) {
               </Grid>
 
               {/* Help */}
-              <Grid size={{ lg: 2, sm: 2, xs: 4 }}>
+              <Grid size={{ lg: 2, sm: 4, xs: 6 }}>
                 <Typography fontWeight={600} fontSize={14} mb={2}>
                   Help
                 </Typography>
@@ -310,7 +304,7 @@ export default function ShopLayout1({ children, data }: Props) {
               </Grid>
 
               {/* Policies */}
-              <Grid size={{ lg: 2, sm: 2, xs: 4 }}>
+              <Grid size={{ lg: 2, sm: 4, xs: 12 }}>
                 <Typography fontWeight={600} fontSize={14} mb={2}>
                   Policies
                 </Typography>
@@ -352,6 +346,6 @@ export default function ShopLayout1({ children, data }: Props) {
           </Container>
         </Box>
       )}
-    </Fragment>
+    </Box>
   )
 }

@@ -9,7 +9,6 @@ import { getOfferData } from "@/utils/api/offer"
 import { BannerOfferResponse } from "@/models/Offer.model"
 import ProductSection from "../product-section"
 import CategorySection from "../category-section"
-// import Section9 from "../section-9"
 import HeroSection from "../hero-section"
 import Loading from "@/app/loading"
 
@@ -60,7 +59,6 @@ export default function HomePageView() {
       <HeroSection bannerSection={bannerSections} offerData={offerData} />
       <CategorySection />
       <ProductSection sections={productSections} />
-      {/* <Section9 /> */}
 
       {/* <Newsletter /> */}
     </Fragment>

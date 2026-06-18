@@ -6,7 +6,7 @@ import { StyledRoot, InnerContainer } from "./styles"
 interface SecondaryHeaderProps extends ComponentProps<typeof StyledRoot> {}
 // =========================================================================
 
-export function SecondaryHeader({ elevation = 2, border = 0, children }: SecondaryHeaderProps) {
+export function SecondaryHeader({ elevation = 2, border = 1, children }: SecondaryHeaderProps) {
   return (
     <StyledRoot elevation={elevation} border={border}>
       <InnerContainer>{children}</InnerContainer>

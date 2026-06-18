@@ -18,7 +18,7 @@ export const StyledRoot = styled("div", {
 })<Props>(({ theme, componentHeight, fixedOn, fixed }) => ({
   paddingTop: fixed ? componentHeight : 0,
   ".hold": {
-    zIndex: 2,
+    zIndex: 100,
     boxShadow: "none",
     position: "relative"
   },
