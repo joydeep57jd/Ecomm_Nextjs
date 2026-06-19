@@ -21,27 +21,26 @@ import Loading from "@/app/loading"
 import useCart from "@/hooks/useCart"
 import { useRouter } from "next/navigation"
 import { useUser } from "@/contexts/UserContenxt"
-
-const ICON_COLOR = "#e05c23"
+import { BRAND } from "theme/brand"
 
 const deliveryInfo = [
   {
-    icon: <LocationOnOutlinedIcon sx={{ fontSize: 20, color: ICON_COLOR, mt: "2px" }} />,
+    icon: <LocationOnOutlinedIcon sx={{ fontSize: 20, color: BRAND.primary, mt: "2px" }} />,
     title: "Deliver to Location",
     subtitle: "1–2 days"
   },
   {
-    icon: <LocalShippingOutlinedIcon sx={{ fontSize: 20, color: ICON_COLOR, mt: "2px" }} />,
+    icon: <LocalShippingOutlinedIcon sx={{ fontSize: 20, color: BRAND.primary, mt: "2px" }} />,
     title: "Free over ₹499",
     subtitle: "Local delivery"
   },
   {
-    icon: <ReplayOutlinedIcon sx={{ fontSize: 20, color: ICON_COLOR, mt: "2px" }} />,
+    icon: <ReplayOutlinedIcon sx={{ fontSize: 20, color: BRAND.primary, mt: "2px" }} />,
     title: "7-day returns",
     subtitle: "Easy & quick"
   },
   {
-    icon: <VerifiedOutlinedIcon sx={{ fontSize: 20, color: ICON_COLOR, mt: "2px" }} />,
+    icon: <VerifiedOutlinedIcon sx={{ fontSize: 20, color: BRAND.primary, mt: "2px" }} />,
     title: "100% genuine",
     subtitle: "19 yrs of trust"
   }
@@ -154,7 +153,7 @@ export default function ProductIntro({
               fontSize: 11,
               fontWeight: 700,
               letterSpacing: 1.2,
-              color: "#c84b31",
+              color: BRAND.storeLabel,
               textTransform: "uppercase",
               mb: 0.75
             }}
@@ -283,12 +282,12 @@ export default function ProductIntro({
                     label="ADD"
                     startIcon={<AddIcon />}
                     sx={{
-                      bgcolor: "#fff7f5",
-                      color: "#c84b31",
-                      border: "1px solid #e8b4a0",
+                      bgcolor: BRAND.primaryLight,
+                      color: BRAND.primaryDark,
+                      border: `1px solid ${BRAND.primaryBorder}`,
                       boxShadow: "none",
                       fontWeight: 600,
-                      "&:hover": { bgcolor: "#fce8e2", boxShadow: "none" }
+                      "&:hover": { bgcolor: BRAND.pageBg, boxShadow: "none" }
                     }}
                   />
                 </Box>
@@ -300,11 +299,11 @@ export default function ProductIntro({
                   fullWidth
                   sx={{
                     flex: 1,
-                    bgcolor: "#BE123C",
-                    color: "#fff",
+                    bgcolor: BRAND.primaryDark,
+                    color: BRAND.primaryContrast,
                     fontWeight: 600,
                     boxShadow: "none",
-                    "&:hover": { bgcolor: "#BE123C", boxShadow: "none" }
+                    "&:hover": { bgcolor: BRAND.primary, boxShadow: "none" }
                   }}
                 >
                   Buy Now

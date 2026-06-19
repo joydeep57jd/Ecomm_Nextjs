@@ -1,6 +1,7 @@
 import Card from "@mui/material/Card"
 import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
+import { BRAND } from "theme/brand"
 import ListItem from "../checkout/checkout-summery/list-item"
 import { useMemo } from "react"
 import { useUser } from "@/contexts/UserContenxt"
@@ -15,7 +16,7 @@ export default function CheckoutForm({ cartItems }: Props) {
   const { user } = useUser()
   const router = useRouter()
 
-  const inStockItems = useMemo(() => cartItems.filter(item => !item.isOutOfStock), [cartItems])
+  const inStockItems = useMemo(() => cartItems.filter((item) => !item.isOutOfStock), [cartItems])
   const outOfStockCount = cartItems.length - inStockItems.length
 
   const priceDetails = useMemo(() => {
@@ -61,7 +62,8 @@ export default function CheckoutForm({ cartItems }: Props) {
             borderColor: "rgba(211,47,47,0.3)"
           }}
         >
-          {outOfStockCount} item{outOfStockCount > 1 ? "s are" : " is"} out of stock and excluded from the total.
+          {outOfStockCount} item{outOfStockCount > 1 ? "s are" : " is"} out of stock and excluded
+          from the total.
         </Typography>
       )}
 
@@ -71,9 +73,8 @@ export default function CheckoutForm({ cartItems }: Props) {
 
       <Button
         fullWidth
-        color="primary"
         variant="contained"
-        sx={{ mt: 2 }}
+        sx={{ mt: 2, bgcolor: BRAND.primary, color: BRAND.primaryContrast, "&:hover": { bgcolor: BRAND.primaryDark } }}
         onClick={checkOut}
         disabled={!inStockItems.length}
       >

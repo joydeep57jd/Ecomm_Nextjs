@@ -31,7 +31,7 @@ export default function ProductSection({ sections }: ProductSectionProps) {
             title={section.sectionName || "Products"}
           >
             {products.map((product) => (
-              <Box pb={0.6} key={product.itemId}>
+              <Box pb={0.6} height="100%" key={product.itemId}>
                 <ProductCard17
                   product={{
                     id: String(product.itemId),
@@ -51,9 +51,14 @@ export default function ProductSection({ sections }: ProductSectionProps) {
                       : 0,
                     categories: [section.sectionName || "Products"],
                     variantId: product.variantId,
+                    itemVariantId: product.variantId,
                     stockQty: product.stockQty,
                     businessUnitId: product.businessUnitId,
-                    businessUnitName: product.businessUnitName
+                    businessUnitName: product.businessUnitName,
+                    rating:product.itemRating,
+                    reviewCount:product.reviewCount
+
+
                   }}
                 />
               </Box>

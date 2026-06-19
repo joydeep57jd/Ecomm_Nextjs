@@ -23,6 +23,7 @@ export interface DataList {
   itemCode: string
   imageList: ImageList[]
   itemVariantId?: number
+  variantId?: number
   itemRating: number
   reviewCount:number
   stockQty:number

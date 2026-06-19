@@ -15,6 +15,7 @@ import {
   secondary
 } from "./theme-colors"
 import { Palette, COLORS } from "theme/types"
+import { BRAND } from "theme/brand"
 
 /*
 WE CREATED MULTIPLE COLOR PALETTE FOR DIFFERENT SHOP VARIATION.
@@ -55,7 +56,7 @@ export const getPalette = (color: COLORS): Palette => {
     primary: selectedPrimaryColor,
     background: {
       paper: "#fff",
-      default: orange[50]
+      default: BRAND.pageBg
     },
     text: {
       primary: grey[800],

@@ -2,15 +2,14 @@
 
 import type { PropsWithChildren } from "react"
 import Link from "next/link"
-// MUI
 import Box from "@mui/material/Box"
 import SvgIcon from "@mui/material/SvgIcon"
 import Typography from "@mui/material/Typography"
 import ButtonBase from "@mui/material/ButtonBase"
 import ArrowForward from "@mui/icons-material/ArrowForward"
 import { styled } from "@mui/material/styles"
-// GLOBAL CUSTOM COMPONENTS
 import { Carousel, useCarousel } from "components/slider"
+import { BRAND } from "theme/brand"
 
 interface ProductsCarouselProps extends PropsWithChildren {
   title: string
@@ -83,10 +82,10 @@ export default function ProductsCarousel({ children, title }: ProductsCarouselPr
                 display: "inline-flex",
                 alignItems: "center",
                 whiteSpace: "nowrap",
-                color: "orange.dark",
+                color: BRAND.primaryDark,
                 textDecoration: "none",
                 transition: "color 150ms ease-in-out",
-                ":hover": { color: "orange.main", textDecoration: "underline" }
+                ":hover": { color: BRAND.primary, textDecoration: "underline" }
               }}
             >
               View all

@@ -7,6 +7,7 @@ import Box from "@mui/material/Box"
 import MuiLink from "@mui/material/Link"
 import Typography from "@mui/material/Typography"
 import ArrowForward from "@mui/icons-material/ArrowForward"
+import { BRAND } from "theme/brand"
 // GLOBAL CUSTOM COMPONENTS
 import Container from "components/Container"
 import layoutApi from "@/utils/api/layout"
@@ -56,9 +57,9 @@ export default function CategorySection() {
           sx={{
             fontSize: 14,
             fontWeight: 600,
-            color: "orange.dark",
+            color: BRAND.primaryDark,
             transition: "color 150ms ease-in-out",
-            ":hover": { color: "orange.main", textDecoration: "underline" }
+            ":hover": { color: BRAND.primary, textDecoration: "underline" }
           }}
         >
           View all

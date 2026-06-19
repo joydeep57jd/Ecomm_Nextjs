@@ -18,6 +18,8 @@ export interface SectionItem {
   businessUnitId: number
   businessUnitName: string
   stockQty: number
+  itemRating:number
+  reviewCount:number
 }
 
 export interface Section {

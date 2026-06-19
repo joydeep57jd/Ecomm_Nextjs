@@ -3,6 +3,7 @@
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import { styled } from "@mui/material/styles"
+import { BRAND } from "theme/brand"
 
 export const MenuRoot = styled(Box)({
   position: "relative",
@@ -22,10 +23,10 @@ export const TriggerButton = styled(Button)(({ theme }) => ({
   paddingInline: "0.4rem",
   paddingBlock: "0.4rem",
   backgroundColor: "transparent",
-  color: theme.palette.orange.main,
+  color: BRAND.primary,
   ":hover": {
     backgroundColor: "transparent",
-    color: theme.palette.orange.dark
+    color: BRAND.primaryDark
   },
   ".dropdown-icon": {
     transition: "transform 200ms ease-in-out"

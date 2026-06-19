@@ -2,6 +2,7 @@
 
 import Chip, { ChipProps } from "@mui/material/Chip"
 import { styled } from "@mui/material/styles"
+import { BRAND } from "theme/brand"
 
 // STYLED COMPONENT
 const StyledChip = styled(Chip, {
@@ -16,7 +17,7 @@ const StyledChip = styled(Chip, {
   borderRadius: 6,
   position: "absolute",
   color: theme.palette.common.white,
-  backgroundColor: theme.palette.orange.main,
+  backgroundColor: BRAND.primary,
   boxShadow: theme.shadows[1],
   "& .MuiChip-label": { paddingInline: 8 },
   ...(shape === "square" && { borderRadius: 0 })

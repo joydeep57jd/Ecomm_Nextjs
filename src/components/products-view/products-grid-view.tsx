@@ -29,8 +29,8 @@ const mapToProduct = (product: DataList): Product => {
     categories: [],
     businessUnitName: product.unitName,
     businessUnitId: product.businessUnitId ? +product.businessUnitId : undefined,
-    variantId: product.itemVariantId,
-    itemVariantId: product.itemVariantId,
+    variantId: product.itemVariantId ?? product.variantId,
+    itemVariantId: product.itemVariantId ?? product.variantId,
     stockQty: product.stockQty,
     rating: product.itemRating,
     reviewCount: product.reviewCount,
@@ -49,7 +49,7 @@ export default function ProductsGridView({ products }: Props) {
       }}
     >
       {products?.map((product) => (
-        <ProductCard17 key={product.itemVariantId ?? product.id} product={mapToProduct(product)} />
+        <ProductCard17 key={product.itemVariantId ?? product.variantId ?? product.id} product={mapToProduct(product)} />
       ))}
     </Box>
   )

@@ -2,6 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import Box from "@mui/material/Box"
 import Star from "@mui/icons-material/Star"
+import { BRAND } from "theme/brand"
 // LOCAL CUSTOM COMPONENTS
 import Discount from "./discount"
 // GLOBAL CUSTOM COMPONENTS
@@ -35,15 +36,15 @@ const ADD_BUTTON_SX = {
   boxShadow: "none",
   whiteSpace: "nowrap",
   textTransform: "none",
-  color: "orange.main",
+  color: BRAND.primary,
   backgroundColor: "transparent",
   border: "1px solid",
-  borderColor: "orange.main",
+  borderColor: BRAND.primary,
   "&:hover": {
     boxShadow: "none",
-    color: "orange.dark",
-    borderColor: "orange.dark",
-    backgroundColor: "orange.50"
+    color: BRAND.primaryDark,
+    borderColor: BRAND.primaryDark,
+    backgroundColor: BRAND.primaryLight
   }
 }
 
@@ -126,15 +127,17 @@ export default function ProductCard17({
           <span className="title">{title}</span>
         </Link>
 
-        {typeof rating === "number" && rating > 0 && !!reviewCount && reviewCount > 0 && (
-          <Box display="flex" alignItems="center" gap={0.75}>
-            <span className="rating-pill">
-              {rating.toFixed(1)}
-              <Star sx={{ fontSize: 13 }} />
-            </span>
-            <span className="review-count">({reviewCount})</span>
-          </Box>
-        )}
+        <Box className="rating-row" display="flex" alignItems="center" gap={0.75}>
+          {typeof rating === "number" && rating > 0 && !!reviewCount && reviewCount > 0 && (
+            <>
+              <span className="rating-pill">
+                {rating.toFixed(1)}
+                <Star sx={{ fontSize: 13 }} />
+              </span>
+              <span className="review-count">({reviewCount})</span>
+            </>
+          )}
+        </Box>
 
         <div className="footer">
           <Box minWidth={0}>
@@ -159,7 +162,7 @@ export default function ProductCard17({
                 productName: title,
                 productPrice: price,
                 productImage: thumbnail,
-                itemVariantId: product.variantId ?? 0,
+                itemVariantId: product.itemVariantId ?? product.variantId ?? 0,
                 qty: 1,
                 mrp: mrp ?? price,
                 stockQty: product.stockQty,

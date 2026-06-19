@@ -23,6 +23,7 @@ import { OrderConfirmationPageView } from "@/pages-sections/order-confirmation"
 import { UserData } from "@/models/Auth.model"
 import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
 import { Cart, RemoteCart } from "@/models/CartProductItem.models"
+import { BRAND } from "theme/brand"
 
 
 export default function CheckoutAlternativePageView() {
@@ -229,7 +230,7 @@ export default function CheckoutAlternativePageView() {
   return orderResponse ? (
     <OrderConfirmationPageView orderResponse={orderResponse} onRetry={retryOrder} />
   ) : (
-    <Box bgcolor="grey.50" sx={{ py: { xs: 3, sm: 4 } }}>
+    <Box bgcolor={BRAND.pageBg} sx={{ py: { xs: 3, sm: 4 } }}>
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid size={{ md: 8, xs: 12 }} order={{ xs: 2, md: 1 }}>

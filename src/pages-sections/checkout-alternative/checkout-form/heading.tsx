@@ -1,19 +1,18 @@
 import Avatar from "@mui/material/Avatar"
 import { BoxProps } from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
-// GLOBAL CUSTOM COMPONENTS
 import FlexBox from "components/flex-box/flex-box"
+import { BRAND } from "theme/brand"
 
-// AVATAR STYLES
 const STYLES = {
   width: 27,
   height: 27,
-  color: "white",
   fontSize: 14,
   lineHeight: 1,
   fontWeight: 500,
   borderRadius: 2,
-  backgroundColor: "primary.main"
+  color: BRAND.stepBadgeContrast,
+  backgroundColor: BRAND.stepBadge
 }
 
 // ==============================================================

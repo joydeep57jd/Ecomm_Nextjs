@@ -87,6 +87,9 @@ export const ContentWrapper = styled("div")(({ theme }) => ({
     transition: "color 150ms ease-in-out",
     ":hover": { color: theme.palette.primary.main }
   },
+  ".rating-row": {
+    minHeight: 20
+  },
   ".review-count": {
     fontSize: 12,
     color: theme.palette.grey[500]

@@ -1,13 +1,12 @@
 "use client"
 
-// MUI
 import Badge from "@mui/material/Badge"
 import Button from "@mui/material/Button"
 import SvgIcon from "@mui/material/SvgIcon"
 import Typography from "@mui/material/Typography"
-// GLOBAL CUSTOM HOOK
 import useCart from "hooks/useCart"
 import { useCartDrawer } from "@/contexts/CartDrawerContext"
+import { BRAND } from "theme/brand"
 
 const CartIcon = (
   <SvgIcon fontSize="small">
@@ -39,7 +38,6 @@ export function HeaderCart() {
     >
       <Button
         variant="contained"
-        color="orange"
         onClick={handleOpen}
         startIcon={CartIcon}
         sx={{
@@ -48,6 +46,9 @@ export function HeaderCart() {
           textTransform: "none",
           minWidth: 0,
           px: { xs: 1.25, sm: 2 },
+          bgcolor: BRAND.primary,
+          color: BRAND.primaryContrast,
+          "&:hover": { bgcolor: BRAND.primaryDark },
           "& .MuiButton-startIcon": { mr: { xs: 0, sm: 0.5 } }
         }}
       >

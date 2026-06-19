@@ -28,6 +28,7 @@ import { AllCategoriesMenu } from "components/header/all-categories-menu"
 import LayoutModel from "models/Layout.model"
 import { Box } from "@mui/material"
 import Section9 from "@/pages-sections/home/section-9"
+import { BRAND } from "theme/brand"
 
 // ==============================================================
 interface Props extends PropsWithChildren {
@@ -132,7 +133,7 @@ export default function ShopLayout1({ children, data }: Props) {
                     "&:hover": { backgroundColor: "action.hover" }
                   }}
                 >
-                  <LocalOfferOutlined sx={{ fontSize: 18, color: "warning.main" }} />
+                  <LocalOfferOutlined sx={{ fontSize: 18, color: BRAND.primaryDark }} />
                   Today&apos;s Deals
                 </Box>
 

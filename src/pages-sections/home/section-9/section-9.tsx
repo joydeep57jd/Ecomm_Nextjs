@@ -6,6 +6,7 @@ import PaymentOutlined from "@mui/icons-material/PaymentOutlined"
 import ReplayOutlined from "@mui/icons-material/ReplayOutlined"
 import VerifiedOutlined from "@mui/icons-material/VerifiedOutlined"
 import type { SvgIconComponent } from "@mui/icons-material"
+import { BRAND } from "theme/brand"
 
 const ITEMS: { icon: SvgIconComponent; title: string; subtitle: string }[] = [
   {
@@ -63,7 +64,7 @@ export default function Section9() {
                 borderColor: "grey.200"
               }}
             >
-              <Icon sx={{ fontSize: 28, color: "warning.main", flexShrink: 0 }} />
+              <Icon sx={{ fontSize: 28, color: BRAND.primary, flexShrink: 0 }} />
               <Box>
                 <Typography
                   variant="body2"
