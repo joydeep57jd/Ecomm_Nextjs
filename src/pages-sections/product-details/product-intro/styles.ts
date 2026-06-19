@@ -4,9 +4,9 @@ import { styled } from "@mui/material/styles"
 
 export const StyledRoot = styled("div")(({ theme }) => ({
   width: "100%",
-  padding: "1.5rem",
+  padding: "1.5rem 0",
   borderRadius: theme.spacing(1),
-  backgroundColor: theme.palette.grey[50],
+  backgroundColor: "transparent",
   "& strong": { fontWeight: 600 },
   "& .rating": {
     display: "flex",
@@ -33,14 +33,14 @@ export const StyledRoot = styled("div")(({ theme }) => ({
 }))
 
 export const ProductImageWrapper = styled("div")(({ theme }) => ({
-  height: 500,
+  height: 420,
   display: "flex",
   overflow: "hidden",
   position: "relative",
   justifyContent: "center",
-  marginBottom: theme.spacing(6),
-  "& img": { objectFit: "cover" },
-  [theme.breakpoints.down("sm")]: { height: 300 },
+  marginBottom: theme.spacing(2),
+  "& img": { objectFit: "contain" },
+  [theme.breakpoints.down("sm")]: { height: 280 },
   "& + .preview-images": {
     overflow: "auto",
     display: "flex",
