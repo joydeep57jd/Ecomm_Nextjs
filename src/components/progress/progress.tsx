@@ -5,16 +5,14 @@
 
 import { useEffect } from "react"
 import NProgress from "nprogress"
-import { useTheme } from "@mui/material/styles"
 import GlobalStyles from "@mui/material/GlobalStyles"
+import { BRAND } from "theme/brand"
 
 import "nprogress/nprogress.css"
 
 type PushStateInput = [data: any, unused: string, url?: string | URL | null | undefined];
 
 export default function ProgressBar() {
-  const theme = useTheme()
-
   useEffect(() => {
     NProgress.configure({ showSpinner: false })
 
@@ -62,7 +60,7 @@ export default function ProgressBar() {
             width: "100%",
             position: "fixed",
             zIndex: 9999999999,
-            background: theme.palette.primary.main
+            background: BRAND.primary
           },
           ".peg": {
             right: 0,

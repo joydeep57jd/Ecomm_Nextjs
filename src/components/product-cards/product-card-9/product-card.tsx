@@ -13,6 +13,7 @@ import Product from "models/Product.model"
 // STYLED COMPONENT
 import { ContentWrapper, Wrapper } from "./styles"
 import ProductAction from "@/components/product-action"
+import { encodeId } from "@/utils/url-id"
 
 // ===========================================================
 type Props = { product: Product };
@@ -41,7 +42,7 @@ export default function ProductCard9({ product }: Props) {
             <ProductTags tags={["Bike", "Motor", "Ducati"]} />
 
             {/* PRODUCT TITLE / NAME */}
-            <Link href={`/products/${slug}`}>
+            <Link href={`/products/${encodeId(slug)}`}>
               <Typography variant="h5" sx={{ mt: 1, mb: 2 }}>
                 {title}
               </Typography>

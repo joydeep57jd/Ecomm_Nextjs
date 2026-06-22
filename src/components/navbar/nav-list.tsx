@@ -17,6 +17,7 @@ import { Category, SubCategory, SubSubCategory } from "@/models/Category.modal"
 import { useCallback, useEffect } from "react"
 import LayoutModel from "@/models/Layout.model"
 import { setItem } from "@/utils/services/local-storage.service"
+import { encodeId } from "@/utils/url-id"
 
 // Title-case a string ("GARMENT & FASHION" -> "Garment & Fashion").
 // CSS text-transform: capitalize can't lowercase the rest of an all-caps word, so do it in JS.
@@ -41,7 +42,7 @@ export function NavigationList({ navigation, layoutModel }: Props) {
     (e: any, paramKeyName: string, paramValue: string) => {
       e.preventDefault()
       const params = new URLSearchParams()
-      params.set(paramKeyName, paramValue)
+      params.set(paramKeyName, encodeId(paramValue))
       router.push(`/products/search?${params.toString()}`)
     },
     [router, searchParams]
@@ -52,7 +53,7 @@ export function NavigationList({ navigation, layoutModel }: Props) {
       <NavLink
         key={nav.id}
         onClick={(e) => navigateTo(e, "SubCategory", nav.id)}
-        href={`/products/search?SubCategory=${nav.id}`}
+        href={`/products/search?SubCategory=${encodeId(nav.id)}`}
       >
         <MenuItem>{toTitleCase(nav.name)}</MenuItem>
       </NavLink>
@@ -68,7 +69,7 @@ export function NavigationList({ navigation, layoutModel }: Props) {
               title: toTitleCase(nav.name),
               child: nav.sub_sub_category.map((sub) => ({
                 title: toTitleCase(sub.name),
-                url: `/products/search?subCategory=${sub.id}`
+                url: `/products/search?subCategory=${encodeId(sub.id)}`
               }))
             }}
             navigateTo={navigateTo}
@@ -84,7 +85,7 @@ export function NavigationList({ navigation, layoutModel }: Props) {
       return (
         <NavLink
           onClick={(e) => navigateTo(e, "subCategory", nav.id)}
-          href={`/products/search?subCategory=${nav.id}`}
+          href={`/products/search?subCategory=${encodeId(nav.id)}`}
           key={nav.name}
         >
           <MenuItem>{toTitleCase(nav.name)}</MenuItem>
@@ -102,6 +103,8 @@ export function NavigationList({ navigation, layoutModel }: Props) {
         flexDirection="column"
         sx={{
           borderRadius: 1,
+          flexShrink: 0,
+          whiteSpace: "nowrap",
           transition: "background-color 150ms ease-in-out",
           "&:hover": {
             backgroundColor: "action.hover",
@@ -113,10 +116,10 @@ export function NavigationList({ navigation, layoutModel }: Props) {
       >
         <NavLink
           onClick={(e) => navigateTo(e, "category", nav.id)}
-          href={`/products/search?category=${nav.id}`}
+          href={`/products/search?category=${encodeId(nav.id)}`}
           key={nav.name}
         >
-          <FlexBox alignItems="flex-end" gap={0.3} sx={{ ...NAV_LINK_STYLES, px: 1.5, py: 0.75, fontSize: 14 }}>
+          <FlexBox alignItems="flex-end" gap={0.3} sx={{ ...NAV_LINK_STYLES, px: 1, py: 0.75, fontSize: 14, whiteSpace: "nowrap" }}>
             {toTitleCase(nav.name)}
             <KeyboardArrowDown
               sx={{
@@ -144,5 +147,5 @@ export function NavigationList({ navigation, layoutModel }: Props) {
     ))
   }
 
-  return <FlexBox gap={1}>{renderRootLevel(navigation)}</FlexBox>
+  return <FlexBox gap={1} sx={{ flexShrink: 0 }}>{renderRootLevel(navigation)}</FlexBox>
 }

@@ -16,6 +16,7 @@ import OrderItemRating from "./page-view/order-item-rating"
 import OrderItemReturn from "./page-view/order-item-return"
 import CancelItem from "./page-view/cancel-item"
 import OrderItemActions from "./order-item-actions"
+import { encodeId } from "@/utils/url-id"
 
 type Props = { order: OrderListCustomer; refreshOrder: () => void }
 
@@ -172,7 +173,7 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
           return (
             <FlexBetween key={ind} px={2} py={1} flexWrap="wrap" gap={1}>
               <Link
-                href={`/products/${item.itemId}${item.itemId ? `?variantId=${item.itemVariantId}` : ""}`}
+                href={`/products/${encodeId(item.itemId)}${item.itemId ? `?variantId=${encodeId(item.itemVariantId)}` : ""}`}
               >
                 <FlexBox gap={2} alignItems="center">
                   <Avatar

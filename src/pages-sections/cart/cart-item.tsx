@@ -14,6 +14,7 @@ import { currency } from "lib"
 import { ContentWrapper, ImageWrapper, QuantityButton, Wrapper } from "./styles"
 import { Cart, } from "@/models/CartProductItem.models"
 import { useUser } from "@/contexts/UserContenxt"
+import { encodeId } from "@/utils/url-id"
 
 
 // =========================================================
@@ -66,7 +67,7 @@ export default function CartItem({ item }: Props) {
 
       <ContentWrapper>
         <Stack spacing={0.5} overflow="hidden">
-          <Link href={`/products/${item.productId}?variantId=${item.itemVariantId}`}>
+          <Link href={`/products/${encodeId(item.productId)}?variantId=${encodeId(item.itemVariantId)}`}>
             <Typography noWrap variant="body1" fontSize={16}>
               {item.variantName}
             </Typography>

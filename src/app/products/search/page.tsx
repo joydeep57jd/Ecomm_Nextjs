@@ -2,6 +2,7 @@ import { Metadata } from "next"
 // PAGE VIEW COMPONENT
 // API FUNCTIONS
 import Products from "./products"
+import { decodeId } from "@/utils/url-id"
 
 export const metadata: Metadata = {
   title: "Product Search - Bazaar Next.js E-commerce Template",
@@ -36,6 +37,12 @@ interface Props {
 export default async function ProductSearch({ searchParams }: Props) {
   const { search, category, subCategory, SubCategory, filter, variantFilter, sort, price, brand } =
     await searchParams
+
+  // Category ids travel through the URL in encoded (base64) form — decode back
+  // to raw ids before they reach the API / downstream components.
+  const categoryId = category ? decodeId(category) : ""
+  const subCategoryId = subCategory ? decodeId(subCategory) : ""
+  const SubCategoryId = SubCategory ? decodeId(SubCategory) : ""
 
   const sortFieldValue = {
     [sortField.RELEVANCE]: true,
@@ -101,9 +108,9 @@ export default async function ProductSearch({ searchParams }: Props) {
     <Products
       filters={filters.value}
       search={search ?? ""}
-      subCategory={subCategory ?? ""}
-      SubCategory={SubCategory ?? ""}
-      categoryId={category ?? ""}
+      subCategory={subCategoryId}
+      SubCategory={SubCategoryId}
+      categoryId={categoryId}
       variantFilters={variantFilters.value}
       sortFilters={sortFilters}
       priceFilters={priceFilters}

@@ -3,6 +3,7 @@ export interface BannerOfferResponse {
   offerName: string
   bannerImageUrl: string
   discountPercentage: number
+  offerIconUrl:string
 }
 
 export interface GetProductOfferResponse {

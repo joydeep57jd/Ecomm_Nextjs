@@ -14,6 +14,7 @@ import { ImageWrapper, ContentWrapper, StyledCard, HoverIconWrapper } from "./st
 // CUSTOM DATA MODEL
 import Product from "models/Product.model"
 import ProductAction from "@/components/product-action"
+import { encodeId } from "@/utils/url-id"
 
 // ========================================================
 interface Props {
@@ -34,7 +35,7 @@ export default function ProductCard1({ product, showProductSize, showRating = tr
 
         {/* HOVER ACTION ICONS */}
         <HoverIconWrapper className="hover-box">
-          <Link href={`/products/${slug}/view`} scroll={false}>
+          <Link href={`/products/${encodeId(slug)}/view`} scroll={false}>
             <IconButton color="inherit">
               <RemoveRedEye fontSize="small" color="inherit" />
             </IconButton>
@@ -44,7 +45,7 @@ export default function ProductCard1({ product, showProductSize, showRating = tr
         </HoverIconWrapper>
 
         {/* PRODUCT IMAGE / THUMBNAIL */}
-        <Link href={`/products/${slug}`}>
+        <Link href={`/products/${encodeId(slug)}`}>
           <LazyImage
             priority
             alt={title}

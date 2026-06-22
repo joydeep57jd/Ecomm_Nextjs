@@ -13,6 +13,7 @@ import Button from "@mui/material/Button"
 // TYPES + API
 import { Category, SubCategory } from "@/models/Category.modal"
 import { GetCategoryResponse } from "@/models/Category.modal"
+import { encodeId, decodeId } from "@/utils/url-id"
 
 interface Props {
   categories: Category[]
@@ -65,8 +66,10 @@ export default function ProductFilters({ categories, categoryOptions }: Props) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const selectedCategory = searchParams.get("category") ?? "all"
-  const selectedSubCategory = searchParams.get("subCategory") ?? "all"
+  const rawCategory = searchParams.get("category")
+  const rawSubCategory = searchParams.get("subCategory")
+  const selectedCategory = rawCategory ? decodeId(rawCategory) : "all"
+  const selectedSubCategory = rawSubCategory ? decodeId(rawSubCategory) : "all"
 
   const decodedPrice = (() => {
     const price = searchParams.get("price")
@@ -123,7 +126,7 @@ export default function ProductFilters({ categories, categoryOptions }: Props) {
       if (value === "all") {
         params.delete("category")
       } else {
-        params.set("category", value)
+        params.set("category", encodeId(value))
       }
       params.delete("subCategory")
       params.delete("brand")
@@ -137,7 +140,7 @@ export default function ProductFilters({ categories, categoryOptions }: Props) {
       if (value === "all") {
         params.delete("subCategory")
       } else {
-        params.set("subCategory", value)
+        params.set("subCategory", encodeId(value))
       }
     })
   }

@@ -5,8 +5,7 @@ import { Fragment, useEffect, useState } from "react"
 
 import { Section } from "@/models/Home.model"
 import { HomeAPI } from "@/utils/api"
-import { getOfferData } from "@/utils/api/offer"
-import { BannerOfferResponse } from "@/models/Offer.model"
+import { useOffers } from "@/contexts/OffersContext"
 import ProductSection from "../product-section"
 import CategorySection from "../category-section"
 import HeroSection from "../hero-section"
@@ -15,21 +14,14 @@ import Loading from "@/app/loading"
 export default function HomePageView() {
   const [productSections, setProductSections] = useState<Section[]>([])
   const [bannerSections, setBannerSections] = useState<Section[]>([])
-  const [offerData, setOfferData] = useState<BannerOfferResponse[] | null>(null)
+  // Reuse the offers already fetched by the layout (ShopLayout1) instead of
+  // making a second request to OFFER.GET_BANNER_OFFER.
+  const offerData = useOffers()
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([getSections(), fetchOfferData()])
+    getSections()
   }, [])
-
-  const fetchOfferData = async () => {
-    try {
-      const res = await getOfferData()
-      setOfferData(res)
-    } catch {
-      setOfferData(null)
-    }
-  }
 
   const getSections = async () => {
     try {

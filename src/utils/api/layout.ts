@@ -5,14 +5,17 @@ import axios from "../axiosInstance"
 import { API_URL } from "../constants"
 import { Category } from "@/models/Category.modal"
 import { CompanyInfo } from "@/models/Companyinfo.model"
+import { BannerOfferResponse } from "@/models/Offer.model"
 
 const getLayoutData = async (): Promise<LayoutModel> => {
   let categories: Category[] = []
   let companyInfoData: CompanyInfo
+  let offers: BannerOfferResponse[] = []
 
-  const [categoryResponse, companyInfoResponse] = await Promise.allSettled([
+  const [categoryResponse, companyInfoResponse, offerResponse] = await Promise.allSettled([
     axios.post<{ data: Category[] }>(`${API_URL.ITEMS.GET_CATEGORY}`, {}),
-    axios.post<{ data: CompanyInfo }>(`${API_URL.MISC.GET_COMPANY_INFO}`, {})
+    axios.post<{ data: CompanyInfo }>(`${API_URL.MISC.GET_COMPANY_INFO}`, {}),
+    axios.post<{ data: BannerOfferResponse[] }>(`${API_URL.OFFER.GET_BANNER_OFFER}`, {})
   ])
 
   if (categoryResponse.status === "fulfilled") {
@@ -23,7 +26,12 @@ const getLayoutData = async (): Promise<LayoutModel> => {
     companyInfoData = companyInfoResponse.value.data.data
   }
 
+  if (offerResponse.status === "fulfilled") {
+    offers = offerResponse.value.data.data ?? []
+  }
+
   return {
+    offers,
     header: {
       categories: [],
       categoryMenus: [],

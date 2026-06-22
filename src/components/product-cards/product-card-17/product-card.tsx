@@ -11,6 +11,7 @@ import ProductAction from "@/components/product-action"
 import { ImageWrapper, ContentWrapper, StyledCard } from "./styles"
 // CUSTOM UTILS FUNCTION
 import { currency } from "lib"
+import { encodeId } from "@/utils/url-id"
 import { Product } from "@/models/Home.model"
 
 // ========================================================
@@ -67,7 +68,7 @@ export default function ProductCard17({
 
   const hasMrp = typeof mrp === "number" && mrp > price
   const outOfStock = (product.stockQty ?? 0) <= 0
-  const productHref = `/products/${slug}${product.itemVariantId ? `?variantId=${product.itemVariantId}` : ""}`
+  const productHref = `/products/${encodeId(slug)}${product.itemVariantId ? `?variantId=${encodeId(product.itemVariantId)}` : ""}`
 
   return (
     <StyledCard
@@ -123,7 +124,7 @@ export default function ProductCard17({
           </span>
         )}
 
-        <Link href={`/products/${slug}`} aria-label={`View ${title}`}>
+        <Link href={`/products/${encodeId(slug)}`} aria-label={`View ${title}`}>
           <span className="title">{title}</span>
         </Link>
 

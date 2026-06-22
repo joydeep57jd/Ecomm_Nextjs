@@ -5,6 +5,7 @@ import Button from "@mui/material/Button"
 import { HoverWrapper } from "./styles"
 import Product from "@/models/Product.model"
 import ProductAction from "@/components/product-action"
+import { encodeId } from "@/utils/url-id"
 
 // ========================================================
 interface Props {
@@ -34,7 +35,7 @@ export default function HoverActions({ product }: Props) {
 
       <Link
         scroll={false}
-        href={`/products/${product.id}${product.variantId ? `?variantId=${product.variantId}` : ""}`}
+        href={`/products/${encodeId(product.id)}${product.variantId ? `?variantId=${encodeId(product.variantId)}` : ""}`}
       >
         <Button
           fullWidth

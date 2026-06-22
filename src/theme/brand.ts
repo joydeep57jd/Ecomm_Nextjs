@@ -5,24 +5,24 @@
  * All components import from this file — no hunting for hardcoded hex values.
  */
 
-import { success, secondary } from "./core/theme-colors"
+import { orange, secondary } from "./core/theme-colors"
 
 export const BRAND = {
   // ─── Page background ────────────────────────────────────────────────────────
   /** The main page/site background. */
-  pageBg: success[50],
+  pageBg: orange[50],
 
   // ─── Primary / button color ─────────────────────────────────────────────────
   /** Main CTA color used for buttons, accents, and icons. */
-  primary: success.main,
+  primary: orange.main,
   /** Darker shade for hover states and "Buy Now"-style CTAs. */
-  primaryDark: success.dark,
+  primaryDark: orange.dark,
   /** Soft background tint for outlined/ghost button variants. */
-  primaryLight: success[50],
+  primaryLight: orange[50],
   /** Border color for ghost/outlined buttons. */
-  primaryBorder: success[200],
+  primaryBorder: orange[200],
   /** Text on top of a primary-colored surface. */
-  primaryContrast: success.contrastText,
+  primaryContrast: orange.contrastText,
 
   // ─── Step / section-number badges ───────────────────────────────────────────
   /** Background of numbered step badges (e.g. "1 Delivery Address" in checkout). */
@@ -32,7 +32,7 @@ export const BRAND = {
 
   // ─── Store / brand label ────────────────────────────────────────────────────
   /** The small uppercase store-name label shown on product pages. */
-  storeLabel: success.dark,
+  storeLabel: orange.dark,
 } as const
 
 export type BrandColors = typeof BRAND

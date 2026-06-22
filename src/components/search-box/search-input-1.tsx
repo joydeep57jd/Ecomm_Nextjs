@@ -16,6 +16,7 @@ import { CategoryLink } from "models/Layout.model"
 import { DataList } from "@/models/AllProduct.model"
 // API + UTILS
 import { getAllProducts } from "@/utils/api/product"
+import { encodeId } from "@/utils/url-id"
 // import { currency } from "lib"
 
 const INPUT_PROPS = {
@@ -138,7 +139,7 @@ export function SearchInput1({ }: Props) {
   const handleSelect = (item: DataList) => {
     setOpen(false)
     setSearch("")
-    router.push(`/products/${item.itemId}`)
+    router.push(`/products/${encodeId(item.itemId)}`)
   }
 
   const showDropdown = open && search.trim().length >= MIN_CHARS

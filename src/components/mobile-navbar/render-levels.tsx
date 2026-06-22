@@ -6,6 +6,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore"
 import Typography from "@mui/material/Typography"
 // GLOBAL CUSTOM COMPONENTS
 import { NavLink } from "components/nav-link"
+import { encodeId } from "@/utils/url-id"
 
 const ACCORDION_STYLES = {
   "&:not(:last-child)": { borderBottom: 0 },
@@ -44,7 +45,7 @@ export const renderLevels = (
       keyName = "subCategory"
     }
 
-    const href = `/products/search?${keyName}=${item.id}`
+    const href = `/products/search?${keyName}=${encodeId(item.id)}`
     const panelKey = `${parentKey}-${index}`
     if (children?.length) {
       return (

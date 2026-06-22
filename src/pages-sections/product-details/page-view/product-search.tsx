@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 // MUI
 import Grid from "@mui/material/Grid"
@@ -15,9 +14,10 @@ import ProductsGridView from "components/products-view/products-grid-view"
 // TYPES + API
 import { DataList } from "@/models/AllProduct.model"
 import ProductFilters from "@/components/products-view/filters"
-import { Category, GetCategoryResponse } from "@/models/Category.modal"
+import { GetCategoryResponse } from "@/models/Category.modal"
 import { VariantOptionDetails } from "@/models/Filters.models"
-import layoutApi from "@/utils/api/layout"
+import { useCategories } from "@/contexts/CategoriesContext"
+import { decodeId } from "@/utils/url-id"
 import SideNav from "@/components/side-nav"
 import { Box, Button, IconButton } from "@mui/material"
 import { Tune } from "@mui/icons-material"
@@ -54,17 +54,14 @@ export default function ProductSearchPageView({
   const searchParams = useSearchParams()
   const sort = searchParams.get("sort") || "new arrival"
 
-  const [categories, setCategories] = useState<Category[]>([])
+  // Reuse the categories already fetched by the layout (ShopLayout1) instead of
+  // making a second request to ITEMS.GET_CATEGORY.
+  const categories = useCategories()
 
-  useEffect(() => {
-    layoutApi
-      .getCategories()
-      .then((data) => setCategories(data || []))
-      .catch(() => setCategories([]))
-  }, [])
-
-  const selectedCategoryId = searchParams.get("category") ?? "all"
-  const selectedSubCategoryId = searchParams.get("subCategory") ?? "all"
+  const rawCategoryId = searchParams.get("category")
+  const rawSubCategoryId = searchParams.get("subCategory")
+  const selectedCategoryId = rawCategoryId ? decodeId(rawCategoryId) : "all"
+  const selectedSubCategoryId = rawSubCategoryId ? decodeId(rawSubCategoryId) : "all"
 
   const activeCategoryObj = categories.find((c) => String(c.id) === String(selectedCategoryId))
   const activeSubCategoryObj = activeCategoryObj?.sub_category?.find(

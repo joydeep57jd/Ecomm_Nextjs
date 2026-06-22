@@ -9,7 +9,6 @@ import Typography from "@mui/material/Typography"
 import Grid from "@mui/material/Grid"
 import Container from "@mui/material/Container"
 import LocalOfferOutlined from "@mui/icons-material/LocalOfferOutlined"
-import NewReleasesOutlined from "@mui/icons-material/NewReleasesOutlined"
 import Celebration from "@mui/icons-material/Celebration"
 import LocationOnOutlined from "@mui/icons-material/LocationOnOutlined"
 import PhoneOutlined from "@mui/icons-material/PhoneOutlined"
@@ -29,6 +28,9 @@ import LayoutModel from "models/Layout.model"
 import { Box } from "@mui/material"
 import Section9 from "@/pages-sections/home/section-9"
 import { BRAND } from "theme/brand"
+import { CategoriesProvider } from "@/contexts/CategoriesContext"
+import { OffersProvider } from "@/contexts/OffersContext"
+import { encodeId } from "@/utils/url-id"
 
 // ==============================================================
 interface Props extends PropsWithChildren {
@@ -37,8 +39,13 @@ interface Props extends PropsWithChildren {
 // ==============================================================
 
 export default function ShopLayout1({ children, data }: Props) {
-  const { footer, header, topbar, mobileNavigation } = data
+  const { footer, header, topbar, mobileNavigation, offers } = data
   const footerDetails = footer!.about[0]
+
+  // Latest 3 offers shown next to "Today's Deals" in the secondary header.
+  // Each links to its sales page using the same base64(offerId) scheme as the
+  // offer list / hero banner.
+  const latestOffers = (offers ?? []).slice(-3).reverse()
 
   const policyLinks = [
     { title: footerDetails?.privacyPolicyDtl?.privacyPolicy, url: "#" },
@@ -47,10 +54,16 @@ export default function ShopLayout1({ children, data }: Props) {
     { title: footerDetails?.cancellation_RefundPolicyDtl?.cancellation_RefundPolicy, url: "#" }
   ].filter((item) => item.title) as { title: string; url: string }[]
 
+  // Latest 4 categories (most recent first) from the live category data,
+  // followed by the Today's Deals link that opens the sales page.
   const shopLinks = [
-    { title: "Grocery", url: "/products/search?category=grocery" },
-    { title: "Shoes & Accessories", url: "/products/search?category=shoes" },
-    { title: "Garment & Fashion", url: "/products/search?category=fashion" },
+    ...(header?.navigation ?? [])
+      .slice(-4)
+      .reverse()
+      .map((category) => ({
+        title: category.name,
+        url: `/products/search?category=${encodeId(category.id)}`
+      })),
     { title: "Today's Deals", url: "/sales" }
   ]
 
@@ -104,31 +117,39 @@ export default function ShopLayout1({ children, data }: Props) {
 
         {header && (
           <SecondaryHeader elevation={0}>
-            <Box display="flex" alignItems="center" gap={1.5} width="100%">
+            <Box
+              display="flex"
+              alignItems="center"
+              gap={1}
+              width="100%"
+              sx={{ flexWrap: "nowrap" }}
+            >
               <AllCategoriesMenu categories={header.navigation} />
 
               <NavigationList navigation={header.navigation} layoutModel={data} />
 
               <Divider
                 orientation="vertical"
-                sx={{ height: 22, alignSelf: "center", borderColor: "grey.300" }}
+                sx={{ height: 22, alignSelf: "center", borderColor: "grey.300", flexShrink: 0 }}
               />
 
-              <Box display="flex" alignItems="center" gap={0.5}>
+              <Box display="flex" alignItems="center" gap={0.5} sx={{ flexShrink: 0 }}>
                 <Box
                   component={Link}
                   href="/sales"
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "6px",
-                    px: 1.5,
+                    gap: "4px",
+                    px: 1,
                     py: 0.75,
                     borderRadius: 1,
                     fontWeight: 500,
                     fontSize: 14,
                     color: "inherit",
                     textDecoration: "none",
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
                     transition: "background-color 150ms ease-in-out",
                     "&:hover": { backgroundColor: "action.hover" }
                   }}
@@ -137,49 +158,43 @@ export default function ShopLayout1({ children, data }: Props) {
                   Today&apos;s Deals
                 </Box>
 
-                <Box
-                  component={Link}
-                  href="/products/search?sort=date"
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    px: 1.5,
-                    py: 0.75,
-                    borderRadius: 1,
-                    fontWeight: 500,
-                    fontSize: 14,
-                    color: "inherit",
-                    textDecoration: "none",
-                    transition: "background-color 150ms ease-in-out",
-                    "&:hover": { backgroundColor: "action.hover" }
-                  }}
-                >
-                  <NewReleasesOutlined sx={{ fontSize: 18, color: "grey.500" }} />
-                  New Arrivals
-                </Box>
-
-                <Box
-                  component={Link}
-                  href="/sales"
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    px: 1.5,
-                    py: 0.75,
-                    borderRadius: 1,
-                    fontWeight: 600,
-                    fontSize: 14,
-                    color: "primary.main",
-                    textDecoration: "none",
-                    transition: "background-color 150ms ease-in-out",
-                    "&:hover": { backgroundColor: "action.hover" }
-                  }}
-                >
-                  <Celebration sx={{ fontSize: 18, color: "primary.main" }} />
-                  Pujo &amp; Anniversary
-                </Box>
+                {latestOffers.map((offer) => (
+                  <Box
+                    key={offer.offerId}
+                    component={Link}
+                    href={`/sales/${Buffer.from(offer.offerId.toString()).toString("base64")}`}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      px: 1,
+                      py: 0.75,
+                      borderRadius: 1,
+                      fontWeight: 500,
+                      fontSize: 14,
+                      color: "inherit",
+                      textDecoration: "none",
+                      whiteSpace: "nowrap",
+                      flexShrink: 0,
+                      transition: "background-color 150ms ease-in-out",
+                      "&:hover": { backgroundColor: "action.hover" }
+                    }}
+                  >
+                    {offer.offerIconUrl ? (
+                      <Image
+                        src={offer.offerIconUrl}
+                        alt={offer.offerName}
+                        width={18}
+                        height={18}
+                        style={{ objectFit: "contain" }}
+                        unoptimized
+                      />
+                    ) : (
+                      <Celebration sx={{ fontSize: 18, color: "primary.main" }} />
+                    )}
+                    {offer.offerName}
+                  </Box>
+                ))}
               </Box>
             </Box>
           </SecondaryHeader>
@@ -187,7 +202,9 @@ export default function ShopLayout1({ children, data }: Props) {
       </Sticky>
 
       <Box component="main" sx={{ flex: 1, bgcolor: "background.default" }}>
-        {children}
+        <CategoriesProvider categories={header?.navigation ?? []}>
+          <OffersProvider offers={offers ?? []}>{children}</OffersProvider>
+        </CategoriesProvider>
       </Box>
 
       <Section9 />
@@ -278,7 +295,12 @@ export default function ShopLayout1({ children, data }: Props) {
                     <Link
                       key={link.title}
                       href={link.url}
-                      style={{ textDecoration: "none", color: "inherit", fontSize: 13 }}
+                      style={{
+                        textDecoration: "none",
+                        color: "inherit",
+                        fontSize: 13,
+                        textTransform: "lowercase"
+                      }}
                     >
                       {link.title}
                     </Link>

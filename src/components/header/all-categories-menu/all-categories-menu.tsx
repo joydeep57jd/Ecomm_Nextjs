@@ -6,6 +6,7 @@ import MenuIcon from "@mui/icons-material/Menu"
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown"
 // DATA TYPES
 import { Category } from "@/models/Category.modal"
+import { encodeId } from "@/utils/url-id"
 // STYLED COMPONENTS
 import { MenuRoot, TriggerButton, Panel, ColumnBox } from "./styles"
 
@@ -34,7 +35,7 @@ export function AllCategoriesMenu({ categories }: Props) {
             <ColumnBox key={category.id} sx={{ bgcolor: `${colorKey}.light` }}>
               <MuiLink
                 component={NextLink}
-                href={`/products/search?category=${category.id}`}
+                href={`/products/search?category=${encodeId(category.id)}`}
                 className="col-title"
                 sx={{ color: `${colorKey}.main` }}
               >
@@ -44,7 +45,7 @@ export function AllCategoriesMenu({ categories }: Props) {
               {category.sub_category?.map((sub) => (
                 <NextLink
                   key={sub.id}
-                  href={`/products/search?subCategory=${sub.id}`}
+                  href={`/products/search?subCategory=${encodeId(sub.id)}`}
                   className="sub-link"
                 >
                   {sub.name}

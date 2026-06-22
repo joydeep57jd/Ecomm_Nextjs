@@ -15,6 +15,7 @@ import { PriceText, StyledRoot } from "./styles"
 import { DataList } from "@/models/AllProduct.model"
 import { VariantOptionDetails } from "@/models/Filters.models"
 import { Box, Chip } from "@mui/material"
+import { encodeId } from "@/utils/url-id"
 
 // ==============================================================
 type Props = { product: DataList; variantOptions: VariantOptionDetails[]; badges: string[] }
@@ -30,7 +31,7 @@ export default function ProductCard16({ product, variantOptions, badges }: Props
 
   return (
     <StyledRoot>
-      <Link href={`/products/${product.itemId}?variantId=${product.itemVariantId || ""}`}>
+      <Link href={`/products/${encodeId(product.itemId)}?variantId=${product.itemVariantId ? encodeId(product.itemVariantId) : ""}`}>
         <div className="img-wrapper">
           <LazyImage unoptimized alt={imageAltTag} width={380} height={379} src={thumbnail} />
           {discount ? <DiscountChip discount={discount} sx={{ left: 20, top: 20 }} /> : null}

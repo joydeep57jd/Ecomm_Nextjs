@@ -1,6 +1,7 @@
 import { CategoryMenuItem } from "models/Category.model"
 import { Category } from "./Category.modal"
 import { FooterDetails } from "./Companyinfo.model"
+import { BannerOfferResponse } from "./Offer.model"
 
 export interface Socials {
   google: string
@@ -79,4 +80,5 @@ export default interface LayoutModel {
   header?: Header
   topbar?: Topbar
   mobileNavigation?: MobileNavigation
+  offers?: BannerOfferResponse[]
 }

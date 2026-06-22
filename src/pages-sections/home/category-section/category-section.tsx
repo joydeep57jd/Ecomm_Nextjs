@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import NextLink from "next/link"
 import Image from "next/image"
 import Box from "@mui/material/Box"
@@ -10,8 +9,8 @@ import ArrowForward from "@mui/icons-material/ArrowForward"
 import { BRAND } from "theme/brand"
 // GLOBAL CUSTOM COMPONENTS
 import Container from "components/Container"
-import layoutApi from "@/utils/api/layout"
-import { Category } from "@/models/Category.modal"
+import { useCategories } from "@/contexts/CategoriesContext"
+import { encodeId } from "@/utils/url-id"
 // STYLED COMPONENTS
 import { CategoryGrid, CategoryCard } from "./styles"
 
@@ -32,14 +31,9 @@ const FALLBACK_META = [
 ]
 
 export default function CategorySection() {
-  const [categories, setCategories] = useState<Category[]>([])
-
-  useEffect(() => {
-    layoutApi
-      .getCategories()
-      .then((data) => setCategories(data || []))
-      .catch(() => setCategories([]))
-  }, [])
+  // Reuse the categories already fetched by the layout (ShopLayout1) instead of
+  // making a second request to ITEMS.GET_CATEGORY.
+  const categories = useCategories()
 
   if (!categories.length) return null
 
@@ -79,7 +73,7 @@ export default function CategorySection() {
             <CategoryCard key={category.id} bg={bg} color={color} accent={accent}>
               <span className="accent-circle" />
 
-              <NextLink href={`/products/search?category=${category.id}`} className="card-head">
+              <NextLink href={`/products/search?category=${encodeId(category.id)}`} className="card-head">
                 <div className="head-row">
                   <span className="icon-square">
                     {category.iconImage && (
@@ -105,7 +99,7 @@ export default function CategorySection() {
                   {category.sub_category.slice(0, 5).map((sub) => (
                     <NextLink
                       key={sub.id}
-                      href={`/products/search?subCategory=${sub.id}`}
+                      href={`/products/search?subCategory=${encodeId(sub.id)}`}
                       className="pill"
                     >
                       {sub.name}

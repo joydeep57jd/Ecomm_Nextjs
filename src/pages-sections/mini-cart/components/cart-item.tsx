@@ -16,6 +16,7 @@ import FlexBox from "components/flex-box/flex-box"
 import { currency } from "lib"
 // CUSTOM DATA MODEL
 import { Cart } from "@/models/CartProductItem.models"
+import { encodeId } from "@/utils/url-id"
 
 // STYLED COMPONENTS
 const StyledRoot = styled("div")(({ theme }) => ({
@@ -64,7 +65,7 @@ interface Props {
 export default function MiniCartItem({ item, onCart }: Props) {
   return (
     <StyledRoot>
-      <Link href={`/products/${item.productId}?variantId=${item.itemVariantId}`}>
+      <Link href={`/products/${encodeId(item.productId)}?variantId=${encodeId(item.itemVariantId)}`}>
         <StyledAvatar variant="rounded">
           <Image alt={item.productName} src={item.productImage} fill sizes="(100px, 100px)" />
         </StyledAvatar>

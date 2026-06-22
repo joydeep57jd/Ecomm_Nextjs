@@ -7,6 +7,7 @@ import Button from "@mui/material/Button"
 import IconLink from "components/icon-link"
 
 import Product from "models/Product.model"
+import { encodeId } from "@/utils/url-id"
 
 export default function ButtonGroup({ product }: { product: Product }) {
   const [isLoading, setLoading] = useState(false)
@@ -38,7 +39,7 @@ export default function ButtonGroup({ product }: { product: Product }) {
         Add to Cart
       </Button>
 
-      <IconLink title="View Product Details" url={`/products/${product.slug}`} sx={{ mt: 2 }} />
+      <IconLink title="View Product Details" url={`/products/${encodeId(product.slug)}`} sx={{ mt: 2 }} />
     </>
   )
 }

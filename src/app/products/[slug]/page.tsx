@@ -1,5 +1,6 @@
 import { SlugParams } from "models/Common"
 import SingleProduct from "./product"
+import { decodeId } from "@/utils/url-id"
 
 // export async function generateMetadata({ params }: SlugParams): Promise<Metadata> {
 //   const { slug } = await params
@@ -17,10 +18,12 @@ import SingleProduct from "./product"
 export default async function ProductDetails({ params, searchParams }: SlugParams) {
   const { slug } = await params
   const resolvedSearchParams = await searchParams
-  const variantId = resolvedSearchParams?.variantId ?? ''
+  const rawVariantId = resolvedSearchParams?.variantId ?? ''
   const variant = resolvedSearchParams?.variant ?? ''
-  
-  
 
-  return <SingleProduct slug={slug} variantId={variantId} variant={variant} />
+  // URLs carry the ids in encoded (base64) form — decode back to raw ids here.
+  const decodedSlug = decodeId(slug)
+  const variantId = rawVariantId ? decodeId(String(rawVariantId)) : ''
+
+  return <SingleProduct slug={decodedSlug} variantId={variantId} variant={variant} />
 }

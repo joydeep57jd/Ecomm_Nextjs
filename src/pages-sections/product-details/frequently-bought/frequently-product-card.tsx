@@ -7,6 +7,7 @@ import LazyImage from "components/LazyImage"
 import { calculateDiscount, currency } from "lib"
 // STYLED COMPONENTS
 import { ItemCard, Price } from "./styles"
+import { encodeId } from "@/utils/url-id"
 
 // =======================================================
 interface Props {
@@ -25,7 +26,7 @@ export default function FrequentlyProductCard({
   imgUrl = "/assets/images/products/Rectangle 116.png"
 }: Props) {
   return (
-    <Link href={`/products/${slug}`}>
+    <Link href={`/products/${encodeId(slug)}`}>
       <ItemCard>
         <HoverBox sx={{ mb: 1.5, borderRadius: 2 }}>
           <LazyImage alt={title} width={500} height={500} src={imgUrl} />

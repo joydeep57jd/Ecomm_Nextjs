@@ -14,7 +14,7 @@ export const MenuRoot = styled(Box)({
   }
 })
 
-export const TriggerButton = styled(Button)(({ theme }) => ({
+export const TriggerButton = styled(Button)(({  }) => ({
   gap: 6,
   flexShrink: 0,
   fontWeight: 600,

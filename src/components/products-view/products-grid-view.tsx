@@ -49,7 +49,10 @@ export default function ProductsGridView({ products }: Props) {
       }}
     >
       {products?.map((product) => (
-        <ProductCard17 key={product.itemVariantId ?? product.variantId ?? product.id} product={mapToProduct(product)} />
+        <ProductCard17
+          key={product.itemVariantId ?? product.variantId ?? product.id}
+          product={mapToProduct(product)}
+        />
       ))}
     </Box>
   )
