@@ -17,6 +17,7 @@ import { saveUserProfile } from "@/utils/api/profile"
 import { useUser } from "@/contexts/UserContenxt"
 import { useState } from "react"
 import { useSnackbar } from "notistack"
+import { BRAND } from "@/theme/brand"
 // CUSTOM DATA MODEL
 
 // ==============================================================
@@ -95,7 +96,7 @@ export default function ProfileEditForm({ user }: Props) {
             disableElevation
             size="large"
             type="submit"
-            color="primary"
+            sx={{ bgcolor: BRAND.primary }}
             variant="contained"
             loading={isSaving}
           >

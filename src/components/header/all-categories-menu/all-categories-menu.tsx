@@ -10,7 +10,7 @@ import { encodeId } from "@/utils/url-id"
 // STYLED COMPONENTS
 import { MenuRoot, TriggerButton, Panel, ColumnBox } from "./styles"
 
-const COLUMN_COLORS = ["#abdaaf", "info", "error", "warning", "secondary"] as const
+const COLUMN_COLORS = ["success", "info", "error", "warning", "secondary"] as const
 
 interface Props {
   categories: Category[]
@@ -32,7 +32,10 @@ export function AllCategoriesMenu({ categories }: Props) {
           const colorKey = COLUMN_COLORS[index % COLUMN_COLORS.length]
 
           return (
-            <ColumnBox key={category.id} sx={{ bgcolor: `${colorKey}.light` }}>
+            <ColumnBox
+              key={category.id}
+              sx={{ bgcolor: colorKey === "success" ? "#E8F5E9" : `${colorKey}.light` }}
+            >
               <MuiLink
                 component={NextLink}
                 href={`/products/search?category=${encodeId(category.id)}`}

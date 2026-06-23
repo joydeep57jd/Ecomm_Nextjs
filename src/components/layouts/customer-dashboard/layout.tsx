@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { useEffect, type PropsWithChildren } from "react"
 // MUI
 import Box from "@mui/material/Box"
@@ -8,6 +8,7 @@ import Container from "@mui/material/Container"
 import { Navigation } from "./navigation"
 import { useUser } from "@/contexts/UserContenxt"
 import { useRouter } from "next/navigation"
+import { BRAND } from "@/theme/brand"
 
 const gridStyle = {
   display: {
@@ -26,7 +27,7 @@ export default function CustomerDashboardLayout({ children }: PropsWithChildren)
   }, [])
 
   return (
-    <Box bgcolor="grey.50" py={{ xs: 3, sm: 4 }}>
+    <Box sx={{ bgcolor: BRAND.pageBg }} py={{ xs: 3, sm: 4 }}>
       <Container>
         <Grid container spacing={3}>
           <Grid size={{ lg: 3, xs: 12 }} sx={gridStyle}>
