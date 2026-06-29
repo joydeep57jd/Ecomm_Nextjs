@@ -232,6 +232,15 @@ export default function CheckoutAlternativePageView() {
   ) : (
     <Box bgcolor={BRAND.pageBg} sx={{ py: { xs: 3, sm: 4 } }}>
       <Container maxWidth="lg">
+        <Box mb={3}>
+          <Box component="h1" sx={{ m: 0, fontSize: { xs: "1.75rem", sm: "2rem" }, fontWeight: 700, color: "text.primary" }}>
+            Secure Checkout
+          </Box>
+          <Box component="p" sx={{ m: 0, mt: 0.5, color: "text.secondary", fontSize: "0.95rem" }}>
+            Review your delivery details and place your order.
+          </Box>
+        </Box>
+
         <Grid container spacing={3}>
           <Grid size={{ md: 8, xs: 12 }} order={{ xs: 2, md: 1 }}>
             <CheckoutForm
@@ -242,6 +251,7 @@ export default function CheckoutAlternativePageView() {
               order={order}
               placingOrder={placingOrder}
               fetchingDeliveryCharge={fetchingDeliveryCharge}
+              totalAmount={totalAmount}
             />
           </Grid>
 

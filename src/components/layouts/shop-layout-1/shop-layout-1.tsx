@@ -126,7 +126,7 @@ export default function ShopLayout1({ children, data }: Props) {
             >
               <AllCategoriesMenu categories={header.navigation} />
 
-              <NavigationList navigation={header.navigation} layoutModel={data} />
+              <NavigationList navigation={header.navigation.slice(0, 3)} layoutModel={data} />
 
               <Divider
                 orientation="vertical"

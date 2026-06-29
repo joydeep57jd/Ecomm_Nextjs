@@ -2,22 +2,21 @@
 import { Resolver, useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
+import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
+import { styled } from "@mui/material/styles"
+import CreditCardIcon from "@mui/icons-material/CreditCard"
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee"
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
+// import ShieldIcon from "@mui/icons-material/Shield"
 
-import { Fragment, useState } from "react"
-// GLOBAL CUSTOM COMPONENTS
+import {  useState } from "react"
 import { FormProvider } from "components/form-hook"
-// LOCAL CUSTOM COMPONENTS
 import Card from "./card"
-import Heading from "./heading"
-// import DeliveryDate from "./delivery-date"
-// import Voucher from "./payments/voucher"
-import FormLabel from "@/pages-sections/payment/form-label"
 import { Address } from "@/models/User.model"
 import DeliveryAddresses from "./delivery-addresses"
 import { DelivaryAddressData } from "@/models/Address.model"
-import { Divider } from "@mui/material"
 
 const validationSchema = yup.object().shape({
   card: yup.string().optional(),
@@ -54,7 +53,25 @@ interface Props {
   order(paymentMethod: string): Promise<void>
   placingOrder: boolean
   fetchingDeliveryCharge: boolean
+  totalAmount?: number
 }
+
+const PaymentOptionCard = styled("div")<{ selected: boolean }>(({ theme, selected }) => ({
+  flex: 1,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-start",
+  gap: theme.spacing(0.5),
+  padding: theme.spacing(2),
+  borderRadius: 12,
+  border: `1.5px solid ${selected ? theme.palette.primary.main : theme.palette.divider}`,
+  backgroundColor: selected ? `${theme.palette.primary.main}0d` : theme.palette.background.paper,
+  cursor: "pointer",
+  transition: "border-color 0.2s, background-color 0.2s",
+  "&:hover": {
+    borderColor: theme.palette.primary.main
+  }
+}))
 
 export default function CheckoutForm({
   deliveryAddresses,
@@ -63,7 +80,8 @@ export default function CheckoutForm({
   order,
   setSelectedDelivaryAddressData,
   placingOrder,
-  fetchingDeliveryCharge
+  fetchingDeliveryCharge,
+  totalAmount
 }: Props) {
   const [paymentMethod, setPaymentMethod] = useState<"online" | "cod" | "">("")
   const [paymentError, setPaymentError] = useState(false)
@@ -86,15 +104,10 @@ export default function CheckoutForm({
     resolver: yupResolver(validationSchema) as Resolver<FormValues>
   })
 
-  const {
-    // watch,
-    handleSubmit,
-    formState: { isSubmitting }
-  } = methods
+  const { handleSubmit, formState: { isSubmitting } } = methods
 
   const handleSubmitForm = handleSubmit((values) => {
     alert(JSON.stringify(values, null, 2))
-    // router.push("/payment");
   })
 
   const handleChangeTo = (method: "online" | "cod") => {
@@ -110,10 +123,10 @@ export default function CheckoutForm({
     order(paymentMethod)
   }
 
+  const isLoading = isSubmitting || placingOrder || fetchingDeliveryCharge
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmitForm}>
-      {/* <DeliveryDate deliveryTimes={deliveryTimes} /> */}
-
       <DeliveryAddresses
         deliveryAddresses={deliveryAddresses}
         getAddresses={getAddresses}
@@ -122,56 +135,47 @@ export default function CheckoutForm({
       />
 
       <Card>
-        <Heading number={2} title="Payment Details" />
-        <Fragment>
-          <Card>
-            {/* CREDIT CARD OPTION */}
-            {/* <FormLabel
-              name="credit-card"
-              title="Pay with credit card"
-              checked={paymentMethod === "credit-card"}
-              handleChange={() => handleChangeTo("credit-card")}
-            />
+        <Typography variant="h6" fontWeight={700} sx={{ mb: 2.5 }}>
+          Payment Method
+        </Typography>
 
-            <Divider sx={{ my: 3, mx: -4 }} /> */}
+        <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+          <PaymentOptionCard selected={paymentMethod === "online"} onClick={() => handleChangeTo("online")}>
+            <CreditCardIcon sx={{ fontSize: 28, color: paymentMethod === "online" ? "primary.main" : "text.secondary" }} />
+            <Typography variant="body2" fontWeight={700} sx={{ mt: 0.5 }}>Pay Online</Typography>
+            <Typography variant="caption" color="text.secondary">UPI · Cards · Wallets</Typography>
+          </PaymentOptionCard>
 
-            {/* PAYPAL CARD OPTION */}
-            <FormLabel
-              name="paypal"
-              title="Pay with Online Payment"
-              checked={paymentMethod === "online"}
-              handleChange={() => handleChangeTo("online")}
-            />
-
-            <Divider sx={{ my: 3, mx: -4 }} />
-
-            {/* CASH ON DELIVERY OPTION */}
-            <FormLabel
-              name="cod"
-              title="Cash On Delivery"
-              checked={paymentMethod === "cod"}
-              handleChange={() => handleChangeTo("cod")}
-            />
-          </Card>
-        </Fragment>
-
-        {/* <Voucher /> */}
+          <PaymentOptionCard selected={paymentMethod === "cod"} onClick={() => handleChangeTo("cod")}>
+            <CurrencyRupeeIcon sx={{ fontSize: 28, color: paymentMethod === "cod" ? "primary.main" : "text.secondary" }} />
+            <Typography variant="body2" fontWeight={700} sx={{ mt: 0.5 }}>Cash on Delivery</Typography>
+            <Typography variant="caption" color="text.secondary">Pay on arrival</Typography>
+          </PaymentOptionCard>
+        </Box>
 
         {paymentError && (
-          <Typography color="error" sx={{ mt: 1, mb: 2 }}>
+          <Typography color="error" variant="caption" sx={{ mb: 2, display: "block" }}>
             Please select a payment method
           </Typography>
         )}
 
         <Button
           size="large"
-          type="submit"
-          color="primary"
+          fullWidth
           variant="contained"
-          loading={isSubmitting || placingOrder || fetchingDeliveryCharge}
+          color="primary"
+          loading={isLoading}
           onClick={handlePlaceOrder}
+          endIcon={<ArrowForwardIcon />}
+          sx={{
+            borderRadius: 2,
+            py: 1.5,
+            fontSize: "1rem",
+            fontWeight: 700,
+            mt: 1
+          }}
         >
-          Place Order
+          {totalAmount ? `Place Order · ₹${totalAmount.toFixed(2)}` : "Place Order"}
         </Button>
       </Card>
     </FormProvider>
