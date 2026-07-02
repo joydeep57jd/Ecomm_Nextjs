@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment, ReactNode, SyntheticEvent } from "react"
+import { Fragment, ReactNode } from "react"
 // MUI
 import Tab from "@mui/material/Tab"
 import Tabs from "@mui/material/Tabs"
@@ -21,38 +21,20 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 
 // ==============================================================
 interface Props {
-  reviews: ReactNode;
-  description: ReactNode;
-  specifications: ReactNode;
-  activeTab: number
-  onTabChange: (value: number) => void
+  reviews: ReactNode
 }
 // ==============================================================
 
-export default function ProductTabs({ reviews, description, activeTab, onTabChange, specifications }: Props) {
-  const handleChangeTab = (_: SyntheticEvent, value: number) => onTabChange(value)
-  // const handleChangeTab = (_: SyntheticEvent, value: number) => setSelectedOption(value)
-
+// Description and Specification now live in the Product Details section
+// (see product-intro). This bottom section only hosts the Review tab.
+export default function ProductTabs({ reviews }: Props) {
   return (
     <Fragment>
-      <StyledTabs
-        textColor="primary"
-        value={activeTab}
-        indicatorColor="primary"
-        onChange={handleChangeTab}
-      >
-        <Tab className="inner-tab" label="Description" />
+      <StyledTabs textColor="primary" value={0} indicatorColor="primary">
         <Tab className="inner-tab" label="Review" />
-        <Tab className="inner-tab" label="Specification" />
       </StyledTabs>
 
-      <div className="mb-3">
-        {/* {selectedOption === 0 && description}
-        {selectedOption === 1 && reviews} */}
-        {activeTab === 0 && description}
-        {activeTab === 1 && reviews}
-         {activeTab === 2 && specifications}
-      </div>
+      <div className="mb-3">{reviews}</div>
     </Fragment>
   )
 }

@@ -1,132 +1,239 @@
 "use client"
 
-import { Fragment } from "react"
 import { format } from "date-fns/format"
 // MUI
 import Box from "@mui/material/Box"
 import Card from "@mui/material/Card"
 import Avatar from "@mui/material/Avatar"
+import Typography from "@mui/material/Typography"
+import Skeleton from "@mui/material/Skeleton"
 import { styled } from "@mui/material/styles"
-import Done from "@mui/icons-material/Done"
+import CancelOutlined from "@mui/icons-material/CancelOutlined"
 // CUSTOM ICON COMPONENTS
 import Delivery from "icons/Delivery"
 import PackageBox from "icons/PackageBox"
 import TruckFilled from "icons/TruckFilled"
-// GLOBAL CUSTOM COMPONENTS
-import { FlexBetween, FlexBox } from "components/flex-box"
 // CUSTOM DATA MODEL
-import { OrderStatus } from "models/Order.model"
+import { OrderStatus } from "@/enums/order-status.enum"
+import { OrderListCustomer, StatusTrack } from "@/models/OrderHistory.modal"
 
 // STYLED COMPONENTS
-const StyledFlexbox = styled(FlexBetween)(({ theme }) => ({
-  flexWrap: "wrap",
-  marginTop: "2rem",
-  marginBottom: "2rem",
-  [theme.breakpoints.down("sm")]: {
-    flexDirection: "column"
-  },
-  "& .line": {
-    height: 2,
-    minWidth: 50,
-    flex: "1 1 0",
-    [theme.breakpoints.down("sm")]: {
-      flex: "unset",
-      height: 50,
-      minWidth: 4
-    }
-  }
-}))
-
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
-  top: -5,
-  right: -5,
-  width: 20,
-  height: 20,
-  position: "absolute",
-  color: theme.palette.primary.main,
-  backgroundColor: theme.palette.primary.light,
-  boxShadow: theme.shadows[1],
-  "& svg": { fontSize: 16 }
-}))
-
-const StyledStatusAvatar = styled(Avatar)(({ theme }) => ({
-  width: 64,
-  height: 64,
+const StepAvatar = styled(Avatar)(({ theme }) => ({
+  width: 44,
+  height: 44,
+  zIndex: 1,
   transition: "all 0.3s ease",
+  "& svg": { fontSize: 22 },
   "&.completed": {
     color: theme.palette.common.white,
     backgroundColor: theme.palette.primary.main
   },
-  "&.pending": {
+  "&.active": {
     color: theme.palette.primary.main,
+    backgroundColor: theme.palette.primary.light,
+    boxShadow: `0 0 0 4px ${theme.palette.primary.light}`
+  },
+  "&.pending": {
+    color: theme.palette.grey[400],
     backgroundColor: theme.palette.grey[100]
   }
 }))
 
-const DeliveryDateBox = styled("div")(({ theme }) => ({
-  textAlign: "center",
-  padding: "0.5rem 1rem",
-  transition: "all 0.3s ease",
-  color: theme.palette.primary.main,
-  borderRadius: theme.shape.borderRadius * 3,
-  backgroundColor: theme.palette.primary.light
-}))
-
 // ==============================================================
 interface Props {
-  status: OrderStatus;
-  deliveredAt: Date;
-  isDelivered: boolean;
+  order: OrderListCustomer
+  statusTrack?: StatusTrack[]
+  statusLoading?: boolean
 }
 // ==============================================================
 
-const STEP_ICONS = [PackageBox, TruckFilled, Delivery]
-const ORDER_STATUS_LIST = ["Pending", "Processing", "Delivered"]
+// Pick an icon for a step based on its API statusId.
+//   8 -> truck (out for delivery)
+//   9 -> delivery
+//   anything else -> package box
+const getStepIcon = (step: StatusTrack) => {
+  if (step.statusId === 8) return TruckFilled
+  if (step.statusId === 9) return Delivery
+  return PackageBox
+}
 
-export default function OrderProgress({ status, deliveredAt, isDelivered }: Props) {
-  const statusIndex = ORDER_STATUS_LIST.indexOf(status)
+// Safely format a date that may be null / empty / invalid.
+const safeDate = (value?: string | Date | null): string | null => {
+  if (!value) return null
+  const date = new Date(value)
+  return isNaN(date.getTime()) ? null : format(date, "dd MMM yyyy")
+}
 
-  return (
-    <Card
-      elevation={0}
-      sx={{
-        mb: 4,
-        p: "2rem 1.5rem",
-        border: "1px solid",
-        borderColor: "grey.100"
-      }}
-    >
-      <StyledFlexbox>
-        {STEP_ICONS.map((Icon, ind) => (
-          <Fragment key={`step-${ind}`}>
-            <Box position="relative">
-              <StyledStatusAvatar
-                alt={`shipping-step-${ind + 1}`}
-                className={ind <= statusIndex ? "completed" : "pending"}
-              >
-                <Icon color="inherit" fontSize="large" />
-              </StyledStatusAvatar>
+// Safely format a status date-time coming from the API.
+const safeDateTime = (value?: string | Date | null): string | null => {
+  if (!value) return null
+  const date = new Date(value)
+  return isNaN(date.getTime()) ? null : format(date, "dd MMM yyyy, hh:mm a")
+}
 
-              {ind < statusIndex && (
-                <StyledAvatar alt="completed-step">
-                  <Done color="inherit" />
-                </StyledAvatar>
-              )}
+export default function OrderProgress({ order, statusTrack, statusLoading }: Props) {
+  const isCancelled = order.isCancel || order.orderStatus === OrderStatus.CANCELLED
+
+  if (isCancelled) {
+    const cancelledOn = safeDate(order.cancelDate)
+    return (
+      <Card
+        elevation={0}
+        sx={{
+          mb: 3,
+          p: 2,
+          display: "flex",
+          alignItems: "center",
+          gap: 1.5,
+          border: "1px solid",
+          borderColor: "error.200",
+          borderRadius: 2,
+          bgcolor: "error.light"
+        }}
+      >
+        <CancelOutlined sx={{ color: "error.main" }} />
+        <Box>
+          <Typography fontWeight={600} fontSize={14} color="error.main">
+            Order Cancelled
+          </Typography>
+          {cancelledOn && (
+            <Typography fontSize={12} color="text.secondary">
+              on {cancelledOn}
+            </Typography>
+          )}
+        </Box>
+      </Card>
+    )
+  }
+
+  // While the status track is still being fetched, show a skeleton instead of
+  // the fallback stepper so the real steps don't flash in afterwards.
+  if (statusLoading && (!statusTrack || statusTrack.length === 0)) {
+    return (
+      <Card
+        elevation={0}
+        sx={{
+          mb: 3,
+          p: { xs: 2, sm: 2.5 },
+          border: "1px solid",
+          borderColor: "grey.100",
+          borderRadius: 2
+        }}
+      >
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          {[0, 1, 2].map((i) => (
+            <Box
+              key={i}
+              sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.75, flex: 1 }}
+            >
+              <Skeleton variant="circular" width={44} height={44} />
+              <Skeleton variant="text" width={60} />
             </Box>
+          ))}
+        </Box>
+      </Card>
+    )
+  }
 
-            {ind < STEP_ICONS.length - 1 && (
-              <Box className="line" bgcolor={ind < statusIndex ? "primary.main" : "grey.100"} />
-            )}
-          </Fragment>
-        ))}
-      </StyledFlexbox>
+  // Prefer the status track coming from the API when available.
+  if (statusTrack && statusTrack.length > 0) {
+    const steps = [...statusTrack].sort((a, b) => a.stepNo - b.stepNo)
 
-      <FlexBox justifyContent={{ xs: "center", sm: "flex-end" }}>
-        <DeliveryDateBox>
-          Estimated Delivery Date{" "}
-          <b>{isDelivered ? format(new Date(deliveredAt), "dd MMM yyyy") : "N/A"}</b>
-        </DeliveryDateBox>
-      </FlexBox>
-    </Card>
-  )
+    // A step is reached (completed) once it has an actual status date/time.
+    const isReached = (s: StatusTrack) => Boolean(safeDateTime(s.statusDateTime))
+
+    // Index of the last step that has actually been reached.
+    let lastReachedIndex = -1
+    steps.forEach((s, i) => {
+      if (isReached(s)) lastReachedIndex = i
+    })
+
+    // The current step is the flagged one, but never behind the furthest
+    // reached step (a step with a timestamp is already complete).
+    const flaggedIndex = steps.findIndex((s) => s.isCurrent)
+    const activeIndex = Math.max(flaggedIndex, lastReachedIndex, 0)
+
+    // Fill the line up to the furthest completed / current step.
+    const progress = steps.length <= 1 ? 0 : activeIndex / (steps.length - 1)
+
+    return (
+      <Card
+        elevation={0}
+        sx={{
+          mb: 3,
+          p: { xs: 2, sm: 2.5 },
+          border: "1px solid",
+          borderColor: "grey.100",
+          borderRadius: 2
+        }}
+      >
+        {/* STEPPER */}
+        <Box sx={{ position: "relative", display: "flex", justifyContent: "space-between" }}>
+          {/* track (behind icons) */}
+          <Box
+            sx={{
+              position: "absolute",
+              top: 21,
+              left: 22,
+              right: 22,
+              height: 3,
+              borderRadius: 2,
+              bgcolor: "grey.100"
+            }}
+          />
+          {/* filled track */}
+          <Box
+            sx={{
+              position: "absolute",
+              top: 21,
+              left: 22,
+              width: `calc((100% - 44px) * ${progress})`,
+              height: 3,
+              borderRadius: 2,
+              bgcolor: "primary.main",
+              transition: "width 0.4s ease"
+            }}
+          />
+
+          {steps.map((step, ind) => {
+            // A step with a timestamp is completed; the current unreached step
+            // is active; everything else is still pending.
+            const state = isReached(step)
+              ? "completed"
+              : ind === activeIndex
+                ? "active"
+                : "pending"
+            const Icon = getStepIcon(step)
+            const stepDate = safeDateTime(step.statusDateTime)
+            return (
+              <Box
+                key={step.statusId ?? ind}
+                sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.75, flex: 1 }}
+              >
+                <StepAvatar className={state} alt={step.statusName}>
+                  <Icon color="inherit" />
+                </StepAvatar>
+                <Typography
+                  fontSize={12}
+                  fontWeight={ind <= activeIndex ? 600 : 500}
+                  color={ind <= activeIndex ? "text.primary" : "text.disabled"}
+                  textAlign="center"
+                >
+                  {step.statusName}
+                </Typography>
+                {stepDate && (
+                  <Typography fontSize={10.5} color="text.secondary" textAlign="center">
+                    {stepDate}
+                  </Typography>
+                )}
+              </Box>
+            )
+          })}
+        </Box>
+      </Card>
+    )
+  }
+
+  // No status track available (and not loading) — nothing to show.
+  return null
 }

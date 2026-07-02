@@ -66,3 +66,37 @@ export interface OrderPayload {
   RecordTo: number
   CustOrdNo: string
 }
+
+
+
+
+export interface GetOrderPaymentAndAddressResponse {
+  orderId:         number;
+  orderNo:         string;
+  paymentMode:     string;
+  customerName:    string;
+  customerPhone:   string;
+  customerEmail:   string;
+  deliveryAddress: DeliveryAddress;
+  statusTrack:     StatusTrack[];
+}
+
+export interface DeliveryAddress {
+  addressLine1: string;
+  addressLine2: string;
+  city:         string;
+  district:     string;
+  state:        string;
+  pin:          string;
+  phone:        string;
+  email:        string;
+}
+
+export interface StatusTrack {
+  stepNo:           number;
+  statusId:         number;
+  statusSystemName: string;
+  statusName:       string;
+  statusDateTime:   Date;
+  isCurrent:        boolean;
+}

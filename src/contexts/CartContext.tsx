@@ -82,13 +82,19 @@ const reducer = (state: InitialState, action: CartActionType) => {
       }
 
     case "CLEAR_CART":
+      // Fully reset the cart in memory AND in localStorage. Used on logout so a
+      // subsequent login on the same session never inherits the previous user's
+      // items. No remote sync here (isSyncRequired: false) — there is no user.
       clearCart()
       return {
         ...state,
         cart: [],
-        isSyncRequired: true,
-        user: action.user,
-        isLoading: !!action.isSyncRequired
+        remoteCarts: undefined,
+        isLoggedIn: false,
+        isSyncRequired: false,
+        user: undefined,
+        deleteItem: undefined,
+        isLoading: false
       }
 
     case "SET_CART":

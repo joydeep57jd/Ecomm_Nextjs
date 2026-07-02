@@ -4,14 +4,18 @@ import {
   Avatar,
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
+  IconButton,
   Rating,
   Typography
 } from "@mui/material"
+import CloudUploadIcon from "@mui/icons-material/CloudUpload"
+import DeleteIcon from "@mui/icons-material/Delete"
 import React, { useState } from "react"
 import { FormProvider, TextField } from "components/form-hook"
 import { useForm } from "react-hook-form"
@@ -20,8 +24,15 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { Item as Product } from "@/models/OrderHistory.modal"
 import Image from "next/image"
 import { saveRating } from "@/utils/api/rating"
-import { SaveRatingRequest } from "@/models/Rating.model"
+import { ReviewImage, SaveRatingRequest } from "@/models/Rating.model"
 import { useUser } from "@/contexts/UserContenxt"
+
+const MAX_IMAGES = 5
+
+type UploadedImage = {
+  name: string
+  base64: string
+}
 
 type Props = {
   handleCloseModal(isReloadRequired: boolean): void
@@ -33,6 +44,9 @@ type Props = {
 function OrderItemRating({ handleCloseModal, product }: Props) {
   const { user } = useUser()
   const [isSaving, setIsSaving] = useState(false)
+  const [images, setImages] = useState<UploadedImage[]>([])
+  const [imageLoading, setImageLoading] = useState(false)
+  const [imageError, setImageError] = useState("")
   const isEditMode = Boolean(product.ratingId)
   
 
@@ -51,11 +65,62 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
 
   const { watch, setValue, getValues } = methods
 
+  const convertToBase64 = (files: File[]): Promise<UploadedImage[]> => {
+    return new Promise((resolve, reject) => {
+      const results: UploadedImage[] = []
+      let processed = 0
+
+      files.forEach((file) => {
+        const reader = new FileReader()
+        reader.onload = () => {
+          results.push({ name: file.name, base64: reader.result as string })
+          processed++
+          if (processed === files.length) resolve(results)
+        }
+        reader.onerror = (error) => reject(error)
+        reader.readAsDataURL(file)
+      })
+    })
+  }
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    e.target.value = ""
+    if (!files.length) return
+
+    setImageError("")
+    if (images.length + files.length > MAX_IMAGES) {
+      setImageError(`You can upload a maximum of ${MAX_IMAGES} images.`)
+      return
+    }
+
+    setImageLoading(true)
+    try {
+      const uploaded = await convertToBase64(files)
+      setImages((prev) => [...prev, ...uploaded])
+    } catch (err) {
+      console.error("Image upload failed:", err)
+      setImageError("Failed to read images. Please try again.")
+    } finally {
+      setImageLoading(false)
+    }
+  }
+
+  const handleRemoveImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index))
+    setImageError("")
+  }
+
   const save = async () => {
     const isValid = await methods.trigger()
     if (!isValid) return
     setIsSaving(true)
     try {
+      const reviewImages: ReviewImage[] = images.map((img) => ({
+        Name: img.name,
+        ImageData: img.base64.split(",")[1] ?? img.base64
+      }))
+
       const payload: SaveRatingRequest = {
         note: getValues("comment"),
         rating: getValues("rating"),
@@ -63,8 +128,8 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
         itemId: product.itemId,
         variantId: product.itemVariantId,
         OrderdetailId:product.orderDetailId,
-        RatingId:product.ratingId || 0
-        
+        RatingId:product.ratingId || 0,
+        ...(reviewImages.length > 0 && { Images: reviewImages })
       }
       await saveRating(payload)
       handleCloseModal(true)
@@ -143,6 +208,94 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
               placeholder="Write a review here..."
             />
           </Box>
+
+          <Box mt={3}>
+            <Typography
+              variant="h6"
+              sx={{ mb: 1, color: "grey.700" }}
+              color="grey.700"
+            >
+              Add Photos{" "}
+              <Typography component="span" variant="caption" color="grey.600">
+                (optional, up to {MAX_IMAGES})
+              </Typography>
+            </Typography>
+
+            {imageLoading ? (
+              <Box display="flex" alignItems="center" gap={1}>
+                <CircularProgress size={22} />
+                <Typography variant="body2" color="text.secondary">
+                  Uploading images...
+                </Typography>
+              </Box>
+            ) : (
+              <Button
+                variant="outlined"
+                component="label"
+                startIcon={<CloudUploadIcon />}
+                disabled={images.length >= MAX_IMAGES}
+                sx={{
+                  textTransform: "none",
+                  borderStyle: "dashed",
+                  borderColor: "grey.400",
+                  color: "grey.700"
+                }}
+              >
+                Upload Images
+                <input
+                  type="file"
+                  hidden
+                  multiple
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+              </Button>
+            )}
+
+            {imageError && (
+              <Typography color="error" sx={{ mt: 1, fontSize: "0.8rem" }}>
+                {imageError}
+              </Typography>
+            )}
+
+            {images.length > 0 && !imageLoading && (
+              <Box mt={2} display="grid" gridTemplateColumns="repeat(auto-fill, 80px)" gap={1.5}>
+                {images.map((img, i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      position: "relative",
+                      borderRadius: 1,
+                      overflow: "hidden",
+                      border: "1px solid #ccc"
+                    }}
+                  >
+                    <Image
+                      src={img.base64}
+                      alt={img.name}
+                      width={80}
+                      height={80}
+                      style={{ objectFit: "cover", width: 80, height: 80 }}
+                    />
+
+                    <IconButton
+                      size="small"
+                      onClick={() => handleRemoveImage(i)}
+                      sx={{
+                        position: "absolute",
+                        top: 2,
+                        right: 2,
+                        backgroundColor: "rgba(255,255,255,0.7)",
+                        "&:hover": { backgroundColor: "rgba(255,255,255,0.9)" }
+                      }}
+                    >
+                      <DeleteIcon fontSize="small" color="error" />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
+            )}
+          </Box>
         </FormProvider>
       </DialogContent>
       <Divider />
@@ -150,7 +303,13 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
         <Button onClick={() => handleCloseModal(false)} color="primary" variant="outlined">
           Cancel
         </Button>
-        <Button onClick={save} loading={isSaving} color="primary" variant="contained">
+        <Button
+          onClick={save}
+          loading={isSaving}
+          disabled={imageLoading}
+          color="primary"
+          variant="contained"
+        >
           Save
         </Button>
       </DialogActions>

@@ -9,7 +9,11 @@ import {
 } from "@/models/Order.model"
 import axiosInstance from "../axiosInstance"
 import API_URL from "../constants"
-import { OrderPayload, OrderResponse } from "@/models/OrderHistory.modal"
+import {
+  GetOrderPaymentAndAddressResponse,
+  OrderPayload,
+  OrderResponse
+} from "@/models/OrderHistory.modal"
 import {
   OrderReturnOtpPayload,
   OrderReturnOtpResponse,
@@ -72,6 +76,14 @@ export const orderReturnPickupOtp = async (payload: OrderReturnOtpPayload) => {
   const { data } = await axiosInstance.post<{ data: OrderReturnOtpResponse }>(
     API_URL.ORDER.GET_RETURN_PICKUP_OTP,
     payload
+  )
+  return data.data
+}
+
+export const getOrderPaymentAndAddress = async (orderId: number) => {
+  const { data } = await axiosInstance.post<{ data: GetOrderPaymentAndAddressResponse }>(
+    API_URL.ORDER.GET_ORDER_PAYMENT_AND_ADDRESS,
+    { orderId }
   )
   return data.data
 }

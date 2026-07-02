@@ -170,6 +170,8 @@ export default function ProductCard17({
                 variantName: title,
                 unitName: product.businessUnitName,
                 businessUnitId: product.businessUnitId,
+                backgroundColor: product.backgroundColor,
+                fontFontColor: product.fontColor,
                 variantOptionDetails: []
               }}
             />

@@ -25,6 +25,7 @@ import OverlayScrollbar from "components/overlay-scrollbar"
 
 // Types
 import { Cart } from "@/models/CartProductItem.models"
+import { getUnitColorMap } from "@/utils/services/unit-colors.service"
 
 export default function MiniCart() {
   const Router = useRouter()
@@ -47,14 +48,19 @@ export default function MiniCart() {
   const tabKeys = Object.keys(tabsData)
   const [activeTab, setActiveTab] = useState(tabKeys[0])
 
+  // Learned per-unit colors (fallback for items whose own colors are missing,
+  // e.g. guest items added from the home page).
+  const unitColorMap = useMemo(() => getUnitColorMap(), [state.cart])
+
   // Extract colors for the CURRENT active tab (for the Checkout button)
   const activeStyles = useMemo(() => {
     const firstItem = tabsData[activeTab]?.[0]
+    const learned = unitColorMap[activeTab]
     return {
-      bg: firstItem?.backgroundColor || "#F3F5F9",
-      font: firstItem?.fontFontColor || "#2B3445"
+      bg: firstItem?.backgroundColor || learned?.bg || "#F3F5F9",
+      font: firstItem?.fontFontColor || learned?.font || "#2B3445"
     }
-  }, [activeTab, tabsData])
+  }, [activeTab, tabsData, unitColorMap])
 
   useEffect(() => {
     if (!tabsData[activeTab] && tabKeys.length > 0) {
@@ -99,8 +105,9 @@ export default function MiniCart() {
           {tabKeys.map((key) => {
             const isActive = activeTab === key
             const firstItemInTab = tabsData[key][0]
-            const tabBg = firstItemInTab?.backgroundColor || "#E8F5E9"
-            const tabFont = firstItemInTab?.fontFontColor || "#1B5E20"
+            const learned = unitColorMap[key]
+            const tabBg = firstItemInTab?.backgroundColor || learned?.bg || "#E8F5E9"
+            const tabFont = firstItemInTab?.fontFontColor || learned?.font || "#1B5E20"
 
             return (
               <Button

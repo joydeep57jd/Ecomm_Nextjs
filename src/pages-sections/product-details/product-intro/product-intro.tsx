@@ -4,8 +4,10 @@ import Grid from "@mui/material/Grid"
 import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
+import Tab from "@mui/material/Tab"
+import Tabs from "@mui/material/Tabs"
 import AddIcon from "@mui/icons-material/Add"
-import BoltIcon from "@mui/icons-material/Bolt"
+import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined"
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined"
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined"
 import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined"
@@ -18,9 +20,9 @@ import { StyledRoot } from "./styles"
 import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
 import ProductAction from "../../../components/product-action"
 import Loading from "@/app/loading"
-import useCart from "@/hooks/useCart"
-import { useRouter } from "next/navigation"
-import { useUser } from "@/contexts/UserContenxt"
+import { enqueueSnackbar } from "notistack"
+import { useEffect, useState } from "react"
+import { rememberUnitColors } from "@/utils/services/unit-colors.service"
 import { BRAND } from "theme/brand"
 
 const deliveryInfo = [
@@ -61,9 +63,19 @@ export default function ProductIntro({
   isLoading,
   onShowReviews
 }: Props) {
-  const { dispatch } = useCart()
-  const { user } = useUser()
-  const router = useRouter()
+  // Product Details tabs: 0 = Description, 1 = Specification
+  const [detailsTab, setDetailsTab] = useState(0)
+  const specifications = product.variantOptionList ?? []
+
+  // Cache this unit's colors so the cart can reuse them for guest items added
+  // from sources that don't return colors.
+  useEffect(() => {
+    rememberUnitColors(
+      product.variantDetails?.unitName,
+      product.variantDetails?.backgroundColor,
+      product.variantDetails?.fontColor
+    )
+  }, [product.variantDetails])
 
   const isOutOfStock = product.priceAndStock?.stockQty === 0 || product.priceAndStock === null
 
@@ -99,17 +111,20 @@ export default function ProductIntro({
         }
       : null
 
-  const handleBuyNow = () => {
-    if (!cartProduct || isOutOfStock) return
-    dispatch({
-      type: "CHANGE_CART_AMOUNT",
-      payload: { ...cartProduct, qty: 1 },
-      isLoggedIn: !!user,
-      user: user ?? undefined
-    })
-    router.push(
-      user ? `/checkout?businessUnitId=${product.variantDetails?.businessUnitId}` : "/login"
-    )
+  const handleShare = async () => {
+    if (typeof window === "undefined") return
+    const url = window.location.href
+    const title = product.variantDetails?.itemName || product.variantDetails?.variantName || "Product"
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url })
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(url)
+        enqueueSnackbar("Product link copied to clipboard", { variant: "success" })
+      }
+    } catch {
+      // Share dialog dismissed or unavailable — no action needed.
+    }
   }
 
   return (
@@ -293,9 +308,8 @@ export default function ProductIntro({
                 </Box>
                 <Button
                   variant="contained"
-                  startIcon={<BoltIcon />}
-                  onClick={handleBuyNow}
-                  disabled={isOutOfStock}
+                  startIcon={<ShareOutlinedIcon />}
+                  onClick={handleShare}
                   fullWidth
                   sx={{
                     flex: 1,
@@ -306,7 +320,7 @@ export default function ProductIntro({
                     "&:hover": { bgcolor: BRAND.primary, boxShadow: "none" }
                   }}
                 >
-                  Buy Now
+                  Share
                 </Button>
               </Box>
             )}
@@ -351,27 +365,61 @@ export default function ProductIntro({
             ))}
           </Box>
 
-          {/* Product details */}
+          {/* Product details: switch between Description and Specification */}
           <Box>
-            <Typography sx={{ fontWeight: 700, fontSize: 15, mb: 1, color: "#1a1a1a" }}>
-              Product Details
-            </Typography>
+            <Tabs
+              value={detailsTab}
+              onChange={(_, value) => setDetailsTab(value)}
+              textColor="primary"
+              indicatorColor="primary"
+              sx={{
+                minHeight: 0,
+                mb: 1.5,
+                borderBottom: "1px solid",
+                borderColor: "divider",
+                "& .MuiTab-root": {
+                  minHeight: 40,
+                  fontWeight: 600,
+                  fontSize: 14,
+                  textTransform: "none"
+                }
+              }}
+            >
+              <Tab label="Description" />
+              <Tab label="Specification" />
+            </Tabs>
 
-            <Typography variant="body2" sx={{ mb: 1, lineHeight: 1.7 }}>
-              {/* <Box component="span" sx={{ fontWeight: 700, color: "#1a1a1a" }}>
-                Description:{" "}
-              </Box> */}
-              {/* <Box component="span" sx={{ color: "#1a1a1a" }}>
-                {product.variantDetails?.variantName}
-              </Box> */}
-              {product.variantDetails?.itemDesc && (
+            {/* Description */}
+            {detailsTab === 0 &&
+              (product.variantDetails?.itemDesc ? (
                 <Box
-                  component="span"
-                  sx={{ color: "#1a1a1a" }}
+                  sx={{ color: "#1a1a1a", fontSize: 14, lineHeight: 1.7 }}
                   dangerouslySetInnerHTML={{ __html: product.variantDetails.itemDesc }}
                 />
-              )}
-            </Typography>
+              ) : (
+                <Typography variant="body2" color="text.secondary">
+                  No description available.
+                </Typography>
+              ))}
+
+            {/* Specification */}
+            {detailsTab === 1 &&
+              (specifications.length > 0 ? (
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 0.75 }}>
+                  {specifications.map((spec, index) => (
+                    <Typography key={index} variant="body2" sx={{ color: "#1a1a1a" }}>
+                      <Box component="strong" sx={{ fontWeight: 700 }}>
+                        {spec.optionName}
+                      </Box>
+                      : {spec.optionValue}
+                    </Typography>
+                  ))}
+                </Box>
+              ) : (
+                <Typography variant="body2" color="text.secondary">
+                  No specifications available.
+                </Typography>
+              ))}
           </Box>
         </Grid>
       </Grid>

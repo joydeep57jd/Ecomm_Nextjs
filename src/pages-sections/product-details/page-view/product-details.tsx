@@ -11,14 +11,12 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 import ProductTabs from "../product-tabs"
 import ProductIntro from "../product-intro"
 import ProductReviews from "../product-reviews"
-import ProductDescription from "../product-description"
 // CUSTOM DATA MODEL
 import Product from "models/Product.model"
 import { SingleProductResponse, VariantOption } from "@/models/SingleProduct.model"
 import { useRouter } from "next/navigation"
 import { GetReviewResponse } from "@/models/Rating.model"
-import { useEffect, useState } from "react"
-import ProductSpecification from "../product-specification"
+import { useEffect } from "react"
 
 // ==============================================================
 interface Props {
@@ -33,7 +31,6 @@ interface Props {
 // ==============================================================
 
 export default function ProductDetailsPageView(props: Props) {
-  const [activeTab, setActiveTab] = useState(0)
   const router = useRouter()
 
   useEffect(() => {
@@ -43,7 +40,6 @@ export default function ProductDetailsPageView(props: Props) {
   }, [props.product?.variantDetails])
 
   const onShowReviews = () => {
-    setActiveTab(1)
     setTimeout(() => {
       const reviewSection = document.getElementById("reviews-container")
       if (reviewSection) {
@@ -76,14 +72,8 @@ export default function ProductDetailsPageView(props: Props) {
         onShowReviews={onShowReviews}
       />
 
-      {/* PRODUCT DESCRIPTION AND REVIEW */}
-      <ProductTabs
-        description={<ProductDescription product={props.product} />}
-        reviews={<ProductReviews reviews={props.reviews} />}
-        specifications={<ProductSpecification specifications={props.product?.variantOptionList} />}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      />
+      {/* PRODUCT REVIEW */}
+      <ProductTabs reviews={<ProductReviews reviews={props.reviews} />} />
 
       {/* FREQUENTLY BOUGHT PRODUCTS AREA */}
       {/* <FrequentlyBought products={props.frequentlyBought} /> */}

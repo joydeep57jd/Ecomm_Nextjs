@@ -35,13 +35,12 @@ export const ImageWrapper = styled("div")(({ theme }) => ({
   ".thumbnail": {
     width: "100%",
     height: "100%",
+    // "contain" keeps the whole product visible; the larger padding gives a
+    // consistent inset so tightly-cropped photos (e.g. the oranges) can't
+    // bleed to the card edges and look bigger than the others.
     objectFit: "contain",
     objectPosition: "center",
-    padding: "8px",
-    "&:hover": {
-      transform: "scale(1.04)"
-    },
-    transition: "transform 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94)"
+    padding: "6px"
   },
   ".stock-overlay": {
     zIndex: 3,

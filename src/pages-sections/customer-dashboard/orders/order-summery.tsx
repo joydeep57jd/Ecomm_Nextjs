@@ -7,27 +7,75 @@ import FlexBetween from "components/flex-box/flex-between"
 // CUSTOM UTILS LIBRARY FUNCTION
 import { currency } from "lib"
 // CUSTOM DATA MODEL
-import { OrderListCustomer } from "@/models/OrderHistory.modal"
+import {
+  DeliveryAddress,
+  GetOrderPaymentAndAddressResponse,
+  OrderListCustomer
+} from "@/models/OrderHistory.modal"
 
 // ==============================================================
-type Props = { order: OrderListCustomer }
+type Props = {
+  order: OrderListCustomer
+  paymentAndAddress: GetOrderPaymentAndAddressResponse | null
+}
 // ==============================================================
 
-export default function OrderSummery({ order }: Props) {
+const formatAddress = (address: DeliveryAddress): string =>
+  [address.addressLine1, address.addressLine2, address.city, address.district, address.state]
+    .filter(Boolean)
+    .join(", ")
+
+export default function OrderSummery({ order, paymentAndAddress }: Props) {
+  const address = paymentAndAddress?.deliveryAddress
+
   return (
     <Grid container spacing={3}>
-      {/* <Grid size={{ md: 6, xs: 12 }}>
-        <Card elevation={0} sx={{ p: 3, border: "1px solid", borderColor: "grey.100" }}>
+      <Grid size={{ md: 6, xs: 12 }}>
+        <Card elevation={0} sx={{ p: 3, border: "1px solid", borderColor: "grey.100", height: "100%" }}>
           <Typography variant="h5" sx={{ mb: 2 }}>
             Shipping Address
           </Typography>
 
-          <Typography variant="body1">{order.assignmentId}</Typography>
-        </Card>
-      </Grid> */}
+          {address ? (
+            <>
+              {paymentAndAddress?.customerName && (
+                <Typography variant="body1" fontWeight={600}>
+                  {paymentAndAddress.customerName}
+                </Typography>
+              )}
 
-      <Grid size={{ md: 12, xs: 12 }}>
-        <Card elevation={0} sx={{ p: 3, border: "1px solid", borderColor: "grey.100" }}>
+              <Typography variant="body1" color="text.secondary">
+                {formatAddress(address)}
+              </Typography>
+
+              {address.pin && (
+                <Typography variant="body1" color="text.secondary">
+                  PIN: {address.pin}
+                </Typography>
+              )}
+
+              {(address.phone || paymentAndAddress?.customerPhone) && (
+                <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+                  Phone: {address.phone || paymentAndAddress?.customerPhone}
+                </Typography>
+              )}
+
+              {(address.email || paymentAndAddress?.customerEmail) && (
+                <Typography variant="body1" color="text.secondary">
+                  Email: {address.email || paymentAndAddress?.customerEmail}
+                </Typography>
+              )}
+            </>
+          ) : (
+            <Typography variant="body1" color="text.secondary">
+              Address not available
+            </Typography>
+          )}
+        </Card>
+      </Grid>
+
+      <Grid size={{ md: 6, xs: 12 }}>
+        <Card elevation={0} sx={{ p: 3, border: "1px solid", borderColor: "grey.100", height: "100%" }}>
           <Typography variant="h5" sx={{ mb: 2 }}>
             Total Summary
           </Typography>
@@ -44,7 +92,17 @@ export default function OrderSummery({ order }: Props) {
             <Typography variant="h6">{currency(+order.total)}</Typography>
           </FlexBetween>
 
-          {/* <p>Paid by Credit/Debit Card</p> */}
+          {paymentAndAddress?.paymentMode && (
+            <>
+              <Divider sx={{ mb: 1 }} />
+              <FlexBetween>
+                <Typography color="text.secondary" variant="body1">
+                  Payment Method:
+                </Typography>
+                <Typography variant="h6">{paymentAndAddress.paymentMode}</Typography>
+              </FlexBetween>
+            </>
+          )}
         </Card>
       </Grid>
     </Grid>

@@ -20,6 +20,8 @@ export interface SectionItem {
   stockQty: number
   itemRating:number
   reviewCount:number
+  fontColor?: string
+  backgroundColor?: string
 }
 
 export interface Section {

@@ -64,12 +64,11 @@ export const components: ThemeComponents = {
     styleOverrides: {
       root: {
         borderRadius: 12,
-        "&:hover .thumbnail": {
-          display: "block !important",
-          maxHeight: "360px !important",
-          minHeight: "360px !important",
-          objectFit: "cover"
-        },
+        // NOTE: intentionally no "&:hover .thumbnail" override here. A hover
+        // rule has higher specificity than the base ".thumbnail" rule, so it
+        // would override a card's own object-fit on hover (e.g. contain ->
+        // cover) and make the image jump/pop. Keep hover sizing identical to
+        // the base rule by simply not styling it.
         ".thumbnail": {
           display: "block !important",
           maxHeight: "360px !important",

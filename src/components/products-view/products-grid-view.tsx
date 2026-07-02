@@ -1,10 +1,12 @@
 "use client"
+import { useEffect } from "react"
 import Box from "@mui/material/Box"
 // GLOBAL CUSTOM COMPONENTS
 import ProductCard17 from "components/product-cards/product-card-17"
 import { DataList } from "@/models/AllProduct.model"
 import { VariantOptionDetails } from "@/models/Filters.models"
 import { Product } from "@/models/Home.model"
+import { rememberUnitColorsFromList } from "@/utils/services/unit-colors.service"
 
 // ========================================================
 type Props = { products: DataList[]; variantOptions: VariantOptionDetails[]; badges: string[] }
@@ -40,6 +42,18 @@ const mapToProduct = (product: DataList): Product => {
 }
 
 export default function ProductsGridView({ products }: Props) {
+  // Cache each unit's colors so the cart can colour items added from sources
+  // that don't return colors (e.g. the home page).
+  useEffect(() => {
+    rememberUnitColorsFromList(
+      (products ?? []).map((p) => ({
+        unitName: p.unitName,
+        backgroundColor: p.backgroundColor,
+        fontColor: p.fontColor
+      }))
+    )
+  }, [products])
+
   return (
     <Box
       sx={{

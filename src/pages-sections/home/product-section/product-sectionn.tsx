@@ -55,6 +55,8 @@ export default function ProductSection({ sections }: ProductSectionProps) {
                     stockQty: product.stockQty,
                     businessUnitId: product.businessUnitId,
                     businessUnitName: product.businessUnitName,
+                    fontColor: product.fontColor,
+                    backgroundColor: product.backgroundColor,
                     rating:product.itemRating,
                     reviewCount:product.reviewCount
 

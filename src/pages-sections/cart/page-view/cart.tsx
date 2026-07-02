@@ -10,6 +10,7 @@ import useCart from "hooks/useCart"
 import CartItem from "../cart-item"
 import EmptyCart from "../empty-cart"
 import CheckoutForm from "../checkout-form"
+import { getUnitColorMap } from "@/utils/services/unit-colors.service"
 
 export default function CartPageView() {
   const {
@@ -28,14 +29,18 @@ export default function CartPageView() {
   const [activeTab, setActiveTab] = useState(tabKeys[0])
   const activeCartItems = tabsData[activeTab] || []
 
+  // Learned per-unit colors (fallback for items missing their own colors).
+  const unitColorMap = useMemo(() => getUnitColorMap(), [cart])
+
   // Extract colors specifically for the active brand/unit
   const activeStyles = useMemo(() => {
     const firstItem = activeCartItems[0]
+    const learned = unitColorMap[activeTab]
     return {
-      bg: firstItem?.backgroundColor || "#E8F5E9",
-      font: firstItem?.fontFontColor || "#1B5E20"
+      bg: firstItem?.backgroundColor || learned?.bg || "#E8F5E9",
+      font: firstItem?.fontFontColor || learned?.font || "#1B5E20"
     }
-  }, [activeCartItems])
+  }, [activeCartItems, unitColorMap, activeTab])
 
   useEffect(() => {
     if (!tabsData[activeTab] && tabKeys.length > 0) {

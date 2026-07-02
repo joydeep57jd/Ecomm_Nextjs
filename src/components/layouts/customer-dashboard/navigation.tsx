@@ -9,6 +9,7 @@ import { MainContainer } from "./styles"
 import { removeItem } from "@/utils/services/local-storage.service"
 import { useUser } from "@/contexts/UserContenxt"
 import { useRouter } from "next/navigation"
+import useCart from "@/hooks/useCart"
 
 const MENUS = [
   {
@@ -32,9 +33,12 @@ export function Navigation() {
 
   const userState = useUser()
   const router = useRouter()
+  const { dispatch } = useCart()
 
   const logout = () => {
-    removeItem("guest_cart")
+    // Wipe the cart (in-memory state + localStorage) so the next login on this
+    // session doesn't inherit this user's items.
+    dispatch({ type: "CLEAR_CART" })
     removeItem("userDetails")
     userState.logout()
     router.push("/")

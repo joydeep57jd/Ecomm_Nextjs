@@ -6,6 +6,11 @@ export interface SaveRatingRequest {
   RatingId?: number
   note: string
   OrderdetailId:number
+   Images?: ReviewImage[];
+}
+export interface ReviewImage {
+  Name: string;
+  ImageData: string; // Base64 encoded file
 }
 
 export interface GetReviewPayload {

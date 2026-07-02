@@ -35,8 +35,9 @@ export default function themeOptions(pathname: string) {
   }
 
   // GET THE COLOR PALETTE BASED ON THE SELECTED MAPPING
-  // Default is COLORS.GREEN — controls the global button/primary color via brand.ts
-  const selectedPalette = getPalette(selectedMapping?.color || COLORS.GREEN)
+  // Default is COLORS.ORANGE so the global button/primary color matches the
+  // orange brand defined in theme/brand.ts (BRAND.primary = orange.main).
+  const selectedPalette = getPalette(selectedMapping?.color || COLORS.ORANGE)
 
   // STORE THE SELECTED MAPPING IN OLD MAPPING FOR MODAL ROUTES -> LOGIN, MINI-CART
   oldMapping = selectedMapping!
