@@ -6,11 +6,7 @@ export interface SaveRatingRequest {
   RatingId?: number
   note: string
   OrderdetailId:number
-   Images?: ReviewImage[];
-}
-export interface ReviewImage {
-  Name: string;
-  ImageData: string; // Base64 encoded file
+  Images?: File[];
 }
 
 export interface GetReviewPayload {
@@ -28,6 +24,7 @@ export interface GetReviewResponse {
   rating:       number;
   customerName: string;
   createdDate:  Date;
+  images:       string[];
 }
 
 

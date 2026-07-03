@@ -36,7 +36,13 @@ axiosInstance.interceptors.request.use(
 
     if (config.method?.toLowerCase() === "post") {
       const companyId = Number(process.env.NEXT_PUBLIC_COMPANY_ID)
-      config.data = { ...(config.data || {}), companyId }
+      // For multipart bodies, append to the FormData instead of spreading it
+      // (spreading a FormData would drop all its fields and files).
+      if (config.data instanceof FormData) {
+        config.data.append("companyId", String(companyId))
+      } else {
+        config.data = { ...(config.data || {}), companyId }
+      }
       config.params = { ...(config.params || {}), companyId }
     }
 

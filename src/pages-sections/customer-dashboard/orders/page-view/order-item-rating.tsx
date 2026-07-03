@@ -4,7 +4,6 @@ import {
   Avatar,
   Box,
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -24,14 +23,15 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { Item as Product } from "@/models/OrderHistory.modal"
 import Image from "next/image"
 import { saveRating } from "@/utils/api/rating"
-import { ReviewImage, SaveRatingRequest } from "@/models/Rating.model"
+import { SaveRatingRequest } from "@/models/Rating.model"
 import { useUser } from "@/contexts/UserContenxt"
 
 const MAX_IMAGES = 5
 
 type UploadedImage = {
   name: string
-  base64: string
+  url: string
+  file: File
 }
 
 type Props = {
@@ -45,7 +45,6 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
   const { user } = useUser()
   const [isSaving, setIsSaving] = useState(false)
   const [images, setImages] = useState<UploadedImage[]>([])
-  const [imageLoading, setImageLoading] = useState(false)
   const [imageError, setImageError] = useState("")
   const isEditMode = Boolean(product.ratingId)
   
@@ -65,25 +64,7 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
 
   const { watch, setValue, getValues } = methods
 
-  const convertToBase64 = (files: File[]): Promise<UploadedImage[]> => {
-    return new Promise((resolve, reject) => {
-      const results: UploadedImage[] = []
-      let processed = 0
-
-      files.forEach((file) => {
-        const reader = new FileReader()
-        reader.onload = () => {
-          results.push({ name: file.name, base64: reader.result as string })
-          processed++
-          if (processed === files.length) resolve(results)
-        }
-        reader.onerror = (error) => reject(error)
-        reader.readAsDataURL(file)
-      })
-    })
-  }
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
     e.target.value = ""
     if (!files.length) return
@@ -94,20 +75,20 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
       return
     }
 
-    setImageLoading(true)
-    try {
-      const uploaded = await convertToBase64(files)
-      setImages((prev) => [...prev, ...uploaded])
-    } catch (err) {
-      console.error("Image upload failed:", err)
-      setImageError("Failed to read images. Please try again.")
-    } finally {
-      setImageLoading(false)
-    }
+    const uploaded: UploadedImage[] = files.map((file) => ({
+      name: file.name,
+      url: URL.createObjectURL(file),
+      file
+    }))
+    setImages((prev) => [...prev, ...uploaded])
   }
 
   const handleRemoveImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index))
+    setImages((prev) => {
+      const removed = prev[index]
+      if (removed) URL.revokeObjectURL(removed.url)
+      return prev.filter((_, i) => i !== index)
+    })
     setImageError("")
   }
 
@@ -116,11 +97,6 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
     if (!isValid) return
     setIsSaving(true)
     try {
-      const reviewImages: ReviewImage[] = images.map((img) => ({
-        Name: img.name,
-        ImageData: img.base64.split(",")[1] ?? img.base64
-      }))
-
       const payload: SaveRatingRequest = {
         note: getValues("comment"),
         rating: getValues("rating"),
@@ -129,7 +105,7 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
         variantId: product.itemVariantId,
         OrderdetailId:product.orderDetailId,
         RatingId:product.ratingId || 0,
-        ...(reviewImages.length > 0 && { Images: reviewImages })
+        ...(images.length > 0 && { Images: images.map((img) => img.file) })
       }
       await saveRating(payload)
       handleCloseModal(true)
@@ -221,15 +197,7 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
               </Typography>
             </Typography>
 
-            {imageLoading ? (
-              <Box display="flex" alignItems="center" gap={1}>
-                <CircularProgress size={22} />
-                <Typography variant="body2" color="text.secondary">
-                  Uploading images...
-                </Typography>
-              </Box>
-            ) : (
-              <Button
+            <Button
                 variant="outlined"
                 component="label"
                 startIcon={<CloudUploadIcon />}
@@ -250,7 +218,6 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
                   onChange={handleFileChange}
                 />
               </Button>
-            )}
 
             {imageError && (
               <Typography color="error" sx={{ mt: 1, fontSize: "0.8rem" }}>
@@ -258,7 +225,7 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
               </Typography>
             )}
 
-            {images.length > 0 && !imageLoading && (
+            {images.length > 0 && (
               <Box mt={2} display="grid" gridTemplateColumns="repeat(auto-fill, 80px)" gap={1.5}>
                 {images.map((img, i) => (
                   <Box
@@ -271,7 +238,7 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
                     }}
                   >
                     <Image
-                      src={img.base64}
+                      src={img.url}
                       alt={img.name}
                       width={80}
                       height={80}
@@ -306,7 +273,6 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
         <Button
           onClick={save}
           loading={isSaving}
-          disabled={imageLoading}
           color="primary"
           variant="contained"
         >
