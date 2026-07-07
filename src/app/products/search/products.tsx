@@ -241,13 +241,6 @@ function Products({
       {/* Full-page loader: shown only when there is no data yet */}
       {!allProductResponse && isLoading && <Loading isSmallLoader={true} />}
 
-      {/* Slim top bar: shown when loading additional pages over existing data */}
-      {isLoading && allProductResponse && (
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1600 }}>
-          <Loading isTiny={true} />
-        </div>
-      )}
-
       {allProductResponse && (
         <>
           <ProductSearchPageView

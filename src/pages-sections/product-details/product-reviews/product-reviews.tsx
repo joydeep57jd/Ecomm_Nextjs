@@ -78,7 +78,7 @@ export default function ProductReviews({ reviews }: Props) {
 
                 <div className="user-rating">
                   <Rating size="small" value={rating} color="warn" readOnly />
-                  <Typography variant="h6">{rating}</Typography>
+                  {/* <Typography variant="h6">{rating}</Typography> */}
                   <Typography component="span">{getDateDifference(createdDate)}</Typography>
                 </div>
               </div>
@@ -152,7 +152,18 @@ export default function ProductReviews({ reviews }: Props) {
         onClose={closeLightbox}
         maxWidth="md"
         fullWidth
-        slotProps={{ paper: { sx: { bgcolor: "grey.900", position: "relative", overflow: "hidden" } } }}
+        sx={{ zIndex: 1600 }}
+        slotProps={{
+          paper: {
+            sx: {
+              bgcolor: "grey.900",
+              position: "relative",
+              overflowY: "auto",
+              maxHeight: "90vh",
+              m: 2
+            }
+          }
+        }}
       >
         {lightbox && (
           <Box>

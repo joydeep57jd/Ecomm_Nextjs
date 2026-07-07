@@ -152,8 +152,8 @@ export default function ProductIntro({
             sx={{
               borderRadius: 2,
               overflow: "hidden",
-              bgcolor: "#f0f5f0",
-              p: 2
+              p: 2,
+              bgcolor: "#fff"
             }}
           >
             <ProductGallery product={product} images={product.imageList ?? []} />

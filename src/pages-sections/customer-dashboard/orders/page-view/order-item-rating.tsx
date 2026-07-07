@@ -27,6 +27,7 @@ import { SaveRatingRequest } from "@/models/Rating.model"
 import { useUser } from "@/contexts/UserContenxt"
 
 const MAX_IMAGES = 5
+const MAX_IMAGE_SIZE = 2 * 1024 * 1024
 
 type UploadedImage = {
   name: string
@@ -75,6 +76,12 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
       return
     }
 
+    const oversizedFiles = files.filter((file) => file.size > MAX_IMAGE_SIZE)
+    if (oversizedFiles.length > 0) {
+      setImageError("Each image must be less than 2 MB.")
+      return
+    }
+
     const uploaded: UploadedImage[] = files.map((file) => ({
       name: file.name,
       url: URL.createObjectURL(file),
@@ -116,7 +123,7 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
   }
 
   return (
-    <Dialog open onClose={() => handleCloseModal(false)} fullWidth>
+    <Dialog open onClose={() => handleCloseModal(false)} fullWidth sx={{ zIndex: 1600 }}>
      <DialogTitle>
         <Typography variant="h4">
           {isEditMode ? "Edit your review" : "Add your review"}

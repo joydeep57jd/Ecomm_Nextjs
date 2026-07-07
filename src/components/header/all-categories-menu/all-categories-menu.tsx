@@ -48,7 +48,7 @@ export function AllCategoriesMenu({ categories }: Props) {
               {category.sub_category?.map((sub) => (
                 <NextLink
                   key={sub.id}
-                  href={`/products/search?subCategory=${encodeId(sub.id)}`}
+                  href={`/products/search?category=${encodeId(category.id)}&subCategory=${encodeId(sub.id)}`}
                   className="sub-link"
                 >
                   {sub.name}

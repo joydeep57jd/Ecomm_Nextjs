@@ -99,7 +99,7 @@ export default function CategorySection() {
                   {category.sub_category.slice(0, 5).map((sub) => (
                     <NextLink
                       key={sub.id}
-                      href={`/products/search?subCategory=${encodeId(sub.id)}`}
+                      href={`/products/search?category=${encodeId(category.id)}&subCategory=${encodeId(sub.id)}`}
                       className="pill"
                     >
                       {sub.name}

@@ -44,10 +44,13 @@ type FormValues = {
   attachments: UploadedFile[]
 }
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024
+
 const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
   const { user } = useUser()
   const [fileLoading, setFileLoading] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [fileError, setFileError] = useState("")
 
   const methods = useForm<FormValues>({
     defaultValues: {
@@ -86,6 +89,15 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
     if (!files.length) return
+
+    setFileError("")
+    const oversizedFiles = files.filter((file) => file.size > MAX_FILE_SIZE)
+    if (oversizedFiles.length > 0) {
+      setFileError("Each file must be less than 2 MB.")
+      e.target.value = ""
+      return
+    }
+
     setFileLoading(true)
     try {
       const uploaded = await convertToBase64(files)
@@ -176,7 +188,13 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
   }
 
   return (
-    <Dialog open onClose={() => handleCloseModal(false)} fullWidth maxWidth="sm">
+    <Dialog
+      open
+      onClose={() => handleCloseModal(false)}
+      fullWidth
+      maxWidth="sm"
+      sx={{ zIndex: 1600 }}
+    >
       <DialogTitle>
         <Typography variant="h5" fontWeight={600}>
           Return Order
@@ -299,6 +317,12 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
                   onChange={handleFileChange}
                 />
               </Button>
+            )}
+
+            {fileError && (
+              <Typography color="error" sx={{ mt: 1, fontSize: "0.8rem" }}>
+                {fileError}
+              </Typography>
             )}
 
             {methods.formState.errors.attachments && (

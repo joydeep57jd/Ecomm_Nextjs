@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import Card from "@mui/material/Card"
 import MenuItem from "@mui/material/MenuItem"
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown"
@@ -36,31 +36,38 @@ export function NavigationList({ navigation, layoutModel }: Props) {
   }, [layoutModel])
 
   const router = useRouter()
-  const searchParams = useSearchParams()
 
   const navigateTo = useCallback(
-    (e: any, paramKeyName: string, paramValue: string) => {
+    (e: any, entries: [string, string][]) => {
       e.preventDefault()
       const params = new URLSearchParams()
-      params.set(paramKeyName, encodeId(paramValue))
+      entries.forEach(([key, value]) => params.set(key, encodeId(value)))
       router.push(`/products/search?${params.toString()}`)
     },
-    [router, searchParams]
+    [router]
   )
 
-  const renderSubSubCategory = (children: SubSubCategory[]) => {
+  // Subcategory/sub-subcategory links must carry their ancestor ids too, otherwise the
+  // search page's category filter sidebar can't tell which parent category to highlight.
+  const renderSubSubCategory = (children: SubSubCategory[], categoryId: string, subCategoryId: string) => {
     return children?.map((nav) => (
       <NavLink
         key={nav.id}
-        onClick={(e) => navigateTo(e, "SubCategory", nav.id)}
-        href={`/products/search?SubCategory=${encodeId(nav.id)}`}
+        onClick={(e) =>
+          navigateTo(e, [
+            ["category", categoryId],
+            ["subCategory", subCategoryId],
+            ["SubCategory", nav.id]
+          ])
+        }
+        href={`/products/search?category=${encodeId(categoryId)}&subCategory=${encodeId(subCategoryId)}&SubCategory=${encodeId(nav.id)}`}
       >
         <MenuItem>{toTitleCase(nav.name)}</MenuItem>
       </NavLink>
     ))
   }
 
-  const renderSubCategory = (children: SubCategory[]) => {
+  const renderSubCategory = (children: SubCategory[], categoryId: string) => {
     return children?.map((nav) => {
       if (nav.sub_sub_category.length) {
         return (
@@ -69,23 +76,31 @@ export function NavigationList({ navigation, layoutModel }: Props) {
               title: toTitleCase(nav.name),
               child: nav.sub_sub_category.map((sub) => ({
                 title: toTitleCase(sub.name),
-                url: `/products/search?subCategory=${encodeId(sub.id)}`
+                url: `/products/search?category=${encodeId(categoryId)}&subCategory=${encodeId(nav.id)}&SubCategory=${encodeId(sub.id)}`
               }))
             }}
-            navigateTo={navigateTo}
-            paramKeyName="subCategory"
-            paramValue={nav.id}
+            onNavigate={(e) =>
+              navigateTo(e, [
+                ["category", categoryId],
+                ["subCategory", nav.id]
+              ])
+            }
             key={nav.name}
           >
-            {renderSubSubCategory(nav.sub_sub_category)}
+            {renderSubSubCategory(nav.sub_sub_category, categoryId, nav.id)}
           </NavItemChild>
         )
       }
 
       return (
         <NavLink
-          onClick={(e) => navigateTo(e, "subCategory", nav.id)}
-          href={`/products/search?subCategory=${encodeId(nav.id)}`}
+          onClick={(e) =>
+            navigateTo(e, [
+              ["category", categoryId],
+              ["subCategory", nav.id]
+            ])
+          }
+          href={`/products/search?category=${encodeId(categoryId)}&subCategory=${encodeId(nav.id)}`}
           key={nav.name}
         >
           <MenuItem>{toTitleCase(nav.name)}</MenuItem>
@@ -115,7 +130,7 @@ export function NavigationList({ navigation, layoutModel }: Props) {
         }}
       >
         <NavLink
-          onClick={(e) => navigateTo(e, "category", nav.id)}
+          onClick={(e) => navigateTo(e, [["category", nav.id]])}
           href={`/products/search?category=${encodeId(nav.id)}`}
           key={nav.name}
         >
@@ -140,7 +155,7 @@ export function NavigationList({ navigation, layoutModel }: Props) {
               overflow: "unset"
             }}
           >
-            {renderSubCategory(nav.sub_category)}
+            {renderSubCategory(nav.sub_category, nav.id)}
           </Card>
         </ChildNavListWrapper>
       </FlexBox>
