@@ -18,6 +18,13 @@ import useGooglePlacesAutocomplete, {
 interface AddressAutocompleteProps {
   /** Called when user selects an address (from autocomplete or current location) */
   onAddressSelect: (details: PlaceDetails) => void
+  /**
+   * Called on every keystroke with the raw typed text. Without this, a user
+   * who types a street address but never clicks a suggestion (e.g. blurs or
+   * submits directly) would have nothing saved for the address field, since
+   * onAddressSelect only fires for a structured Google Places selection.
+   */
+  onTextChange?: (value: string) => void
   /** Default input value */
   defaultValue?: string
   /** MUI TextField label */
@@ -30,6 +37,7 @@ interface AddressAutocompleteProps {
 
 export default function AddressAutocomplete({
   onAddressSelect,
+  onTextChange,
   defaultValue = "",
   label = "Search Address",
   error,
@@ -52,9 +60,11 @@ export default function AddressAutocomplete({
     setInputValue(value)
     if (reason === "input" && value !== prevInputRef.current) {
       prevInputRef.current = value
+      onTextChange?.(value)
       fetchPredictions(value)
     }
     if (reason === "clear") {
+      onTextChange?.("")
       clearPredictions()
     }
   }

@@ -1,9 +1,9 @@
 import CheckoutAlternativePageView from "@/pages-sections/checkout-alternative/page-view"
 import type { Metadata } from "next"
 export const metadata: Metadata = {
-  title: "Checkout - Bazaar Next.js E-commerce Template",
+  title: "Checkout - Super Shop",
   description:
-    "Bazaar is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store",
+    "Super Shop is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store",
   authors: [{ name: "UI-LIB", url: "https://ui-lib.com" }],
   keywords: ["e-commerce", "e-commerce template", "next.js", "react"]
 }

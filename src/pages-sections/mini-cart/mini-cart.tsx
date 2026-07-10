@@ -26,6 +26,7 @@ import OverlayScrollbar from "components/overlay-scrollbar"
 // Types
 import { Cart } from "@/models/CartProductItem.models"
 import { getUnitColorMap } from "@/utils/services/unit-colors.service"
+import { currency } from "lib"
 
 export default function MiniCart() {
   const Router = useRouter()
@@ -67,6 +68,13 @@ export default function MiniCart() {
       setActiveTab(tabKeys[0])
     }
   }, [tabsData, activeTab, tabKeys])
+
+  // Subtotal reflects only the active tab's in-stock items — the same set
+  // "Proceed to Checkout" acts on.
+  const subtotal = useMemo(() => {
+    const items = tabsData[activeTab] ?? []
+    return items.reduce((sum, item) => (item.isOutOfStock ? sum : sum + item.productPrice * item.qty), 0)
+  }, [tabsData, activeTab])
 
   const handleCartAmountChange = (amount: number, product: Cart) => () => {
     dispatch({
@@ -140,7 +148,7 @@ export default function MiniCart() {
       )}
 
       {/* CART ITEMS */}
-      <Box height={`calc(100% - ${CART_LENGTH ? "293px" : "75px"})`}>
+      <Box height={`calc(100% - ${CART_LENGTH ? "333px" : "75px"})`}>
         {CART_LENGTH > 0 ? (
           <OverlayScrollbar>
             {tabsData[activeTab]?.map((item) => (
@@ -159,6 +167,15 @@ export default function MiniCart() {
       {/* ACTIONS */}
       {CART_LENGTH > 0 && (
         <Box p={2.5}>
+          <FlexBetween mb={1.5}>
+            <Typography variant="body1" fontWeight={600}>
+              Subtotal
+            </Typography>
+            <Typography variant="body1" fontWeight={700}>
+              {currency(subtotal)}
+            </Typography>
+          </FlexBetween>
+
           <Button
             fullWidth
             variant="contained"

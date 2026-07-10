@@ -35,25 +35,36 @@ export default function OrderRow({ order }: Props) {
   
   return (
      <Link href={`/orders/details?id=${btoa(order.custOrdNo)}`}>
-      <TableRow elevation={0} sx={{ gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr" }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Image
-              alt="Logo"
-              width={40}
-              height={40}
-              src={firstItem?.imageName }
-              style={{ marginLeft: 8, borderRadius: '100%' }}
-            />
+      <TableRow elevation={0} sx={{ gridTemplateColumns: "2.5fr 1fr 1fr 1fr auto" }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, minWidth: 0 }}>
+          {/* Fixed width so the order id below always starts at the same
+              x-offset, whether or not the "+N" badge is present. Both
+              children are flexShrink:0 so the badge never gets squeezed
+              down to nothing by the flex layout. */}
+          <Box sx={{ display: 'flex', alignItems: 'center', width: 80, flexShrink: 0 }}>
+            <Box sx={{ flexShrink: 0 }}>
+              <Image
+                alt="Logo"
+                width={40}
+                height={40}
+                src={firstItem?.imageName }
+                style={{ marginLeft: 8, borderRadius: '100%' }}
+              />
+            </Box>
 
             {items.length > 1 && (
-              <Typography noWrap variant="h5">
+              <Typography noWrap variant="h5" sx={{ ml: 0.5, flexShrink: 0 }}>
                 +{items.length - 1}
               </Typography>
             )}
           </Box>
 
-          <Typography noWrap variant="h5">
+          <Typography
+            noWrap
+            variant="h5"
+            title={`#${order.custOrdNo}`}
+            sx={{ minWidth: 0, fontSize: { xs: 14, sm: 16 } }}
+          >
             #{order.custOrdNo}
           </Typography>
         </Box>
@@ -67,9 +78,10 @@ export default function OrderRow({ order }: Props) {
         </Typography>
 
         <Typography
+          noWrap
           variant="body1"
           fontWeight={500}
-          sx={{ textAlign: { sm: "center", xs: "right" } }}
+          sx={{ textAlign: { sm: "right", xs: "right" } }}
         >
           {currency(+order.total)}
         </Typography>

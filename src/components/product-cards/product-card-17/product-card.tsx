@@ -67,7 +67,9 @@ export default function ProductCard17({
   const backgroundColor = product.backgroundColor
 
   const hasMrp = typeof mrp === "number" && mrp > price
-  const outOfStock = (product.stockQty ?? 0) <= 0
+  const hasValidPrice = typeof price === "number" && price > 0
+  // No price data is just as unpurchasable as no stock — treat both as "not available".
+  const outOfStock = (product.stockQty ?? 0) <= 0 || !hasValidPrice
   const productHref = `/products/${encodeId(slug)}${product.itemVariantId ? `?variantId=${encodeId(product.itemVariantId)}` : ""}`
 
   return (
@@ -143,12 +145,14 @@ export default function ProductCard17({
         <div className="footer">
           <Box minWidth={0}>
             <Box display="flex" alignItems="baseline" gap={0.75}>
-              <span className="price">{currency(price, 0)}</span>
-              {hasMrp && <span className="mrp">{currency(mrp, 0)}</span>}
+              <span className="price">
+                {hasValidPrice ? currency(price, 0) : "Price unavailable"}
+              </span>
+              {hasValidPrice && hasMrp && <span className="mrp">{currency(mrp, 0)}</span>}
             </Box>
 
-            <span className="save" style={{ visibility: hasMrp ? "visible" : "hidden" }}>
-              {hasMrp ? `Save ${currency(mrp - price, 0)}` : "—"}
+            <span className="save" style={{ visibility: hasValidPrice && hasMrp ? "visible" : "hidden" }}>
+              {hasValidPrice && hasMrp ? `Save ${currency(mrp - price, 0)}` : "—"}
             </span>
           </Box>
 

@@ -9,13 +9,10 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  IconButton,
   Rating,
   Typography
 } from "@mui/material"
-import CloudUploadIcon from "@mui/icons-material/CloudUpload"
-import DeleteIcon from "@mui/icons-material/Delete"
-import React, { useState } from "react"
+import { useState } from "react"
 import { FormProvider, TextField } from "components/form-hook"
 import { useForm } from "react-hook-form"
 import { initialRatingFormValues, ratingSchema } from "@/schema/profile/rating.schema"
@@ -25,9 +22,12 @@ import Image from "next/image"
 import { saveRating } from "@/utils/api/rating"
 import { SaveRatingRequest } from "@/models/Rating.model"
 import { useUser } from "@/contexts/UserContenxt"
+import ImageUploadDropzone from "@/components/image-upload/dropzone"
+import ImageUploadPreviewGrid from "@/components/image-upload/preview-grid"
 
 const MAX_IMAGES = 5
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024
+const REVIEW_MAX_LENGTH = 300
 
 type UploadedImage = {
   name: string
@@ -65,11 +65,7 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
 
   const { watch, setValue, getValues } = methods
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
-    e.target.value = ""
-    if (!files.length) return
-
+  const handleFileChange = (files: File[]) => {
     setImageError("")
     if (images.length + files.length > MAX_IMAGES) {
       setImageError(`You can upload a maximum of ${MAX_IMAGES} images.`)
@@ -189,7 +185,11 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
               name="comment"
               variant="outlined"
               placeholder="Write a review here..."
+              slotProps={{ htmlInput: { maxLength: REVIEW_MAX_LENGTH } }}
             />
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", textAlign: "right", mt: 0.5 }}>
+              {(watch("comment")?.length ?? 0)}/{REVIEW_MAX_LENGTH}
+            </Typography>
           </Box>
 
           <Box mt={3}>
@@ -204,27 +204,12 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
               </Typography>
             </Typography>
 
-            <Button
-                variant="outlined"
-                component="label"
-                startIcon={<CloudUploadIcon />}
-                disabled={images.length >= MAX_IMAGES}
-                sx={{
-                  textTransform: "none",
-                  borderStyle: "dashed",
-                  borderColor: "grey.400",
-                  color: "grey.700"
-                }}
-              >
-                Upload Images
-                <input
-                  type="file"
-                  hidden
-                  multiple
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-              </Button>
+            <ImageUploadDropzone
+              label="Upload Images"
+              disabled={images.length >= MAX_IMAGES}
+              accept="image/*"
+              onFilesSelected={handleFileChange}
+            />
 
             {imageError && (
               <Typography color="error" sx={{ mt: 1, fontSize: "0.8rem" }}>
@@ -232,43 +217,10 @@ function OrderItemRating({ handleCloseModal, product }: Props) {
               </Typography>
             )}
 
-            {images.length > 0 && (
-              <Box mt={2} display="grid" gridTemplateColumns="repeat(auto-fill, 80px)" gap={1.5}>
-                {images.map((img, i) => (
-                  <Box
-                    key={i}
-                    sx={{
-                      position: "relative",
-                      borderRadius: 1,
-                      overflow: "hidden",
-                      border: "1px solid #ccc"
-                    }}
-                  >
-                    <Image
-                      src={img.url}
-                      alt={img.name}
-                      width={80}
-                      height={80}
-                      style={{ objectFit: "cover", width: 80, height: 80 }}
-                    />
-
-                    <IconButton
-                      size="small"
-                      onClick={() => handleRemoveImage(i)}
-                      sx={{
-                        position: "absolute",
-                        top: 2,
-                        right: 2,
-                        backgroundColor: "rgba(255,255,255,0.7)",
-                        "&:hover": { backgroundColor: "rgba(255,255,255,0.9)" }
-                      }}
-                    >
-                      <DeleteIcon fontSize="small" color="error" />
-                    </IconButton>
-                  </Box>
-                ))}
-              </Box>
-            )}
+            <ImageUploadPreviewGrid
+              items={images.map((img) => ({ name: img.name, src: img.url, isImage: true }))}
+              onRemove={handleRemoveImage}
+            />
           </Box>
         </FormProvider>
       </DialogContent>

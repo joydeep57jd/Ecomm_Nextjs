@@ -14,8 +14,8 @@ export async function generateMetadata({ params }: SlugParams): Promise<Metadata
   if (!product) notFound()
 
   return {
-    title: product.title + " - Bazaar Next.js E-commerce Template",
-    description: "Bazaar is a React Next.js E-commerce template.",
+    title: product.title + " - Super Shop",
+    description: "Super Shop is a React Next.js E-commerce template.",
     authors: [{ name: "UI-LIB", url: "https://ui-lib.com" }],
     keywords: ["e-commerce", "e-commerce template", "next.js", "react"]
   }

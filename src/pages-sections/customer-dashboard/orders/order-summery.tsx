@@ -31,7 +31,7 @@ export default function OrderSummery({ order, paymentAndAddress }: Props) {
   return (
     <Grid container spacing={3}>
       <Grid size={{ md: 6, xs: 12 }}>
-        <Card elevation={0} sx={{ p: 3, border: "1px solid", borderColor: "grey.100", height: "100%" }}>
+        <Card elevation={0} sx={{ p: { xs: 2, sm: 3 }, border: "1px solid", borderColor: "grey.100", height: "100%" }}>
           <Typography variant="h5" sx={{ mb: 2 }}>
             Shipping Address
           </Typography>
@@ -75,7 +75,7 @@ export default function OrderSummery({ order, paymentAndAddress }: Props) {
       </Grid>
 
       <Grid size={{ md: 6, xs: 12 }}>
-        <Card elevation={0} sx={{ p: 3, border: "1px solid", borderColor: "grey.100", height: "100%" }}>
+        <Card elevation={0} sx={{ p: { xs: 2, sm: 3 }, border: "1px solid", borderColor: "grey.100", height: "100%" }}>
           <Typography variant="h5" sx={{ mb: 2 }}>
             Total Summary
           </Typography>

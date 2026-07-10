@@ -78,6 +78,8 @@ export default function ProductIntro({
   }, [product.variantDetails])
 
   const isOutOfStock = product.priceAndStock?.stockQty === 0 || product.priceAndStock === null
+  // A sale price of 0/undefined isn't a real price — never render it as if it were one.
+  const hasValidPrice = !!product.priceAndStock && product.priceAndStock.salePrice > 0
 
   const hasDiscount =
     product.priceAndStock?.salePrice !== product.priceAndStock?.mrp &&
@@ -249,8 +251,15 @@ export default function ProductIntro({
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
-              <Typography sx={{ fontSize: 30, fontWeight: 800, color: "#1a1a1a", lineHeight: 1 }}>
-                {currency(product.priceAndStock?.salePrice)}
+              <Typography
+                sx={{
+                  fontSize: hasValidPrice ? 30 : 16,
+                  fontWeight: hasValidPrice ? 800 : 600,
+                  color: hasValidPrice ? "#1a1a1a" : "text.secondary",
+                  lineHeight: 1
+                }}
+              >
+                {hasValidPrice ? currency(product.priceAndStock?.salePrice) : "--"}
               </Typography>
 
               {hasDiscount && (
@@ -288,23 +297,38 @@ export default function ProductIntro({
                 {isOutOfStock ? "Out of stock" : "In stock"}
               </Box>
             </Typography>
-            {cartProduct && (
+            {product.imageList?.length > 0 && (
               <Box sx={{ display: "flex", gap: 1.5, mb: 0.5, mt: 1.25 }}>
                 <Box sx={{ flex: 1 }}>
-                  <ProductAction
-                    product={cartProduct}
-                    fullWidth
-                    label="ADD"
-                    startIcon={<AddIcon />}
-                    sx={{
-                      bgcolor: BRAND.primaryLight,
-                      color: BRAND.primaryDark,
-                      border: `1px solid ${BRAND.primaryBorder}`,
-                      boxShadow: "none",
-                      fontWeight: 600,
-                      "&:hover": { bgcolor: BRAND.pageBg, boxShadow: "none" }
-                    }}
-                  />
+                  {cartProduct && !isOutOfStock ? (
+                    <ProductAction
+                      product={cartProduct}
+                      fullWidth
+                      label="ADD"
+                      startIcon={<AddIcon />}
+                      sx={{
+                        bgcolor: BRAND.primaryLight,
+                        color: BRAND.primaryDark,
+                        border: `1px solid ${BRAND.primaryBorder}`,
+                        boxShadow: "none",
+                        fontWeight: 600,
+                        "&:hover": { bgcolor: BRAND.pageBg, boxShadow: "none" }
+                      }}
+                    />
+                  ) : (
+                    <Button
+                      fullWidth
+                      disabled
+                      variant="outlined"
+                      sx={{
+                        color: "text.disabled",
+                        borderColor: "grey.300",
+                        fontWeight: 600
+                      }}
+                    >
+                      Not Available
+                    </Button>
+                  )}
                 </Box>
                 <Button
                   variant="contained"

@@ -1,7 +1,7 @@
 import * as yup from "yup"
 
 export const validationSchema = yup.object({
-  street2: yup.string().max(100, "Street2 must be at most 100 characters").optional(),
+  address2: yup.string().max(100, "Address line 2 must be at most 100 characters").optional(),
 
   fname: yup
     .string()
@@ -24,9 +24,11 @@ export const validationSchema = yup.object({
     .matches(/^\d{10}$/, "Phone number must be exactly 10 digits")
     .required("Phone is required"),
 
-  city: yup.string().optional(),
+  city: yup.string().required("City is required"),
 
-  state: yup.string().optional(),
+  dist: yup.string().optional(),
+
+  state: yup.string().required("State is required"),
 
   country: yup.string().required("Country is required"),
 

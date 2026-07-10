@@ -2,6 +2,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { format } from "date-fns"
+import Box from "@mui/material/Box"
 import Card from "@mui/material/Card"
 import Avatar from "@mui/material/Avatar"
 import Typography from "@mui/material/Typography"
@@ -157,7 +158,7 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
   return (
     <>
       <Card elevation={0} sx={{ p: 0, mb: 4, border: "1px solid", borderColor: "grey.100" }}>
-        <FlexBetween px={3} py={2} flexWrap="wrap" gap={1} bgcolor="grey.50">
+        <FlexBetween px={{ xs: 2, sm: 3 }} py={2} flexWrap="wrap" gap={1} bgcolor="grey.50">
           <Item title="Order ID:" value={order?.custOrdNo} />
           <Item title="Placed on:" value={format(new Date(order.orderDate), "dd MMM, yyyy")} />
         </FlexBetween>
@@ -171,14 +172,27 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
           if (showOrderOtp) shownOtps.add(orderOtp)
 
           return (
-            <FlexBetween key={ind} px={2} py={1} flexWrap="wrap" gap={1}>
+            <FlexBetween
+              key={ind}
+              px={2}
+              py={1.5}
+              gap={2}
+              alignItems="flex-start"
+              sx={{ flexWrap: "wrap" }}
+            >
+              {/* flex-basis is a firm 160px (not "auto") so the row's alignment
+                  doesn't shift per-row based on each product name's untruncated
+                  (pre-ellipsis) width — and a 130px floor so it never gets
+                  crushed by the actions block; below that the whole actions
+                  block naturally wraps to its own line instead of squeezing. */}
               <Link
                 href={`/products/${encodeId(item.itemId)}${item.itemId ? `?variantId=${encodeId(item.itemVariantId)}` : ""}`}
+                style={{ minWidth: 130, flex: "1 1 160px" }}
               >
-                <FlexBox gap={2} alignItems="center">
+                <FlexBox gap={2} alignItems="center" sx={{ minWidth: 0 }}>
                   <Avatar
                     variant="rounded"
-                    sx={{ height: 60, width: 60, backgroundColor: "grey.50" }}
+                    sx={{ height: 60, width: 60, backgroundColor: "grey.50", flexShrink: 0 }}
                   >
                     <Image
                       alt={item.imageAlt}
@@ -194,39 +208,46 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
                       }}
                     />
                   </Avatar>
-                  <div>
-                    <Typography noWrap variant="h6">
+                  <Box sx={{ minWidth: 0 }}>
+                    <Typography noWrap variant="h6" title={item.name}>
                       {item.name}
                     </Typography>
                     <Typography lineHeight={2} variant="body1" color="text.secondary">
                       {currency(item.price + item.tax)} x {item.qty}
                     </Typography>
-                  </div>
+                  </Box>
                 </FlexBox>
               </Link>
 
-              <OrderItemActions
-                item={item}
-                order={order}
-                loadingInvoiceId={loadingInvoiceId}
-                returnOtp={showReturnOtp}
-                orderOtp={showOrderOtp}
-                getDaysLeftToReturn={getDaysLeftToReturn}
-                formatDeliveryDate={formatDeliveryDate}
-                onInvoice={handleOpenInvoice}
-                onReturn={(i) => {
-                  setSelectedProduct(i)
-                  setModalType("return")
-                }}
-                onRating={(i) => {
-                  setSelectedProduct(i)
-                  setModalType("rating")
-                }}
-                onCancel={(i) => {
-                  setSelectedProduct(i)
-                  setModalType("cancel")
-                }}
-              />
+              {/* If this and the product-info block don't both fit on the
+                  current line, flex-wrap moves this whole block down to its
+                  own line — flexShrink+minWidth:0 then let it (and its own
+                  internal flexWrap) shrink to fit that line instead of
+                  overflowing and getting clipped by the Card. */}
+              <Box sx={{ flexShrink: 1, minWidth: 0 }}>
+                <OrderItemActions
+                  item={item}
+                  order={order}
+                  loadingInvoiceId={loadingInvoiceId}
+                  returnOtp={showReturnOtp}
+                  orderOtp={showOrderOtp}
+                  getDaysLeftToReturn={getDaysLeftToReturn}
+                  formatDeliveryDate={formatDeliveryDate}
+                  onInvoice={handleOpenInvoice}
+                  onReturn={(i) => {
+                    setSelectedProduct(i)
+                    setModalType("return")
+                  }}
+                  onRating={(i) => {
+                    setSelectedProduct(i)
+                    setModalType("rating")
+                  }}
+                  onCancel={(i) => {
+                    setSelectedProduct(i)
+                    setModalType("cancel")
+                  }}
+                />
+              </Box>
             </FlexBetween>
           )
         })}

@@ -48,11 +48,27 @@ export default function ShopLayout1({ children, data }: Props) {
   const latestOffers = (offers ?? []).slice(-3).reverse()
 
   const policyLinks = [
-    { title: footerDetails?.privacyPolicyDtl?.privacyPolicy, url: "#" },
-    { title: footerDetails?.termsAndConditionsDtl?.termsAndConditions, url: "#" },
-    { title: footerDetails?.returnPolicyDtl?.returnPolicy, url: "#" },
-    { title: footerDetails?.cancellation_RefundPolicyDtl?.cancellation_RefundPolicy, url: "#" }
-  ].filter((item) => item.title) as { title: string; url: string }[]
+    {
+      title: footerDetails?.privacyPolicyDtl?.privacyPolicy,
+      show: footerDetails?.privacyPolicyDtl?.showPrivacyPolicy,
+      isHtml: footerDetails?.privacyPolicyDtl?.isHtml
+    },
+    {
+      title: footerDetails?.termsAndConditionsDtl?.termsAndConditions,
+      show: footerDetails?.termsAndConditionsDtl?.showTermsAndConditions,
+      isHtml: footerDetails?.termsAndConditionsDtl?.isHtml
+    },
+    {
+      title: footerDetails?.returnPolicyDtl?.returnPolicy,
+      show: footerDetails?.returnPolicyDtl?.showReturnPolicy,
+      isHtml: footerDetails?.returnPolicyDtl?.isHtml
+    },
+    {
+      title: footerDetails?.cancellation_RefundPolicyDtl?.cancellation_RefundPolicy,
+      show: footerDetails?.cancellation_RefundPolicyDtl?.showCancellation_RefundPolicy,
+      isHtml: footerDetails?.cancellation_RefundPolicyDtl?.isHtml
+    }
+  ].filter((item) => item.show && item.title) as { title: string; show: boolean; isHtml: boolean }[]
 
   // Latest 4 categories (most recent first) from the live category data,
   // followed by the Today's Deals link that opens the sales page.
@@ -332,15 +348,23 @@ export default function ShopLayout1({ children, data }: Props) {
                   Policies
                 </Typography>
                 <Box display="flex" flexDirection="column" gap={1.5}>
-                  {policyLinks.map((link) => (
-                    <Link
-                      key={link.title}
-                      href={link.url}
-                      style={{ textDecoration: "none", color: "inherit", fontSize: 13 }}
-                    >
-                      {link.title}
-                    </Link>
-                  ))}
+                  {policyLinks.map((link) =>
+                    link.isHtml ? (
+                      <Box
+                        key={link.title}
+                        sx={{
+                          color: "text.secondary",
+                          fontSize: 13,
+                          "& p": { m: 0 }
+                        }}
+                        dangerouslySetInnerHTML={{ __html: link.title }}
+                      />
+                    ) : (
+                      <Typography key={link.title} variant="body2" color="text.secondary" fontSize={13}>
+                        {link.title}
+                      </Typography>
+                    )
+                  )}
                 </Box>
               </Grid>
             </Grid>

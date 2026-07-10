@@ -11,20 +11,18 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  IconButton,
   Typography
 } from "@mui/material"
-import CloudUploadIcon from "@mui/icons-material/CloudUpload"
-
 import Image from "next/image"
-import React, { useState } from "react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { OrderListCustomer, Item as Product } from "@/models/OrderHistory.modal"
 import { orderReturn, orderReturnImage } from "@/utils/api/order"
 import { OrderReturnPayload, ReturnWithImagePayload } from "@/models/Return.model"
 import { useUser } from "@/contexts/UserContenxt"
 import { currency } from "@/lib"
-import DeleteIcon from "@mui/icons-material/Delete"
+import ImageUploadDropzone from "@/components/image-upload/dropzone"
+import ImageUploadPreviewGrid from "@/components/image-upload/preview-grid"
 
 type Props = {
   handleCloseModal(isReloadRequired: boolean): void
@@ -86,15 +84,11 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
     })
   }
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
-    if (!files.length) return
-
+  const handleFileChange = async (files: File[]) => {
     setFileError("")
     const oversizedFiles = files.filter((file) => file.size > MAX_FILE_SIZE)
     if (oversizedFiles.length > 0) {
       setFileError("Each file must be less than 2 MB.")
-      e.target.value = ""
       return
     }
 
@@ -265,59 +259,12 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
               Upload Files <span>*</span>
             </Typography>
 
-            {fileLoading ? (
-              <Box display="flex" alignItems="center" gap={1}>
-                <CircularProgress size={22} />
-                <Typography variant="body2" color="text.secondary">
-                  Uploading files...
-                </Typography>
-              </Box>
-            ) : (
-              <Button
-                variant="outlined"
-                component="label"
-                startIcon={<CloudUploadIcon />}
-                sx={{
-                  height: { xs: 100, sm: 120, md: 140 },
-                  width: { xs: "90%", sm: "80%", md: 550 },
-                  borderStyle: "dashed",
-                  textTransform: "none",
-                  borderColor: "grey.400",
-                  color: "grey.700",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: { xs: "0.9rem", sm: "1rem" },
-                  "&:hover": {
-                    borderColor: "primary.main",
-                    backgroundColor: "rgba(25,118,210,0.04)"
-                  },
-                  mx: "auto",
-                  mt: 2
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" }
-                  }}
-                >
-                  Upload Files 
-                </Typography>
-
-                <input
-                  type="file"
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    opacity: 0,
-                    cursor: "pointer"
-                  }}
-                  multiple
-                  accept="image/*,application/pdf"
-                  onChange={handleFileChange}
-                />
-              </Button>
-            )}
+            <ImageUploadDropzone
+              label="Upload Files"
+              loading={fileLoading}
+              accept="image/*,application/pdf"
+              onFilesSelected={handleFileChange}
+            />
 
             {fileError && (
               <Typography color="error" sx={{ mt: 1, fontSize: "0.8rem" }}>
@@ -331,76 +278,15 @@ const OrderItemReturn = ({ handleCloseModal, product, order }: Props) => {
               </Typography>
             )}
 
-            {methods.watch("attachments")?.length > 0 && !fileLoading && (
-              <Box mt={2} display="grid" gridTemplateColumns="repeat(auto-fill, 80px)" gap={1.5}>
-                {methods.watch("attachments").map((file, i) => (
-                  <Box
-                    key={i}
-                    sx={{
-                      position: "relative",
-                      borderRadius: 1,
-                      overflow: "hidden",
-                      border: "1px solid #ccc"
-                    }}
-                  >
-                    {file.base64.startsWith("data:image") ? (
-                      <Image
-                        src={file.base64}
-                        alt={file.name}
-                        width={80}
-                        height={80}
-                        style={{ objectFit: "cover" }}
-                      />
-                    ) : (
-                      <Box
-                        sx={{
-                          height: 80,
-                          width: 80,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          backgroundColor: "grey.100",
-                          fontSize: 12
-                        }}
-                      >
-                        PDF
-                      </Box>
-                    )}
-
-                    <Typography
-                      variant="caption"
-                      noWrap
-                      sx={{
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        width: "100%",
-                        backgroundColor: "rgba(0,0,0,0.6)",
-                        color: "white",
-                        textAlign: "center",
-                        fontSize: "0.65rem",
-                        py: 0.3
-                      }}
-                    >
-                      {file.name}
-                    </Typography>
-
-                    <IconButton
-                      size="small"
-                      onClick={() => handleRemoveImage(i)}
-                      sx={{
-                        position: "absolute",
-                        top: 2,
-                        right: 2,
-                        backgroundColor: "rgba(255,255,255,0.7)",
-                        "&:hover": { backgroundColor: "rgba(255,255,255,0.9)" }
-                      }}
-                    >
-                      <DeleteIcon fontSize="small" color="error" />
-                    </IconButton>
-                  </Box>
-                ))}
-              </Box>
+            {!fileLoading && (
+              <ImageUploadPreviewGrid
+                items={(methods.watch("attachments") ?? []).map((file) => ({
+                  name: file.name,
+                  src: file.base64,
+                  isImage: file.base64.startsWith("data:image")
+                }))}
+                onRemove={handleRemoveImage}
+              />
             )}
           </Box>
         </FormProvider>

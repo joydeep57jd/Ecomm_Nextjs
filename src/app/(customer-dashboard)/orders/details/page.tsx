@@ -10,17 +10,6 @@ import { GetOrderPaymentAndAddressResponse, OrderListCustomer, OrderResponse } f
 import {  useSearchParams } from "next/navigation"
 import Loading from "@/app/loading"
 
-
-// export async function generateMetadata({ params }: IdParams): Promise<Metadata> {
-//   const { id } = await params
-//   const order = await getOrderDetail(+id)
-
-//   return {
-//     title: order.custOrdNo + "",
-//     description: "Order Details.",
-//   }
-// }
-
 export default  function OrderDetails() {
   const [singleOrderResponse, setSingleOrderResponse] = useState<OrderListCustomer | null>(null)
   const [ singleOrderPaymentAndAddress, setSingleOrderPaymentAndAddress] = useState<GetOrderPaymentAndAddressResponse | null>(null)

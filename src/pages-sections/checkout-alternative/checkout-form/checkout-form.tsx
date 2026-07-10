@@ -17,6 +17,7 @@ import Card from "./card"
 import { Address } from "@/models/User.model"
 import DeliveryAddresses from "./delivery-addresses"
 import { DelivaryAddressData } from "@/models/Address.model"
+import { currency } from "@/lib"
 
 const validationSchema = yup.object().shape({
   card: yup.string().optional(),
@@ -175,7 +176,7 @@ export default function CheckoutForm({
             mt: 1
           }}
         >
-          {totalAmount ? `Place Order · ₹${totalAmount.toFixed(2)}` : "Place Order"}
+          {totalAmount ? `Place Order · ${currency(totalAmount)}` : "Place Order"}
         </Button>
       </Card>
     </FormProvider>

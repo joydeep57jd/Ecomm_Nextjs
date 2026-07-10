@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(curl -s -o /dev/null -w 'Total: %{time_total}s HTTP:%{http_code} size:%{size_download}\\\\n' --max-time 60 -X POST '__TRACKED_VAR__/frontend/GetCompanyDefaultTemplateUI?companyId=155&_t=__CMDSUB_OUTPUT__000' -H 'Content-Type: application/json' -d '{\"companyId\":155}')"
+      "Bash(curl -s -o /dev/null -w 'Total: %{time_total}s HTTP:%{http_code} size:%{size_download}\\\\n' --max-time 60 -X POST '__TRACKED_VAR__/frontend/GetCompanyDefaultTemplateUI?companyId=155&_t=__CMDSUB_OUTPUT__000' -H 'Content-Type: application/json' -d '{\"companyId\":155}')",
+      "Bash(node screenshot-order-details.js)"
     ]
   }
 }

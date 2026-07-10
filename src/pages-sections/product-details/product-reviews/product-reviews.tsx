@@ -30,11 +30,21 @@ interface Props {
 // Max thumbnails shown before collapsing the rest into a "+N" tile.
 const MAX_THUMBS = 4
 
+// Reviews longer than this are clamped with a "Read more" toggle so a huge
+// review doesn't blow out the section's height (or wrap badly on long
+// unbroken strings).
+const REVIEW_CLAMP_CHARS = 240
+const REVIEW_CLAMP_LINES = 4
+
 // State describing which image set/index is open in the lightbox.
 type LightboxState = { images: string[]; index: number } | null
 
 export default function ProductReviews({ reviews }: Props) {
   const [lightbox, setLightbox] = useState<LightboxState>(null)
+  const [expandedReviews, setExpandedReviews] = useState<Record<number, boolean>>({})
+
+  const toggleExpand = (ind: number) =>
+    setExpandedReviews((prev) => ({ ...prev, [ind]: !prev[ind] }))
 
   const openLightbox = (images: string[], index: number) => setLightbox({ images, index })
   const closeLightbox = () => setLightbox(null)
@@ -84,9 +94,46 @@ export default function ProductReviews({ reviews }: Props) {
               </div>
             </div>
 
-            <Typography variant="body1" sx={{ color: "grey.700" }}>
+            <Typography
+              variant="body1"
+              sx={{
+                color: "grey.700",
+                overflowWrap: "anywhere",
+                wordBreak: "break-word",
+                ...(review &&
+                review.length > REVIEW_CLAMP_CHARS &&
+                !expandedReviews[ind]
+                  ? {
+                      display: "-webkit-box",
+                      WebkitLineClamp: REVIEW_CLAMP_LINES,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden"
+                    }
+                  : {})
+              }}
+            >
               {review}
             </Typography>
+
+            {review && review.length > REVIEW_CLAMP_CHARS && (
+              <Typography
+                component="button"
+                type="button"
+                onClick={() => toggleExpand(ind)}
+                sx={{
+                  mt: 0.5,
+                  p: 0,
+                  border: 0,
+                  background: "none",
+                  cursor: "pointer",
+                  color: "primary.main",
+                  fontWeight: 600,
+                  fontSize: 14
+                }}
+              >
+                {expandedReviews[ind] ? "Show less" : "Read more"}
+              </Typography>
+            )}
 
             {/* REVIEW IMAGES */}
             {reviewImages.length > 0 && (

@@ -65,11 +65,18 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
     setFormValue("address1", details.formattedAddress, { shouldValidate: true })
     setFormValue("pin", details.pincode, { shouldValidate: true })
     setFormValue("city", details.city, { shouldValidate: true })
-    // setFormValue("dist", details.district)
+    setFormValue("dist", details.district)
     setFormValue("state", details.state, { shouldValidate: true })
     setFormValue("country", details.country, { shouldValidate: true })
     setFormValue("latitude", details.lat)
     setFormValue("longitude", details.lng)
+  }
+
+  // Keeps address1 in sync with whatever the user has typed, even if they
+  // never pick a suggestion from the Google Places dropdown — otherwise the
+  // street only gets saved when a structured place is selected.
+  const handleAddressTextChange = (value: string) => {
+    setFormValue("address1", value, { shouldValidate: true })
   }
 
   useEffect(() => {
@@ -134,18 +141,24 @@ export default function DeliveryAddressForm({ deliveryAddress, handleCloseModal 
             <Grid size={{ xs: 12 }}>
               <AddressAutocomplete
                 onAddressSelect={handleAddressSelect}
+                onTextChange={handleAddressTextChange}
                 defaultValue={deliveryAddress?.customer?.address1 || ""}
                 label="Address"
               />
             </Grid>
 
-            {/* <Grid size={{ sm: 6, xs: 12 }}>
-              <TextField fullWidth name="address1" label="Address line 1" />
-            </Grid> */}
+            <Grid size={{ sm: 6, xs: 12 }}>
+              <TextField fullWidth name="address2" label="Address line 2 (optional)" />
+            </Grid>
 
-            {/* <Grid size={{ sm: 6, xs: 12 }}>
-              <TextField fullWidth name="address2" label="Address line 2" />
-            </Grid> */}
+            <Grid size={{ sm: 6, xs: 12 }}>
+              <TextField fullWidth name="city" label="City" />
+            </Grid>
+
+            <Grid size={{ sm: 6, xs: 12 }}>
+              <TextField fullWidth name="state" label="State" />
+            </Grid>
+
             <Grid size={{ sm: 6, xs: 12 }}>
               <TextField fullWidth name="email" label="Email" />
             </Grid>
