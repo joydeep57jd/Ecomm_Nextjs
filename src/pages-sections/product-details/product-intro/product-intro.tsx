@@ -200,36 +200,38 @@ export default function ProductIntro({
           </Typography>
 
           {/* Rating row */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2.5, flexWrap: "wrap" }}>
-            <Box
-              sx={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 0.4,
-                bgcolor: "#2e7d32",
-                color: "#fff",
-                borderRadius: 1,
-                px: 0.9,
-                py: 0.3,
-                fontSize: 13,
-                fontWeight: 700,
-                lineHeight: 1.6
-              }}
-            >
-              {product?.variantDetails?.itemRating?.toFixed(1) ?? "—"} ★
+          {product?.variantDetails?.itemRating > 0 && (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2.5, flexWrap: "wrap" }}>
+              <Box
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 0.4,
+                  bgcolor: "#2e7d32",
+                  color: "#fff",
+                  borderRadius: 1,
+                  px: 0.9,
+                  py: 0.3,
+                  fontSize: 13,
+                  fontWeight: 700,
+                  lineHeight: 1.6
+                }}
+              >
+                {product.variantDetails.itemRating.toFixed(1)} ★
+              </Box>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  cursor: "pointer",
+                  "&:hover": { textDecoration: "underline" }
+                }}
+                onClick={onShowReviews}
+              >
+                ({product.variantDetails?.reviewCount ?? 0})
+              </Typography>
             </Box>
-            <Typography
-              variant="body2"
-              sx={{
-                color: "text.secondary",
-                cursor: "pointer",
-                "&:hover": { textDecoration: "underline" }
-              }}
-              onClick={onShowReviews}
-            >
-              ({product.variantDetails?.reviewCount ?? 0})
-            </Typography>
-          </Box>
+          )}
 
           {/* Variant selector */}
           <Box sx={{ mb: 2 }}>
