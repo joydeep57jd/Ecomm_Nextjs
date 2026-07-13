@@ -7,6 +7,8 @@ export const StyledCard = styled(Card, {
   shouldForwardProp: (prop) => prop !== "bgWhite"
 })<{ bgWhite?: boolean }>(({ theme }) => ({
   height: "100%",
+  minWidth: 0,
+  width: "100%",
   margin: "auto",
   marginTop: 5,
   display: "flex",
@@ -110,6 +112,7 @@ export const ContentWrapper = styled("div")(({ theme }) => ({
     marginTop: "auto",
     paddingTop: 6,
     display: "flex",
+    flexWrap: "wrap",
     alignItems: "flex-end",
     justifyContent: "space-between"
   },

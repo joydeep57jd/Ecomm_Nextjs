@@ -68,7 +68,7 @@ export default function CheckoutForm({ cartItems }: Props) {
       )}
 
       <ListItem title={`Price (${inStockItems.length})`} value={priceDetails.mrp} />
-      <ListItem title="Discount" value={priceDetails.discount} />
+      <ListItem title="Discount" value={priceDetails.discount} isDiscount />
       <ListItem title="Total Amount" value={priceDetails.totalPrice} />
 
       <Button

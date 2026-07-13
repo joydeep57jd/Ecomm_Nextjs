@@ -10,8 +10,21 @@ export const CategoryGrid = styled("div")(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
     gridTemplateColumns: "repeat(2, 1fr)"
   },
+  // Below "sm" a single stacked column made this section very tall when
+  // there were several categories, so it scrolls horizontally instead —
+  // same pattern as the product carousels elsewhere on the home page.
   [theme.breakpoints.down("sm")]: {
-    gridTemplateColumns: "1fr"
+    display: "flex",
+    gap: "0.75rem",
+    overflowX: "auto",
+    scrollSnapType: "x mandatory",
+    WebkitOverflowScrolling: "touch",
+    margin: "1rem -1rem 0",
+    padding: "0 1rem 0.5rem",
+    scrollbarWidth: "none",
+    "&::-webkit-scrollbar": {
+      display: "none"
+    }
   }
 }))
 
@@ -33,6 +46,12 @@ export const CategoryCard = styled("div", {
   background: bg,
   border: `1px solid ${theme.palette.grey[200]}`,
   transition: "transform 220ms ease-in-out, box-shadow 220ms ease-in-out",
+  [theme.breakpoints.down("sm")]: {
+    flex: "0 0 auto",
+    width: "78%",
+    maxWidth: 280,
+    scrollSnapAlign: "start"
+  },
   ":hover": {
     transform: "translateY(-5px)",
     boxShadow: theme.shadows[8]

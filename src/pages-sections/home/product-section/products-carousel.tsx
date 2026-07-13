@@ -54,7 +54,7 @@ export default function ProductsCarousel({ children, title }: ProductsCarouselPr
   const { ref, api, arrows, options } = useCarousel({
     align: "start",
     slideSpacing: "24px",
-    slidesToShow: { xs: 1, sm: 2, md: 3, lg: 5 }
+    slidesToShow: { xs: 2, sm: 2, md: 3, lg: 5 }
   })
 
   const hasSlides = !!children && Array.isArray(children) && children.length > 0

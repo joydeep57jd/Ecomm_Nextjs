@@ -30,7 +30,7 @@ export default function CheckoutSummary() {
       <ListItem title="Subtotal" value={total} />
       <ListItem title="Shipping" />
       <ListItem title="Tax" value={0} />
-      <ListItem title="Discount" />
+      <ListItem title="Discount" isDiscount />
 
       <Divider sx={{ my: 2 }} />
 

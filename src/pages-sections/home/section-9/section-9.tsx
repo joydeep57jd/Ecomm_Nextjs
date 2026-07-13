@@ -46,7 +46,7 @@ export default function Section9() {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr 1fr", sm: "repeat(4, 1fr)" },
+            gridTemplateColumns: { xs: "repeat(2, minmax(0, 1fr))", sm: "repeat(4, minmax(0, 1fr))" },
             gap: { xs: 2, sm: 0 }
           }}
         >
@@ -58,6 +58,7 @@ export default function Section9() {
                 alignItems: "center",
                 gap: 1.5,
                 px: { sm: 3 },
+                minWidth: 0,
                 borderRight: {
                   sm: index < ITEMS.length - 1 ? "1px solid" : "none"
                 },
@@ -65,7 +66,7 @@ export default function Section9() {
               }}
             >
               <Icon sx={{ fontSize: 28, color: BRAND.primary, flexShrink: 0 }} />
-              <Box>
+              <Box sx={{ minWidth: 0 }}>
                 <Typography
                   variant="body2"
                   fontWeight={700}
