@@ -16,7 +16,7 @@ type Props = {
   paymentAndAddress: GetOrderPaymentAndAddressResponse | null
   paymentAndAddressLoading?: boolean
   refreshOrder: () => void
-};
+}
 // =============================================================
 
 export function OrderDetailsPageView({

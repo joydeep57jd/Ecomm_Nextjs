@@ -5,7 +5,8 @@ import {
   PlaceOrderResponse,
   PlaceOrderRequest,
   CustCancelRequest,
-  DeliveryChargeResponse
+  DeliveryChargeResponse,
+  ReturnOrderTruckResponse
 } from "@/models/Order.model"
 import axiosInstance from "../axiosInstance"
 import API_URL from "../constants"
@@ -84,6 +85,14 @@ export const getOrderPaymentAndAddress = async (orderId: number) => {
   const { data } = await axiosInstance.post<{ data: GetOrderPaymentAndAddressResponse }>(
     API_URL.ORDER.GET_ORDER_PAYMENT_AND_ADDRESS,
     { orderId }
+  )
+  return data.data
+}
+
+export const getReturnOrderTruck = async (orderDetailId: number) => {
+  const { data } = await axiosInstance.post<{ data: ReturnOrderTruckResponse[] }>(
+    API_URL.ORDER.GET_RETURN_ORDER_LIST,
+    { orderDetailId }
   )
   return data.data
 }

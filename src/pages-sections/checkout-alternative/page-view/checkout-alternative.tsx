@@ -25,7 +25,6 @@ import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
 import { Cart, RemoteCart } from "@/models/CartProductItem.models"
 import { BRAND } from "theme/brand"
 
-
 export default function CheckoutAlternativePageView() {
   const params = useSearchParams()
   const [addressListResponse, setAddressListResponse] = useState<UserAddressListResponse | null>(
@@ -155,7 +154,7 @@ export default function CheckoutAlternativePageView() {
     getDeliveryChargeDetails(addressData)
   }
   const totalAmount =
-    deliveryChargeResponse?.deliveryCharge! + checkoutOrderResponse?.grandtotalamt!
+    deliveryChargeResponse?.stores?.[0]?.totalCharge! + checkoutOrderResponse?.grandtotalamt!
 
   const order = async (paymentMethod: string) => {
     if (!selectedDelivaryAddressData || !checkoutOrderResponse) return
@@ -204,14 +203,17 @@ export default function CheckoutAlternativePageView() {
       },
       order: {
         orderdate: new Date().toLocaleString(),
-        deliverychargeamt: deliveryChargeResponse?.deliveryCharge ?? 0,
+        deliverychargeamt: deliveryChargeResponse?.stores?.[0]?.totalCharge ?? 0,
         discount_code: "",
         DeliveryDistance: deliveryChargeResponse?.stores?.[0]?.distanceKm ?? 0,
         discount_total: "0",
         grandtotalamt: totalAmount,
         totalamt: checkoutOrderResponse!.totalamt,
         totaltaxamt: checkoutOrderResponse!.totaltaxamt,
-        data: checkoutOrderResponse!.item
+        data: checkoutOrderResponse!.item,
+        deliverybasecharge: deliveryChargeResponse?.stores?.[0]?.deliveryCharge ?? 0,
+        deliverygstpercentage: deliveryChargeResponse?.stores?.[0]?.gstPercentage ?? 0,
+        deliverygstamount: deliveryChargeResponse?.stores?.[0]?.gstAmount ?? 0
       }
     })
     setOrderResponse(response)
@@ -233,7 +235,15 @@ export default function CheckoutAlternativePageView() {
     <Box bgcolor={BRAND.pageBg} sx={{ py: { xs: 3, sm: 4 } }}>
       <Container maxWidth="lg">
         <Box mb={3}>
-          <Box component="h1" sx={{ m: 0, fontSize: { xs: "1.75rem", sm: "2rem" }, fontWeight: 700, color: "text.primary" }}>
+          <Box
+            component="h1"
+            sx={{
+              m: 0,
+              fontSize: { xs: "1.75rem", sm: "2rem" },
+              fontWeight: 700,
+              color: "text.primary"
+            }}
+          >
             Secure Checkout
           </Box>
           <Box component="p" sx={{ m: 0, mt: 0.5, color: "text.secondary", fontSize: "0.95rem" }}>
@@ -258,7 +268,7 @@ export default function CheckoutAlternativePageView() {
           <Grid size={{ md: 4, xs: 12 }} order={{ xs: 1, md: 2 }}>
             <CheckoutSummery
               checkoutOrderResponse={checkoutOrderResponse!}
-              deliveryCharge={deliveryChargeResponse?.deliveryCharge ?? 0}
+              deliveryCharge={deliveryChargeResponse?.stores?.[0]?.totalCharge ?? 0}
               Product={product}
               totalAmount={totalAmount}
             />

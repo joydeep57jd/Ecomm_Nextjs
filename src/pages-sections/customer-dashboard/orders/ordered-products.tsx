@@ -17,6 +17,7 @@ import OrderItemRating from "./page-view/order-item-rating"
 import OrderItemReturn from "./page-view/order-item-return"
 import CancelItem from "./page-view/cancel-item"
 import OrderItemActions from "./order-item-actions"
+import OrderItemReturnProgress from "./order-item-return-progress"
 import { encodeId } from "@/utils/url-id"
 
 type Props = { order: OrderListCustomer; refreshOrder: () => void }
@@ -172,83 +173,80 @@ export default function OrderedProducts({ order, refreshOrder }: Props) {
           if (showOrderOtp) shownOtps.add(orderOtp)
 
           return (
-            <FlexBetween
-              key={ind}
-              px={2}
-              py={1.5}
-              gap={2}
-              alignItems="flex-start"
-              sx={{ flexWrap: "wrap" }}
-            >
-              {/* flex-basis is a firm 160px (not "auto") so the row's alignment
+            <Box key={ind} px={2} py={1.5}>
+              <FlexBetween gap={2} alignItems="flex-start" sx={{ flexWrap: "wrap" }}>
+                {/* flex-basis is a firm 160px (not "auto") so the row's alignment
                   doesn't shift per-row based on each product name's untruncated
                   (pre-ellipsis) width — and a 130px floor so it never gets
                   crushed by the actions block; below that the whole actions
                   block naturally wraps to its own line instead of squeezing. */}
-              <Link
-                href={`/products/${encodeId(item.itemId)}${item.itemId ? `?variantId=${encodeId(item.itemVariantId)}` : ""}`}
-                style={{ minWidth: 130, flex: "1 1 160px" }}
-              >
-                <FlexBox gap={2} alignItems="center" sx={{ minWidth: 0 }}>
-                  <Avatar
-                    variant="rounded"
-                    sx={{ height: 60, width: 60, backgroundColor: "grey.50", flexShrink: 0 }}
-                  >
-                    <Image
-                      alt={item.imageAlt}
-                      src={item.imageName}
-                      width={60}
-                      height={60}
-                      style={{
-                        height: 60,
-                        width: 60,
-                        borderRadius: "100%",
-                        objectFit: "contain",
-                        border: "1px solid #ead7d7"
-                      }}
-                    />
-                  </Avatar>
-                  <Box sx={{ minWidth: 0 }}>
-                    <Typography noWrap variant="h6" title={item.name}>
-                      {item.name}
-                    </Typography>
-                    <Typography lineHeight={2} variant="body1" color="text.secondary">
-                      {currency(item.price + item.tax)} x {item.qty}
-                    </Typography>
-                  </Box>
-                </FlexBox>
-              </Link>
+                <Link
+                  href={`/products/${encodeId(item.itemId)}${item.itemId ? `?variantId=${encodeId(item.itemVariantId)}` : ""}`}
+                  style={{ minWidth: 130, flex: "1 1 160px" }}
+                >
+                  <FlexBox gap={2} alignItems="center" sx={{ minWidth: 0 }}>
+                    <Avatar
+                      variant="rounded"
+                      sx={{ height: 60, width: 60, backgroundColor: "grey.50", flexShrink: 0 }}
+                    >
+                      <Image
+                        alt={item.imageAlt}
+                        src={item.imageName}
+                        width={60}
+                        height={60}
+                        style={{
+                          height: 60,
+                          width: 60,
+                          borderRadius: "100%",
+                          objectFit: "contain",
+                          border: "1px solid #ead7d7"
+                        }}
+                      />
+                    </Avatar>
+                    <Box sx={{ minWidth: 0 }}>
+                      <Typography noWrap variant="h6" title={item.name}>
+                        {item.name}
+                      </Typography>
+                      <Typography lineHeight={2} variant="body1" color="text.secondary">
+                        {currency(item.price + item.tax)} x {item.qty}
+                      </Typography>
+                    </Box>
+                  </FlexBox>
+                </Link>
 
-              {/* If this and the product-info block don't both fit on the
-                  current line, flex-wrap moves this whole block down to its
-                  own line — flexShrink+minWidth:0 then let it (and its own
-                  internal flexWrap) shrink to fit that line instead of
-                  overflowing and getting clipped by the Card. */}
-              <Box sx={{ flexShrink: 1, minWidth: 0 }}>
-                <OrderItemActions
-                  item={item}
-                  order={order}
-                  loadingInvoiceId={loadingInvoiceId}
-                  returnOtp={showReturnOtp}
-                  orderOtp={showOrderOtp}
-                  getDaysLeftToReturn={getDaysLeftToReturn}
-                  formatDeliveryDate={formatDeliveryDate}
-                  onInvoice={handleOpenInvoice}
-                  onReturn={(i) => {
-                    setSelectedProduct(i)
-                    setModalType("return")
-                  }}
-                  onRating={(i) => {
-                    setSelectedProduct(i)
-                    setModalType("rating")
-                  }}
-                  onCancel={(i) => {
-                    setSelectedProduct(i)
-                    setModalType("cancel")
-                  }}
-                />
-              </Box>
-            </FlexBetween>
+                {/* If this and the product-info block don't both fit on the
+                    current line, flex-wrap moves this whole block down to its
+                    own line — flexShrink+minWidth:0 then let it (and its own
+                    internal flexWrap) shrink to fit that line instead of
+                    overflowing and getting clipped by the Card. */}
+                <Box sx={{ flexShrink: 1, minWidth: 0 }}>
+                  <OrderItemActions
+                    item={item}
+                    order={order}
+                    loadingInvoiceId={loadingInvoiceId}
+                    returnOtp={showReturnOtp}
+                    orderOtp={showOrderOtp}
+                    getDaysLeftToReturn={getDaysLeftToReturn}
+                    formatDeliveryDate={formatDeliveryDate}
+                    onInvoice={handleOpenInvoice}
+                    onReturn={(i) => {
+                      setSelectedProduct(i)
+                      setModalType("return")
+                    }}
+                    onRating={(i) => {
+                      setSelectedProduct(i)
+                      setModalType("rating")
+                    }}
+                    onCancel={(i) => {
+                      setSelectedProduct(i)
+                      setModalType("cancel")
+                    }}
+                  />
+                </Box>
+              </FlexBetween>
+
+              <OrderItemReturnProgress orderDetailId={item.orderDetailId} />
+            </Box>
           )
         })}
       </Card>

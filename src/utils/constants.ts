@@ -46,7 +46,8 @@ export const API_URL = {
     CUST_RETURN_ORDER: "/FrontEnd/SaveExchangeReturnItemsForInvoice",
     CUST_RETURN_ORDERIMAGE: "/Frontend/AddReturnProductImage",
     GET_RETURN_PICKUP_OTP: "/Frontend/GetReturnPickupOtp",
-    GET_ORDER_PAYMENT_AND_ADDRESS:"/Frontend/GetOrderPaymentAndAddress"
+    GET_ORDER_PAYMENT_AND_ADDRESS:"/Frontend/GetOrderPaymentAndAddress",
+    GET_RETURN_ORDER_LIST:"/frontend/GetReturnStatusTrack"
   },
   OFFER:{
     GET_BANNER_OFFER:'/productmanagement/GetActiveOffersList',

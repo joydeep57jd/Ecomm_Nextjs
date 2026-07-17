@@ -127,6 +127,9 @@ export interface OrderData {
   totalamt: number
   totaltaxamt: number
   deliverychargeamt: number
+  deliverybasecharge: number
+  deliverygstpercentage: number
+  deliverygstamount: number
   grandtotalamt: number
   discount_code: string
   discount_total: string
@@ -169,10 +172,21 @@ export interface DeliveryChargeStoreDetail {
   businessUnitId: number
   distanceKm: number
   deliveryCharge: number
+  gstPercentage: number
+  gstAmount: number
+  totalCharge: number
   message: string
 }
 
 export interface DeliveryChargeResponse {
   deliveryCharge: number
   stores: DeliveryChargeStoreDetail[]
+}
+
+export interface ReturnOrderTruckResponse {
+  stepNo: number
+  statusName: string
+  statusImageUrl: null
+  statusDateTime: Date
+  isCurrent: boolean
 }
