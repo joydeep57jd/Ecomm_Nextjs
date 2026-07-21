@@ -24,6 +24,7 @@ import { UserData } from "@/models/Auth.model"
 import { getCart, getLocalCartFromRemoteCart } from "@/utils/api/cart"
 import { Cart, RemoteCart } from "@/models/CartProductItem.models"
 import { BRAND } from "theme/brand"
+import { getFinalAmount, getRoundOff, roundAmount } from "@/utils/round-off"
 
 export default function CheckoutAlternativePageView() {
   const params = useSearchParams()
@@ -46,7 +47,7 @@ export default function CheckoutAlternativePageView() {
   const [location, setLocation] = useState({ latitude: 0.0, longitude: 0.0 })
 
   const router = useRouter()
-  const { user } = useUser()
+  const { user, companyInfo } = useUser()
 
   const {
     dispatch,
@@ -156,6 +157,10 @@ export default function CheckoutAlternativePageView() {
   const totalAmount =
     deliveryChargeResponse?.stores?.[0]?.totalCharge! + checkoutOrderResponse?.grandtotalamt!
 
+  // COMPANY ROUNDING RULE: 0 NO ROUNDING | 1 UPPER BOUND | 2 LOWER BOUND
+  const finalAmount = getFinalAmount(totalAmount, companyInfo?.rounded)
+  const roundOff = getRoundOff(totalAmount, companyInfo?.rounded)
+
   const order = async (paymentMethod: string) => {
     if (!selectedDelivaryAddressData || !checkoutOrderResponse) return
     setPlacingOrder(true)
@@ -207,7 +212,8 @@ export default function CheckoutAlternativePageView() {
         discount_code: "",
         DeliveryDistance: deliveryChargeResponse?.stores?.[0]?.distanceKm ?? 0,
         discount_total: "0",
-        grandtotalamt: totalAmount,
+        grandtotalamt: roundAmount(totalAmount),
+        FinalAmount: finalAmount,
         totalamt: checkoutOrderResponse!.totalamt,
         totaltaxamt: checkoutOrderResponse!.totaltaxamt,
         data: checkoutOrderResponse!.item,
@@ -261,7 +267,7 @@ export default function CheckoutAlternativePageView() {
               order={order}
               placingOrder={placingOrder}
               fetchingDeliveryCharge={fetchingDeliveryCharge}
-              totalAmount={totalAmount}
+              totalAmount={finalAmount}
             />
           </Grid>
 
@@ -270,7 +276,10 @@ export default function CheckoutAlternativePageView() {
               checkoutOrderResponse={checkoutOrderResponse!}
               deliveryCharge={deliveryChargeResponse?.stores?.[0]?.totalCharge ?? 0}
               Product={product}
-              totalAmount={totalAmount}
+              totalAmount={finalAmount}
+              roundOff={roundOff}
+              roundingEnabled={!!companyInfo?.rounded}
+              loading={fetchingDeliveryCharge}
             />
           </Grid>
         </Grid>

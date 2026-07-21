@@ -84,6 +84,7 @@ export default function OrderSummery({ order, paymentAndAddress }: Props) {
           <ListItem title="Tax:" value={currency(+order.tax)} />
           <ListItem title="Shipping fee:" value={currency(+order.delvCharge)} />
           <ListItem title="Discount:" value={currency(+order.discount)} />
+          <ListItem title="Round Off:" value={currency(+order.roundOff)} />
 
           <Divider sx={{ mb: 1 }} />
 

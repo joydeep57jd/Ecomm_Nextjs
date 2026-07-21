@@ -131,6 +131,7 @@ export interface OrderData {
   deliverygstpercentage: number
   deliverygstamount: number
   grandtotalamt: number
+  FinalAmount: number
   discount_code: string
   discount_total: string
   DeliveryDistance: number

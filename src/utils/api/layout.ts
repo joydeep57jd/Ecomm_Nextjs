@@ -32,6 +32,7 @@ const getLayoutData = async (): Promise<LayoutModel> => {
 
   return {
     offers,
+    companyInfo: companyInfoData!,
     header: {
       categories: [],
       categoryMenus: [],

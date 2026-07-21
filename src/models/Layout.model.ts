@@ -1,6 +1,6 @@
 import { CategoryMenuItem } from "models/Category.model"
 import { Category } from "./Category.modal"
-import { FooterDetails } from "./Companyinfo.model"
+import { CompanyInfo, FooterDetails } from "./Companyinfo.model"
 import { BannerOfferResponse } from "./Offer.model"
 
 export interface Socials {
@@ -81,4 +81,5 @@ export default interface LayoutModel {
   topbar?: Topbar
   mobileNavigation?: MobileNavigation
   offers?: BannerOfferResponse[]
+  companyInfo?: CompanyInfo
 }

@@ -13,6 +13,7 @@ export interface OrderListCustomer {
   orderDate: Date
   subTotal: string
   tax: string
+  roundOff:string
   discount: string
   delvCharge: string
   total: string
