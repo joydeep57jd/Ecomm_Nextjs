@@ -42,10 +42,18 @@ export default function ChangePasswordForm() {
       NewPassword: values.newPassword
     }
     try {
-      await changePassword(payload)
+      // THE API ANSWERS 200 EVEN ON FAILURE — `status` IS WHAT DECIDES, NOT THE HTTP CODE
+      const response = await changePassword(payload)
+
+      if (!response?.status) {
+        enqueueSnackbar(response?.message || response?.data?.message || "Failed to change password", {
+          variant: "error"
+        })
+        return
+      }
+
       methods.reset()
       enqueueSnackbar("Password changed successfully", { variant: "success" })
-      
     } catch (err) {
       console.error("Failed to change password", err)
       enqueueSnackbar("Failed to change password. Please try again.", {variant:"error"})

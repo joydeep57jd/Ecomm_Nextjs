@@ -85,3 +85,9 @@ export interface ChangePasswordResponse{
   password: string;
   message:  string;
 }
+
+export interface ChangePasswordApiResponse {
+  status: boolean
+  data: ChangePasswordResponse
+  message: string
+}
