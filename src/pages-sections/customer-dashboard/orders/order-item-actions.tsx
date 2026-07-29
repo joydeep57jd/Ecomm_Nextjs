@@ -87,7 +87,7 @@ export default function OrderItemActions({
     )
   }
 
-  if (!item.invDate) {
+  if (!item.isOutForDelivery) {
     return (
       <Button onClick={() => onCancel(item)} variant="outlined" color="error" size="small">
         Cancel Item
