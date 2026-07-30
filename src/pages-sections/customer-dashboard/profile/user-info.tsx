@@ -44,7 +44,7 @@ export default function UserInfo({ user }: Props) {
   )
 }
 
-function TableRowItem({ title, value }: { title: string; value: string }) {
+function TableRowItem({ title, value }: { title: string; value: string | null }) {
   return (
     <FlexBox flexDirection="column" p={1}>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 0.5 }}>

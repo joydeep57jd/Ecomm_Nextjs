@@ -1,7 +1,12 @@
 import { DelivaryAddressData } from "@/models/Address.model"
 import axios from "../axiosInstance"
 import { API_URL } from "../constants"
-import { SaveUserProfilePayload, UserAddressListResponse, UserProfile } from "@/models/User.model"
+import {
+  SaveUserProfileApiResponse,
+  SaveUserProfilePayload,
+  UserAddressListResponse,
+  UserProfile
+} from "@/models/User.model"
 
 export const SaveAddress = async (data: DelivaryAddressData) => {
   return await axios.post(API_URL.ADDRESS.ADD, data)
@@ -28,7 +33,13 @@ export const userProfile = async (UserId: string) => {
   return data.data
 }
 
-export const saveUserProfile = async (payload: SaveUserProfilePayload): Promise<UserProfile> => {
-  const { data } = await axios.post<{ data: UserProfile }>(API_URL.USER.SAVE_PROFILE, payload)
-  return data.data
+export const saveUserProfile = async (
+  payload: SaveUserProfilePayload
+): Promise<SaveUserProfileApiResponse> => {
+  // RETURNS THE WHOLE ENVELOPE — THE CALLER HAS TO CHECK `status`, NOT THE HTTP CODE
+  const { data } = await axios.post<SaveUserProfileApiResponse>(
+    API_URL.USER.SAVE_PROFILE,
+    payload
+  )
+  return data
 }

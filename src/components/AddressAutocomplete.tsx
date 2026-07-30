@@ -33,6 +33,8 @@ interface AddressAutocompleteProps {
   error?: boolean
   /** Helper text */
   helperText?: string
+  /** MUI TextField size — defaults to the theme's "small" */
+  size?: "small" | "medium"
 }
 
 export default function AddressAutocomplete({
@@ -41,7 +43,8 @@ export default function AddressAutocomplete({
   defaultValue = "",
   label = "Search Address",
   error,
-  helperText
+  helperText,
+  size
 }: AddressAutocompleteProps) {
   const [inputValue, setInputValue] = useState(defaultValue)
   const [locating, setLocating] = useState(false)
@@ -125,6 +128,7 @@ export default function AddressAutocomplete({
           label={label}
           error={error}
           helperText={helperText}
+          size={size}
           fullWidth
           slotProps={{
             input: {

@@ -1,5 +1,4 @@
 import { Fragment } from "react"
-import Card from "@mui/material/Card"
 // LOCAL CUSTOM COMPONENT
 // CUSTOM DATA MODEL
 
@@ -11,11 +10,6 @@ type Props = { user: UserProfile };
 // ===========================================================
 
 export function ProfileEditPageView({ user }: Props) {
-  return (
-    <Fragment>
-      <Card sx={{ padding: { xs: 3, sm: 4 } }}>
-        {user && <ProfileEditForm user={user} />}
-      </Card>
-    </Fragment>
-  )
+  // THE FORM OWNS ITS OWN SECTION CARDS — NO OUTER CARD HERE
+  return <Fragment>{user && <ProfileEditForm user={user} />}</Fragment>
 }

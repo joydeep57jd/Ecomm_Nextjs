@@ -71,3 +71,13 @@ export interface SaveUserProfilePayload {
   Token: string
   CustomerProfileDtl: UserProfile
 }
+
+/**
+ * SaveCustomerProfile answers HTTP 200 even when it fails — `status` is what
+ * decides the outcome, and `data.msg` carries the reason.
+ */
+export interface SaveUserProfileApiResponse {
+  status: boolean
+  message: string
+  data?: { type: string; msg: string }
+}

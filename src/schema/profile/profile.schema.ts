@@ -9,7 +9,17 @@ export const profileSchema = yup.object().shape({
   contact: yup
     .string()
     .required("Contact is required")
-    .matches(/^[0-9]{10}$/, "Enter a valid 10-digit mobile number")
+    .matches(/^[0-9]{10}$/, "Enter a valid 10-digit mobile number"),
+  address1: yup.string().required("Address is required"),
+  address2: yup.string().default("").optional(),
+  city: yup.string().required("City is required"),
+  dist: yup.string().default("").optional(),
+  state: yup.string().required("State is required"),
+  pin: yup
+    .string()
+    .required("Zip is required")
+    .matches(/^[0-9]{6}$/, "Zip must be exactly 6 digits"),
+  country: yup.string().required("Country is required")
 })
 
 export type ProfileSchemaType = yup.InferType<typeof profileSchema>
@@ -24,6 +34,14 @@ export const getProfileInitialValue = (user: UserProfile) => {
     contact: contact,
     lastName: user.custLName || "",
     firstName: user.custFName || "",
-    middleName: user.custMName || ""
+    middleName: user.custMName || "",
+    // BILLING ADDRESS — SAME FIELDS THE PROFILE PAYLOAD SENDS BACK
+    address1: user.billAddr1 || "",
+    address2: user.billAddr2 || "",
+    city: user.billCityTownVill || "",
+    dist: user.billDist || "",
+    state: user.billState || "",
+    pin: user.billPIN || "",
+    country: user.billCountry || ""
   }
 }
